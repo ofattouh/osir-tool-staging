@@ -1,0 +1,268 @@
+/**
+Theme Name: Astra Child Theme
+Author: PSHSA
+Author URI: http://wpastra.com/about/
+Description: Astra is the fastest, fully customizable & beautiful theme suitable for blogs, personal portfolios and business websites. It is very lightweight (less than 50KB on frontend) and offers unparalleled speed. Built with SEO in mind, Astra comes with schema.org code integrated so search engines will love your site. Astra offers plenty of sidebar options and widget areas giving you a full control for customizations. Furthermore, we have included special features and templates so feel free to choose any of your favorite page builder plugin to create pages flexibly. Some of the other features: # WooCommerce Ready # Responsive # Compatible with major plugins # Translation Ready # Extendible with premium addons # Regularly updated # Designed, Developed, Maintained & Supported by Brainstorm Force. Looking for a perfect base theme? Look no further. Astra is fast, fully customizable and beautiful theme!
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: astra-child-theme
+Template: astra
+*/
+
+/* Gotham custom fonts */
+
+/*
+@font-face {
+  font-family: 'Gotham Light';
+  src: url('/wp-content/uploads/Gotham/Gotham-Light.otf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Gotham Medium';
+  src: url('/wp-content/uploads/Gotham/Gotham-Medium.otf');
+  font-weight: bold;
+}
+
+body, p {
+  font-family: 'Gotham Light' !important;
+  font-size: 18px !important;
+  color: #000 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gotham Medium' !important;
+  color: #7A2531 !important;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 35px !important;
+}
+
+h2 {
+  font-size: 25px !important;
+}
+
+h3, h4, h5, h6 {
+  font-size: 22px !important;
+}
+
+.help_narrative_phs_cls {
+  font-style: italic;
+}
+
+.gform_button {
+  width: 130px !important;
+}
+
+
+.gform_wrapper div.validation_error {
+  color: #7A2531 !important;
+  border-top: 1px solid #E8E8E8 !important;
+  border-bottom: 1px solid #E8E8E8 !important;
+  border-right: 1px solid #E8E8E8 !important;
+  border-left: 5px solid #7A2531 !important;
+  text-align: left !important;
+  padding-left: 10px !important;
+}
+
+.header_phs_burgundy_cls {
+  margin: 30px 0;
+  max-width: 99%;
+  border-top: 1px solid #D75064;
+  border-bottom: 1px solid #D75064;
+  padding: 32px;
+  background-color: #7A2531;
+  color: #FFFFFF;
+}
+*/
+
+/* Switches
+
+.gform_wrapper .description_above .gfield_description {
+  padding: 12px 40px 10px 0 !important;
+}
+
+.gfield_description {
+  width: 95% !important;
+  float: left !important;
+}
+
+.ginput_container_checkbox {
+  width: 4% !important;
+  float: left !important;
+}
+
+table.gsurvey-likert th.gsurvey-likert-choice-label {
+  background-color: #7a2531 !important;
+}
+
+*/
+
+/* PHS Checklist
+#gform_wrapper_14 .gform_fields .gfield .pretty.p-switch .state:after {
+  content: "No" !important;
+  margin-left: -85px !important;
+}
+
+.gform_legacy_markup_wrapper ul.gfield_checkbox, .gform_legacy_markup_wrapper ul.gfield_radio{
+  margin: 6px 0px 0px 50px !important;
+}
+
+.gform_wrapper.gravity-theme .gform_previous_button.button {
+  background-color: #7a2531 !important;
+  color: #fff !important;
+}
+*/
+
+/* Survey Charts **********************************/
+
+
+/*
+.google-visualization-table {
+  display: none !important;
+}
+
+.google-visualization-table .gradient {
+  background: none #7a2531 !important;
+}
+*/
+
+/* Survey form navigation buttons */
+
+.gform_wrapper.gravity-theme .gform_previous_button.button:hover,
+.gform_wrapper.gravity-theme .gform_next_button.button:hover {
+  background-color: #D75064 !important;
+}
+
+.gform_wrapper.gravity-theme .gform_previous_button.button,
+.gform_wrapper.gravity-theme .gform_next_button.button,
+.gform_wrapper.gravity-theme .gform_save_link.button {
+  background-color: #7a2531 !important;
+  color: #fff !important;
+}
+
+/**************************** Member Press ****************************/
+
+/* Hide show password button */
+.mp-hide-pw.button {
+  display : none !important;
+}
+
+/* Hide sub accounts search - doesn't work */
+.mpca-search {
+  display: none !important;
+}
+
+/* Personal information fields 
+.mepr-form-input {
+  width: 60% !important;
+}
+*/
+
+/* Personal information fields */
+.mp_wrapper select, .mp_wrapper .mepr_mepr-address-zip {
+  width: 30% !important;
+}
+
+/* Mobile break point */
+
+@media only screen and (max-width: 778px) {
+
+  /* Hide all charts */
+  .visualizer-front-681, .visualizer-front-574, .visualizer-front-567, .visualizer-front-552,
+  .visualizer-front-547, .visualizer-front-477, .visualizer-front-451, .visualizer-front-225,
+  .visualizer-actions a[data-visualizer-chart-id]{
+    display: none !important;
+  }
+
+  /* Show all tables */
+
+  table.visualizer-data-table {
+    width: 90% !important;
+  }
+
+  /*
+  .google-visualization-table {
+    display: block !important;
+    width: auto !important;
+  }
+
+  .google-visualization-table-th {
+    padding: 2% !important;
+    text-transform: uppercase !important;
+  }
+
+  .google-visualization-table-td, .google-visualization-table-th {
+    text-align: center !important;
+  }
+  */
+
+  /*
+
+  .gfield_description {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .ginput_container_checkbox {
+    float: none !important;
+    padding-left: 40px !important;
+  }
+
+  .gform_button {
+    width: 90px !important;
+  }
+  */
+
+  /* PHS Checklist
+  #gform_wrapper_14 .gform_fields .gfield .pretty.p-switch .state:after {
+    content: "No" !important;
+    margin-left: -355px !important;
+  }
+  */
+
+}
+
+/*
+
+div.visualizer-front-357 svg rect{
+  fill: green !important;
+}
+
+div.visualizer-front-357 svg g g g:first-child rect:nth-child(1){
+  fill: green !important;
+  pointer-events: none;
+}
+
+p:nth-child(2) {
+  background: red;
+}
+
+div.visualizer-front-357 svg g g g:last-child rect:nth-child(1),
+div.visualizer-front-477 svg g g g:nth-child(2) rect:nth-child(1){
+  fill: #dd3333 !important;
+  pointer-events: none;
+}
+
+div.visualizer-front-357 svg g g g:last-child rect:nth-child(2),
+div.visualizer-front-477 svg g g g:nth-child(2) rect:nth-child(2){
+  fill:#ff9205 !important;
+  pointer-events: none;
+}
+
+div.visualizer-front-357 svg g g g:last-child rect:nth-child(3),
+div.visualizer-front-477 svg g g g:nth-child(2) rect:nth-child(3){
+  fill: #eeee22 !important;
+  pointer-events: none;
+}
+
+div.visualizer-front-357 svg g g g:last-child rect:nth-child(4),
+div.visualizer-front-477 svg g g g:nth-child(2) rect:nth-child(4){
+  fill: #81d742 !important;
+  pointer-events: none;
+}
+
+*/
