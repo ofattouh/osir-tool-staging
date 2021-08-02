@@ -15,9 +15,17 @@ add_filter( 'astra_single_post_navigation_enabled', '__return_false' );
 
 // https://developer.wordpress.org/reference/functions/wp_is_mobile/
 function my_custom_redirects_func() {
-  if ( is_user_logged_in() && is_page('osir-survey-analytics') && wp_is_mobile() ) {
+  // my_gform_id = 10, corporate_parent_account_moderator_id = 3 
+  if ( is_user_logged_in() && wp_is_mobile() && is_page('osir-survey-analytics-3') ) {
     // Redirect users to the mobile page version of the survey analytics
-    wp_safe_redirect( '/osir-survey-analytics-m/' );
+    wp_safe_redirect( '/osir-survey-analytics-3-m/' );
+    exit;
+  }
+
+  // my_gform_id = 17, corporate_parent_account_moderator_id = 9
+  if ( is_user_logged_in() && wp_is_mobile() && is_page('osir-survey-analytics-9') ) {
+    // Redirect users to the mobile page version of the survey analytics
+    wp_safe_redirect( '/osir-survey-analytics-9-m/' );
     exit;
   }
 }
