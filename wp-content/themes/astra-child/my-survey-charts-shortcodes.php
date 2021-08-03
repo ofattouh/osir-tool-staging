@@ -28,6 +28,7 @@ function total_number_of_answers(){
 	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
 
 	$results = $wpdb->get_results( $sql, ARRAY_A );
+
 	return $results[0]['numberSubmissions'];
 }
 
@@ -67,8 +68,8 @@ function average_company_score_by_osir(){
 	// echo "<br><br>".$sql."<br><br>";
 	// print_r($myresults);
 
-	$OSIRAverageCompanyScore = 
-	( $myresults[0] + $myresults[1] + $myresults[2] + $myresults[3] ) / total_number_of_answers();
+	$OSIRAverageCompanyScore = ( total_number_of_answers() > 0 ) ? 
+	( $myresults[0] + $myresults[1] + $myresults[2] + $myresults[3] ) / total_number_of_answers() : 0;
 
 	return $OSIRAverageCompanyScore;
 }
@@ -109,8 +110,8 @@ function outlook_average_company_score(){
 	// echo "<br><br>".$sql."<br><br>";
 	// print_r($myresults);
 
-	$outlookAverageCompanyScore = 
-	( $myresults[0] + $myresults[1] + $myresults[2] + $myresults[3] ) / total_number_of_answers();
+	$outlookAverageCompanyScore = ( total_number_of_answers() > 0 ) ? 
+	( $myresults[0] + $myresults[1] + $myresults[2] + $myresults[3] ) / total_number_of_answers() : 0;
 
 	return $outlookAverageCompanyScore;
 }

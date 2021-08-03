@@ -673,3 +673,15 @@ function astra_has_widgets_block_editor() {
 	}
 	return false;
 }
+
+/**
+ * Check whether user is exising or new to override the default margin space added to Elementor-TOC widget.
+ *
+ * @since 3.6.7
+ * @return boolean
+ */
+function astra_can_remove_elementor_toc_margin_space() {
+	$astra_settings                                    = get_option( ASTRA_THEME_SETTINGS );
+	$astra_settings['remove-elementor-toc-margin-css'] = isset( $astra_settings['remove-elementor-toc-margin-css'] ) ? false : true;
+	return apply_filters( 'astra_remove_elementor_toc_margin', $astra_settings['remove-elementor-toc-margin-css'] );
+}

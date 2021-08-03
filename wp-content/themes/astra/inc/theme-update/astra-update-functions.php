@@ -3089,7 +3089,7 @@ function astra_clear_all_assets_cache() {
  * Set flag for updated default values for buttons & add GB Buttons padding support.
  *
  * @since 3.6.3
- * @return void.
+ * @return void
  */
 function astra_button_default_values_updated() {
 	$theme_options = get_option( 'astra-settings', array() );
@@ -3104,7 +3104,7 @@ function astra_button_default_values_updated() {
  * Set flag for old users, to not directly apply underline to content links.
  *
  * @since 3.6.4
- * @return void.
+ * @return void
  */
 function astra_update_underline_link_setting() {
 	$theme_options = get_option( 'astra-settings', array() );
@@ -3127,6 +3127,37 @@ function astra_support_block_editor() {
 	// Set flag on existing user's site to not reflect changes directly.
 	if ( ! isset( $theme_options['support-block-editor'] ) ) {
 		$theme_options['support-block-editor'] = false;
+		update_option( 'astra-settings', $theme_options );
+	}
+}
+
+/**
+ * Set flag to maintain backward compatibility for existing users.
+ * Fixing the case where footer widget's right margin space not working.
+ *
+ * @since 3.6.7
+ * @return void
+ */
+function astra_fix_footer_widget_right_margin_case() {
+	$theme_options = get_option( 'astra-settings', array() );
+
+	if ( ! isset( $theme_options['support-footer-widget-right-margin'] ) ) {
+		$theme_options['support-footer-widget-right-margin'] = false;
+		update_option( 'astra-settings', $theme_options );
+	}
+}
+
+/**
+ * Set flag to avoid direct reflections on live site & to maintain backward compatibility for existing users.
+ *
+ * @since 3.6.7
+ * @return void
+ */
+function astra_remove_elementor_toc_margin() {
+	$theme_options = get_option( 'astra-settings', array() );
+
+	if ( ! isset( $theme_options['remove-elementor-toc-margin-css'] ) ) {
+		$theme_options['remove-elementor-toc-margin-css'] = false;
 		update_option( 'astra-settings', $theme_options );
 	}
 }

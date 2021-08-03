@@ -6,12 +6,14 @@ Requires at least: 4.9
 License: GPL2
 Requires PHP: 5.6
 Tested up to: 5.8
-Stable tag: 5.2.5
+Stable tag: 5.2.6
 
 Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, LGPD, POPIA, APA, CCPA and PIPEDA.
 
 == Description ==
 Complianz is a GDPR/CCPA Cookie Consent plugin that supports GDPR, DSGVO, LGPD, POPIA, APA, CCPA and PIPEDA with a conditional Cookie Notice and customized Cookie Policy based on the results of the built-in Cookie Scan.
+
+https://www.youtube.com/watch?v=JJzOzNAd5Bw&ab_channel=ReallySimplePlugins
 
 == Features ==
 * Configure a Cookie Notice for your specific region: European Union, United Kingdom, United States, Australia, South Africa or Canada. Or use one Cookie Notice worldwide.
@@ -116,6 +118,11 @@ POPIA is the acronym for the South African PROTECTION OF PERSONAL INFORMATION AC
 With some custom CSS this is possible, but we do not consider a cookie wall to be GDPR compliant, so it's not actively supported. We do, however, have the option to create a Soft Cookie Wall. Which blocks interaction with the website, but dismissing remains a possibility.
 
 == Change log ==
+= 5.2.6 =
+* Fix: Sync services in multilanguage environment
+* Improvement: prevent naming conflicts with custom posttypes when region redirecting by adding a prefix
+* Fix: consent area required a cookiename change on multisite environments because of rt_ cookie prefix
+
 = 5.2.5 =
 * Fix: placeholder detection used wrong key, resulting in default placeholder
 

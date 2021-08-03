@@ -74,6 +74,7 @@ class Astra_Widget_Component_Dynamic_CSS {
 			} else {
 				$builder_widget_selector = $selector . ' .' . $builder_type . '-widget-area-inner';
 			}
+
 			$css_output_desktop = array(
 				$builder_widget_selector              => array(
 					'color'     => $text_color_desktop,
