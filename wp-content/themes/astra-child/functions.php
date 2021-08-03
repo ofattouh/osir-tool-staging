@@ -48,18 +48,18 @@ function gf_adding_scripts(){
 add_action('wp_enqueue_scripts', 'gf_adding_scripts');
 
 // GF survey form submissions hook
-add_action( 'gform_after_submission_'.$my_gform_id, 'after_submission', 10, 2);
-function after_submission($entry, $form ) {
+add_action( 'gform_after_submission_'.$my_gform_id, 'gf_after_submission', 10, 2);
+function gf_after_submission($entry, $form ) {
 	global $survey_entry;
 	global $survey_form;
 	$survey_entry = $entry;
 	$survey_form = $form;
 
-	add_action( 'astra_entry_content_after', 'add_script_astra_entry_content_after');
+	add_action( 'astra_entry_content_after', 'add_my_script_astra_entry_content_after');
 }
 
 // Astra theme hook
-function add_script_astra_entry_content_after() {
+function add_my_script_astra_entry_content_after() {
 	global $survey_entry;
 	global $survey_form;
 
@@ -188,6 +188,11 @@ function gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_o
 	$wcb_claim, $my_gform_id, $gf_moderator_uid ){
 	global $survey_entry;
 
+	// save gf submission user meta entry
+	add_user_meta( get_current_user_id(), 'gf_survey_entry', $survey_entry['id']);
+
+	// add gf meta entries
+	gform_add_meta( $survey_entry['id'], 'gf_subscriber_uid', get_current_user_id() );
 	gform_add_meta( $survey_entry['id'], 'gf_moderator_uid', $gf_moderator_uid );
 	gform_add_meta( $survey_entry['id'], 'my_gform_id', $my_gform_id );
 	gform_add_meta( $survey_entry['id'], 'total_osir_score', $total_osir_score );
