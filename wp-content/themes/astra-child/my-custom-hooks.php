@@ -16,11 +16,6 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   $ca_parent = get_ca_parent();
   $my_ca = ( isset($ca_parent) && $ca_parent !== '' )? $ca_parent : $ca;
 
-  // echo "<br><br>ca<br>";
-  // print_r($ca);
-  // echo "<br><br>my_ca<br>";
-  // print_r($my_ca);
-
   if(!empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()) {
     ?>
     <a href="<?php echo $my_ca->sub_account_management_url(); ?>" class="mepr-account-row-action mepr-account-manage-sub-accounts"><?php _e('Sub Accounts', 'memberpress-corporate'); ?></a>
@@ -49,13 +44,7 @@ function get_ca_parent () {
     $parent_ca_res = $wpdb->get_results( $sql );
     $ca_parent_uuid = $parent_ca_res[0]->uuid;
     $ca_parent = MPCA_Corporate_Account::find_by_uuid($ca_parent_uuid);
-
-    // $ca_parent = "28cae006dd7c93520ef15a24c089dd76";
-    // echo $sql;
-    // print_r($parent_ca_res);
-    // $is_existing_user = MeprUtils::is_user_logged_in();
-    // $subscriptions = $usr->subscriptions();
-
+  
     // use the parent account instead to allow other corporate member accounts to upload 
     // new users to the same membership plan using the ONLY 1 parent corporate account user_id
     return $ca_parent;

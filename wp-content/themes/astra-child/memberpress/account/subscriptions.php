@@ -11,9 +11,8 @@ if(!empty($subscriptions)) {
       <thead>
         <tr>
           <th><?php _ex('Membership', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('Subscription', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
-          <th> </th>
+          <th><?php _ex('Manage Membership', 'ui', 'memberpress'); ?></th>
           <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
         </tr>
       </thead>
@@ -65,62 +64,6 @@ if(!empty($subscriptions)) {
 
               <?php if($txn != false && $txn instanceof MeprTransaction && !$txn->is_sub_account()): ?>
                 <div class="mepr-account-subscr-id"><?php echo $s->subscr_id; ?></div>
-              <?php endif; ?>
-            </td>
-            <td data-label="<?php _ex('Terms', 'ui', 'memberpress'); ?>">
-              <div class="mepr-account-auto-rebill">
-                <?php
-                  if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()) {
-                    ?>
-                    <div class="mepr-account-sub-account-auto-rebill">
-                      <?php _ex('Sub Account', 'ui', 'memberpress'); ?>
-                      <?php MeprHooks::do_action('mepr_account_subscriptions_sub_account_auto_rebill', $txn); ?>
-                    </div>
-                    <?php
-                  }
-                  else {
-                    if($is_sub):
-                      echo ($s->status == MeprSubscription::$active_str)?_x('Enabled', 'ui', 'memberpress'):MeprAppHelper::human_readable_status($s->status, 'subscription');
-                    elseif(is_null($s->expires_at) or $s->expires_at == MeprUtils::db_lifetime()):
-                      _ex('Lifetime', 'ui', 'memberpress');
-                    else:
-                      _ex('None', 'ui', 'memberpress');
-                    endif;
-                  }
-                ?>
-              </div>
-              <?php if($prd->register_price_action != 'hidden'): ?>
-                <div class="mepr-account-terms">
-                  <?php
-                    if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()) {
-                      MeprHooks::do_action('mepr_account_subscriptions_sub_account_terms', $txn);
-                    }
-                    else {
-                      if($prd->register_price_action == 'custom' && !empty($prd->register_price)) {
-                        //Add coupon in if one was used eh
-                        $coupon_str = '';
-                        if($is_sub) {
-                          $subscr = new MeprSubscription($s->id);
-
-                          if($subscr->coupon_id && ($coupon = new MeprCoupon($subscr->coupon_id)) && isset($coupon->ID) && $coupon->ID) {
-                            $coupon_str = ' ' . _x('with coupon', 'ui', 'memberpress') . ' ' . $coupon->post_title;
-                          }
-                        }
-
-                        echo stripslashes($prd->register_price) . $coupon_str;
-                      }
-                      else if($txn != false && $txn instanceof MeprTransaction) {
-                        echo MeprTransactionsHelper::format_currency($txn);
-                      }
-                    }
-                  ?>
-                </div>
-              <?php endif; ?>
-              <?php if($txn != false && $txn instanceof MeprTransaction && !$txn->is_sub_account && $is_sub && ($nba = $sub->next_billing_at)): ?>
-                <div class="mepr-account-rebill"><?php printf(_x('Next Billing: %s', 'ui', 'memberpress'), MeprAppHelper::format_date($nba)); ?></div>
-              <?php elseif (!$sub->next_billing_at && ($nba = $sub->expires_at) && stripos($sub->expires_at, '0000-00') === false) : ?>
-
-                <div class="mepr-account-rebill"><?php printf(_x('Expires: %s', 'ui', 'memberpress'), MeprAppHelper::format_date($nba)); ?></div>
               <?php endif; ?>
             </td>
             <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s->active; ?></div></td>
