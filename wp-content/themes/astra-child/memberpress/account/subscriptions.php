@@ -13,8 +13,6 @@ if(!empty($subscriptions)) {
           <th><?php _ex('Membership', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Subscription', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('Created', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('Card Exp.', 'ui', 'memberpress'); ?></th>
           <th> </th>
           <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
         </tr>
@@ -126,25 +124,6 @@ if(!empty($subscriptions)) {
               <?php endif; ?>
             </td>
             <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s->active; ?></div></td>
-            <td data-label="<?php _ex('Created', 'ui', 'memberpress'); ?>">
-              <?php if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()): ?>
-                <div>--</div>
-              <?php else: ?>
-                <div class="mepr-account-created-at"><?php echo MeprAppHelper::format_date($s->created_at); ?></div>
-              <?php endif; ?>
-            </td>
-            <td data-label="<?php _ex('Card Expires', 'ui', 'memberpress'); ?>">
-              <?php if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()): ?>
-                <div>--</div>
-              <?php else: ?>
-                <?php if( ($exp_mo = $sub->cc_exp_month) && ($exp_yr = $sub->cc_exp_year) ): ?>
-                  <?php $cc_class = (($sub->cc_expiring_before_next_payment())?' mepr-inactive':''); ?>
-                  <div class="mepr-account-cc-exp<?php echo $cc_class; ?>"><?php printf(_x('%1$02d-%2$d', 'ui', 'memberpress'), $exp_mo, $exp_yr); ?></div>
-                <?php else: //Need a placeholder for responsive ?>
-                  <div>&zwnj;</div>
-                <?php endif; ?>
-              <?php endif; ?>
-            </td>
             <td data-label="<?php _ex('Actions', 'ui', 'memberpress'); ?>">
                 <div class="mepr-account-actions">
                   <?php
