@@ -171,9 +171,9 @@ function add_my_script_astra_entry_content_after() {
 	// echo '<h4>OSIR Profile: ' . getUserProfile($total_osir_score).'</h4>';
 
 	// https://docs.gravitypdf.com/v6/users/shortcodes-and-mergetags
-	echo do_shortcode("[gravitypdf name='OSIR Tool PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
+	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
 	echo " | ";
-	echo do_shortcode("[gravitypdf name='OSIR Tool PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
+	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
 
 	// Survey submission confirmation messages
 	echo getUserProfileGenericMsg();
