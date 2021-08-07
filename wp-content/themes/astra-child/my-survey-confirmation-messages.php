@@ -76,7 +76,7 @@ function getUserProfileMsg ($userProfile ='N/A') {
 
 // Get user profile generic message
 function getUserProfileGenericMsg () {
-	$userProfileGenericMsg  = '<br><br><p>Thank you for your participation. You will find your OSI risk assessment report below:</p>';
+	$userProfileGenericMsg  = '<br><p>Thank you for your participation. You will find your OSI risk assessment report below:</p>';
 	$userProfileGenericMsg .= '<h3>REPORT: RISK OF DEVELOPING AN OCCUPATOINAL STRESS INJURY</h3>';
 	$userProfileGenericMsg .= '<p>Your overall OSI risk score is calculated using several data points from this survey.';
 	$userProfileGenericMsg .= ' This report is meant to be screening tool only. By regularly monitoring your behaviours,';

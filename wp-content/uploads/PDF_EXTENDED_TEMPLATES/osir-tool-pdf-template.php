@@ -5,7 +5,7 @@
   * Version: 1.0
   * Description: Custom PDF template used to output the layout of PDF generated downloadable file outlining the recommendations according to calculated OSIR score when the user completes Gravity Forms OSIR survey submission
   * Author: PSHSA
-  * Author URI: https://docs.gravitypdf.com/v6/developers/first-custom-pdf
+  * Author URI: https://gravitypdf.com
   * Group: Custom
   * License: GPLv2
   * Required PDF Version: 4.0-alpha
@@ -30,7 +30,11 @@ if ( ! class_exists( 'GFForms' ) ) {
  * @var array  $args      Contains an array of all variables - the ones being described right now - passed to the template
  */
 
- ?>
+  // Docs
+  // https://docs.gravitypdf.com/v6/developers/first-custom-pdf
+  // https://gist.github.com/jakejackson1/997b5dedf0a5e665e8ef
+
+?>
 
  <!-- PDF CSS styles -->
 
@@ -60,7 +64,7 @@ if ( ! class_exists( 'GFForms' ) ) {
 
 <table autosize="1">
 	<tr>
-		<td align="left"><img src="/wp-content/uploads/2021/07/cropped-PSHSA_logo.png" alt="PSHSA" /></td>
+		<td align="left"><img src="/wp-content/uploads/2021/07/PSHSA_logo.png" alt="PSHSA" /></td>
 		<td align="right">Page {PAGENO} of {nbpg}</td>
 	</tr>
 </table>
@@ -81,9 +85,6 @@ if ( ! class_exists( 'GFForms' ) ) {
 
     if ( $entry_id > 0 && $is_survey_entry_submitted_by_user !== false && $is_survey_entry_submitted_by_user === 'yes') {    
       $total_osir_score = gform_get_meta( $entry_id, 'total_osir_score' );
-
-      // echo "<br>entry_id: ".$entry_id;
-      // echo "<br>is_survey_entry_submitted_by_user: ".$is_survey_entry_submitted_by_user;
 
       if ($total_osir_score > 0) {
         echo getUserProfileGenericMsg();
