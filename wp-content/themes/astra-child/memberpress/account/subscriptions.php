@@ -10,9 +10,9 @@ if(!empty($subscriptions)) {
     <table id="mepr-account-subscriptions-table" class="mepr-account-table">
       <thead>
         <tr>
-          <th><?php _ex('Membership', 'ui', 'memberpress'); ?></th>
+          <th><?php _ex('Subscription Plan', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('Manage Membership', 'ui', 'memberpress'); ?></th>
+          <th><?php _ex('User Management', 'ui', 'memberpress'); ?></th>
           <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
         </tr>
       </thead>
