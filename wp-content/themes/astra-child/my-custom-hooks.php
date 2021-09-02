@@ -16,8 +16,8 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   $ca_parent = get_ca_parent();
   $my_ca = ( isset($ca_parent) && $ca_parent !== '' )? $ca_parent : $ca;
 
-  /* echo "<br>ca:". $ca;
-  echo "<br>ca_parent: ".$ca_parent; */
+  // echo "<br>ca:". $ca;
+  // echo "<br>ca_parent: ".$ca_parent;
 
   if(!empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()) {
     ?>
