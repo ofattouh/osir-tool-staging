@@ -10,9 +10,6 @@
     // echo "<br><br>=======================ca_parent: "; 
     // print_r($ca_parent);
 
-    // $is_existing_user = MeprUtils::is_user_logged_in();
-    // echo "<br>is_existing_user: ".$is_existing_user;
-
     // use the parent account instead to allow other corporate member accounts to upload 
     // new users to the same membership plan using the ONLY 1 parent corporate account user_id
     $ca = $ca_parent;
@@ -151,7 +148,13 @@
     <a href="<?php echo $ca->export_url(); ?>"><?php _e('Export Sub Accounts', 'memberpress-corporate');?></a>
   </div>
 
-  <!-- Signup URL removed #mpca_signup_url -->
+  <!-- Signup URL -->
+  <div id="mpca_signup_url" class="mpca-fat-bottom">
+    <h4><?php _e('Signup URL', 'memberpress-corporate'); ?></h4>
+    <p><?php _e('People signing up with this link will be automatically added to your account', 'memberpress-corporate'); ?></p>
+
+    <?php $app_helper->clipboard_input($ca->signup_url(), '', 'mpca-20'); ?>
+  </div>
 
   <?php if($ca->num_sub_accounts > $ca->num_sub_accounts_used() && defined('MPCA_IMPORTERS_PATH') === true): ?>
   <div id="mpca_import_sub_accounts">
@@ -183,4 +186,5 @@
     </form>
   </div>
   <?php endif ?>
+  <?php do_action('mpca-restrictions'); ?>
 </div>
