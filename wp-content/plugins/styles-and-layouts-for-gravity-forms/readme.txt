@@ -3,8 +3,8 @@ Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Multi Column Layouts, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 5.7
-Stable tag: 4.3.2
+Tested up to: 5.8
+Stable tag: 4.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,11 +66,12 @@ Checkout the below video to have a quick glance of Field Icons addon
 * [ **Custom Themes** ](https://wpmonks.com/downloads/custom-themes/): 
 **Custom Themes addon for Styles and Layouts for Gravity Forms lets you save your own form designs as themes.** You can create unlimited themes and apply them on unlimited forms. This addon will save a lot of time if you want to make two forms with same styling. You are free to modify the form design even after you have applied a theme.
 
-Checkout the below video to have a quick glance at Custom Themes addon
-[youtube https://www.youtube.com/watch?v=4WCC8kQMqxA]
-
 * [ **Addon Bundle**](https://wpmonks.com/downloads/addon-bundle/):
 Addon Bundle is a collection of all the addons of Styles and Layouts for Gravity Forms and you will get it a special discounted price. 
+
+* [ **Gravity Forms Conversational Addon** ](https://gravityconversational.com/downloads/gravity-conversational-form/): 
+**Convert Gravity Forms design to Typeform style with one click of button**. You can customize the design of the conversational form by changing colors. The form will be shown on a distraction free layout.
+
 
 == Installation ==
 
@@ -110,8 +111,12 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 4.3.3 (3 September 2021) =
+* Fixed Next and Previous button not getting same styling
+* Fixed Error messages styles not working in Gravity Forms v2.5
+
 = 4.3.2 (16 July 2021) =
-* Fixed form not showing customizer 
+* Fixed form not showing in customizer 
 
 = 4.3.1 (3 April 2021) =
 * Fixed a bug where styling on some forms were lost after 4.3 update

@@ -102,10 +102,12 @@ function astra_woocommerce_dynamic_css( $dynamic_css, $dynamic_css_filtered = ''
 	$checkout_width        = astra_get_option( 'checkout-content-width' );
 	$checkout_custom_width = astra_get_option( 'checkout-content-max-width' );
 
-	$header_cart_icon_style  = astra_get_option( 'woo-header-cart-icon-style' );
-	$header_cart_icon_color  = astra_get_option( 'header-woo-cart-icon-color', $theme_color );
-	$header_cart_icon_radius = astra_get_option( 'woo-header-cart-icon-radius' );
-	$cart_h_color            = astra_get_foreground_color( $header_cart_icon_color );
+	$header_cart_icon_style    = astra_get_option( 'woo-header-cart-icon-style' );
+	$header_cart_icon_color    = astra_get_option( 'header-woo-cart-icon-color', $theme_color );
+	$header_cart_icon_radius   = astra_get_option( 'woo-header-cart-icon-radius' );
+	$cart_h_color              = astra_get_foreground_color( $header_cart_icon_color );
+	$theme_h_color             = astra_get_foreground_color( $theme_color );
+	$cart_products_count_color = astra_get_option( 'woo-header-cart-product-count-color', $theme_h_color );
 
 	// Default headings font family.
 	$headings_font_family = astra_get_option( 'headings-font-family' );
@@ -171,7 +173,6 @@ function astra_woocommerce_dynamic_css( $dynamic_css, $dynamic_css_filtered = ''
 		),
 		'.ast-site-header-cart i.astra-icon:after' => array(
 			'background' => $header_cart_count_color,
-			'color'      => astra_get_foreground_color( $theme_color ),
 		),
 
 		'.single-product div.product .entry-title' => array(
@@ -244,6 +245,13 @@ function astra_woocommerce_dynamic_css( $dynamic_css, $dynamic_css_filtered = ''
 			'text-transform' => esc_attr( $shop_product_content_text_transform ),
 			'line-height'    => esc_attr( $shop_product_content_line_height ),
 			'color'          => esc_attr( $shop_product_content_color ),
+		),
+
+		'.ast-site-header-cart .ast-addon-cart-wrap i.astra-icon:after' => array(
+			'color' => esc_attr( $cart_products_count_color ),
+		),
+		'.ast-theme-transparent-header .ast-site-header-cart .ast-addon-cart-wrap i.astra-icon:after' => array(
+			'color' => esc_attr( $cart_products_count_color ),
 		),
 	);
 
@@ -328,6 +336,27 @@ function astra_woocommerce_dynamic_css( $dynamic_css, $dynamic_css_filtered = ''
 			'.ast-icon-next:before'                     => array(
 				'transform' => 'rotate(-90deg)',
 			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-prev:before, #ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-next:before' => array(
+				'content'     => '"\e900"',
+				'font-family' => 'Astra',
+				'font-size'   => '20px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav a' => array(
+				'width'  => '20px',
+				'height' => '20px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider:hover .flex-direction-nav .flex-prev' => array(
+				'left' => '10px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider:hover .flex-direction-nav .flex-next' => array(
+				'right' => '10px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-prev' => array(
+				'transform' => 'rotate(90deg)',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-next' => array(
+				'transform' => 'rotate(-90deg)',
+			),
 		);
 
 		if ( false === astra_addon_builder_helper()->is_header_footer_builder_active ) {
@@ -392,6 +421,26 @@ function astra_woocommerce_dynamic_css( $dynamic_css, $dynamic_css_filtered = ''
 			'.ast-product-icon-previous .ast-icon.icon-arrow svg, .ast-product-icon-next .ast-icon.icon-arrow svg' => array(
 				'margin-left' => '0',
 				'width'       => '0.8em',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-prev:before, #ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-next:before' => array(
+				'content'   => '"\203A"',
+				'font-size' => '30px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav a' => array(
+				'width'  => '30px',
+				'height' => '30px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider:hover .flex-direction-nav .flex-prev' => array(
+				'left' => '-10px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider:hover .flex-direction-nav .flex-next' => array(
+				'right' => '-10px',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-prev' => array(
+				'transform' => 'rotate(180deg)',
+			),
+			'#ast-quick-view-modal .ast-qv-image-slider .flex-direction-nav .flex-next' => array(
+				'transform' => 'rotate(0deg)',
 			),
 		);
 	}

@@ -380,10 +380,6 @@ window.eml = window.eml || { l10n: {} };
 
         createFilters: function() {
 
-            var uncategorizedProps,
-                taxonomies = _.intersection( _.keys( eml.l10n.taxonomies ), eml.l10n.filter_taxonomies );
-
-
             original.AttachmentFilters.Uploaded.createFilters.apply( this, arguments );
 
             _.each( this.filters, function( filter, key ) {
@@ -631,17 +627,18 @@ window.eml = window.eml || { l10n: {} };
 
         fixLayout: function() {
 
-            var $browser = this.$el,
-                $attachments = $browser.find('.attachments'),
-                $uploader = $browser.find('.uploader-inline'),
-                $toolbar = $browser.find('.media-toolbar'),
-                $messages = $('.eml-media-css .updated:visible, .eml-media-css .error:visible, .eml-media-css .notice:visible, .eml-media-css .notice-error:visible, .eml-media-css .notice-warning:visible, .eml-media-css .notice-success:visible, .eml-media-css .notice-info:visible'),
-                $update_nag = $('.eml-media-css .update-nag');
+            var browserView = this,
+                attachments = browserView.attachmentsWrapper || browserView.attachments,
+                toolbar     = browserView.toolbar,
+
+                $messages   = $('.eml-media-css .updated:visible, .eml-media-css .error:visible, .eml-media-css .notice:visible, .eml-media-css .notice-error:visible, .eml-media-css .notice-warning:visible, .eml-media-css .notice-success:visible, .eml-media-css .notice-info:visible'),
+                $update_nag = $('.eml-media-css .update-nag'),
+                messagesOuterHeight = 0;
 
 
             if ( $update_nag.length ) {
                 $update_nag.css( 'margin-left', 15 + 'px' );
-                $browser.closest('.wrap').css( 'top', $update_nag.outerHeight() + 25 + 'px' );
+                browserView.$el.closest('.wrap').css( 'top', $update_nag.outerHeight() + 25 + 'px' );
             }
 
 
@@ -650,20 +647,18 @@ window.eml = window.eml || { l10n: {} };
                 return;
             }
 
+
             if ( this.controller.isModeActive( 'select' ) ) {
 
-                $attachments.css( 'top', $toolbar.height() + 10 + 'px' );
-                $uploader.css( 'top', $toolbar.height() + 10 + 'px' );
-                $browser.find('.eml-loader').css( 'top', $toolbar.height() + 10 + 'px' );
+                attachments.$el.css( 'top', toolbar.$el.height() + 10 + 'px' );
+                browserView.uploader.$el.css( 'top', toolbar.$el.height() + 10 + 'px' );
+                browserView.$el.find('.eml-loader').css( 'top', toolbar.$el.height() + 10 + 'px' );
 
                 // TODO: find a better place for it, something like fixLayoutOnce
-                $toolbar.find('.media-toolbar-secondary').prepend( $toolbar.find('.instructions') );
+                toolbar.$el.find('.media-toolbar-secondary').prepend( toolbar.$el.find('.instructions') );
             }
 
-            if ( this.controller.isModeActive( 'eml-grid' ) )
-            {
-                var messagesOuterHeight = 0;
-
+            if ( this.controller.isModeActive( 'eml-grid' ) ) {
 
                 if ( ! _.isUndefined( $messages ) )
                 {
@@ -674,8 +669,9 @@ window.eml = window.eml || { l10n: {} };
                     messagesOuterHeight = messagesOuterHeight ? messagesOuterHeight - 15 : 0;
                 }
 
-                $browser.css( 'top', $toolbar.outerHeight() + messagesOuterHeight + 15 + 'px' );
-                $toolbar.css( 'top', - $toolbar.outerHeight() - 25 + 'px' );
+                browserView.$el.css( 'top', toolbar.$el.outerHeight() + messagesOuterHeight + 15 + 'px' );
+                toolbar.$el.css( 'top', - toolbar.$el.outerHeight() - 25 + 'px' );
+                attachments.$el.css( 'top', 0 );
             }
         },
 
@@ -743,7 +739,8 @@ window.eml = window.eml || { l10n: {} };
                 'widgets' === eml.l10n.current_screen ) {
 
 
-                if ( -1 !== $.inArray( 'types', eml.l10n.filters_to_show ) ) {
+                if ( -1 !== $.inArray( 'types', eml.l10n.filters_to_show ) ||
+                     ! this.controller.isModeActive( 'eml-grid' ) ) {
 
                     this.toolbar.set( 'filtersLabel', new media.view.Label({
                         value: l10n.filterByType,
@@ -809,12 +806,13 @@ window.eml = window.eml || { l10n: {} };
                         if ( -1 !== _.indexOf( eml.l10n.filter_taxonomies, taxonomy ) && values.term_list.length ) {
 
                             self.toolbar.set( taxonomy+'FilterLabel', new media.view.Label({
-                                value: eml.l10n.filter_by + values.plural_name,
+                                value: eml.l10n.filter_by + ' ' + values.plural_name,
                                 attributes: {
                                     'for':  'media-attachment-' + taxonomy + '-filters',
                                 },
                                 priority: -70 + i++
                             }).render() );
+                            
                             self.toolbar.set( taxonomy+'-filter', new media.view.AttachmentFilters.Taxonomy({
                                 controller: self.controller,
                                 model: self.collection.props,
@@ -1038,20 +1036,20 @@ window.eml = window.eml || { l10n: {} };
 
         toggleSidebar: function() {
 
-            var selection = this.controller.state().get( 'selection' );
+            var selection = this.controller.state().get( 'selection' ),
+                attachments = this.attachmentsWrapper || this.attachments;
+
 
             if ( selection.length ) {
                 this.sidebar.$el.removeClass( 'hidden' );
-                this.$el.children('.attachments').css( 'right', '300px' );
-                this.$el.children('.uploader-inline').css( 'right', '310px' );
-
+                attachments.$el.css( 'right', '300px' );
+                this.uploader.$el.css( 'right', '310px' );
                 this.controller.trigger( 'sidebar:on' );
             }
             else {
                 this.sidebar.$el.addClass( 'hidden' );
-                this.$el.children('.attachments').css( 'right', 0 );
-                this.$el.children('.uploader-inline').css( 'right', '10px' );
-
+                attachments.$el.css( 'right', 0 );
+                this.uploader.$el.css( 'right', '10px' );
                 this.controller.trigger( 'sidebar:off' );
             }
         },
@@ -1132,6 +1130,7 @@ window.eml = window.eml || { l10n: {} };
         },
 
         createAttachments: function() {
+
             this.attachments = new media.view.Attachments({
                 controller:           this.controller,
                 collection:           this.collection,
@@ -1149,10 +1148,16 @@ window.eml = window.eml || { l10n: {} };
             this.controller.on( 'attachment:keydown:arrow',     _.bind( this.attachments.arrowEvent, this.attachments ) );
             this.controller.on( 'attachment:details:shift-tab', _.bind( this.attachments.restoreFocus, this.attachments ) );
 
-            this.views.add( this.attachments );
+            // Backward 5.x compatibility
+            if ( this.attachmentsWrapper ) {
+                this.views.add( '.attachments-wrapper', this.attachments );
+            }
+            else {
+                this.views.add( this.attachments );
+            }
 
-
-            if ( this.controller.isModeActive( 'grid' ) || this.controller.isModeActive( 'eml-grid' ) ) {
+            if ( this.controller.isModeActive( 'grid' ) ||
+                 this.controller.isModeActive( 'eml-grid' ) ) {
                 this.attachmentsNoResults = new media.View({
                     controller: this.controller,
                     tagName: 'p'

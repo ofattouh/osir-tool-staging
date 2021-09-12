@@ -533,3 +533,36 @@ function astra_addon_has_widgets_block_editor() {
 	}
 	return false;
 }
+
+/**
+ * Check whther to display or hide sticky header widget design options.
+ *
+ * @since 3.5.8
+ * @return boolean
+ */
+function astra_addon_remove_widget_design_options() {
+	if ( function_exists( 'astra_remove_widget_design_options' ) ) {
+		return astra_remove_widget_design_options();
+	}
+	return false;
+}
+
+/**
+ * Regenerate Theme and Addon cache files.
+ *
+ * @since 3.5.9
+ * @return void
+ */
+function astra_clear_theme_and_addon_cache() {
+	// Clear Addon static CSS asset cache.
+	Astra_Minify::refresh_assets();
+
+	// This will clear addon dynamic CSS cache file which is generated using File generation option.
+	$astra_cache_base_instance = new Astra_Cache_Base( 'astra-addon' );
+	$astra_cache_base_instance->refresh_assets( 'astra-addon' );
+	// Clear Theme assets cache.
+	$astra_cache_base_instance = new Astra_Cache_Base( 'astra' );
+	$astra_cache_base_instance->refresh_assets( 'astra' );
+}
+
+add_action( 'astra_addon_update_after', 'astra_clear_theme_and_addon_cache', 10 );

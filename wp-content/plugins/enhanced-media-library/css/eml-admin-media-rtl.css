@@ -227,14 +227,16 @@ body.upload-php.eml-grid #wpbody-content > #screen-meta {
 .media-frame.mode-eml-grid .attachments-browser .uploader-inline {
     top: 0;
 }
+.media-frame.mode-eml-grid .attachments-browser .attachments-wrapper,
 .media-frame.mode-eml-grid .attachments-browser .attachments {
-    padding: 8px;
-
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     -o-transition: all 0.2s;
     -ms-transition: all 0.2s;
     transition: all 0.2s;
+}
+.media-frame.mode-eml-grid .attachments-browser .attachments {
+    padding: 8px;
 }
 .media-frame.mode-eml-grid .delete-attachment,
 .media-frame.mode-eml-grid .trash-attachment,

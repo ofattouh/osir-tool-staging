@@ -173,7 +173,7 @@ class GFPolls extends GFAddOn {
 
 		// Register Polls block.
 		if ( class_exists( 'GF_Blocks' ) ) {
-			require_once( $this->get_base_path() . '/includes/class-gf-block-polls.php' );
+			require_once( plugin_dir_path( __FILE__ ) . '/includes/class-gf-block-polls.php' );
 		}
 
 		parent::init();
@@ -679,70 +679,103 @@ class GFPolls extends GFAddOn {
 	 */
 	public function render_poll_field_content( $content, $field, $value, $entry_id, $form_id ) {
 
-		if ( $entry_id === 0 && $field->type == 'poll' && ! $this->is_form_editor() ) {
+		if (
+			$this->is_form_editor()
+			|| $entry_id !== 0
+			|| $field->type !== 'poll'
+			|| ! $this->should_randomize_choices( $entry_id, $field )
+		) {
+			return $content;
+		}
 
-			if ( $field->enableRandomizeChoices ) {
+		// Pass the HTML for the choices through DOMDocument to make sure we get the complete node.
+		$dom     = new DOMDocument();
+		$content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
+		// Clean content from new line characters.
+		$content = str_replace( '&#13;', ' ', $content );
+		$content = trim( preg_replace( '/\s\s+/', ' ', $content ) );
+		$loader  = libxml_disable_entity_loader( true );
+		$errors  = libxml_use_internal_errors( true );
+		$dom->loadHTML( $content );
+		libxml_clear_errors();
+		libxml_use_internal_errors( $errors );
+		libxml_disable_entity_loader( $loader );
+		$content = $dom->saveXML( $dom->documentElement );
 
-				//pass the HTML for the choices through DOMdocument to make sure we get the complete node.
-				$dom     = new DOMDocument();
-				$content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
-				// Clean content from new line characters.
-				$content = str_replace('&#13;', ' ' ,$content);
-				$content = trim(preg_replace('/\s\s+/', ' ', $content));
-				$loader  = libxml_disable_entity_loader( true );
-				$errors  = libxml_use_internal_errors( true );
-				$dom->loadHTML( $content );
-				libxml_clear_errors();
-				libxml_use_internal_errors( $errors );
-				libxml_disable_entity_loader( $loader );
-				$content = $dom->saveXML( $dom->documentElement );
+		$nodes = $this->get_choices_to_randomize( $dom, $form_id, $field );
 
-				$options_container_tag = 'div';
-				$legacy_markup = method_exists( 'GFCommon', 'is_legacy_markup_enabled') ? GFCommon::is_legacy_markup_enabled( $form_id ) : true ;
-                if( $legacy_markup ){
-	                $options_container_tag = 'ul';
-                }
-
-				//pick out the elements: div or (legacy ul) for radio & checkbox, OPTION for select.
-				$element_name = $field->inputType == 'select' ? 'select' : $options_container_tag;
-
-                if( $element_name == 'div' ){
-	                // Options container is within the field div container,
-                    // so we need to go two levels deep if we are looking by 'div' tag.
-	                $nodes        = $dom->getElementsByTagName( $element_name )->item( 0 )->childNodes->item(0)->childNodes;
-                } else {
-	                $nodes        = $dom->getElementsByTagName( $element_name )->item( 0 )->childNodes;
-                }
-
-				//cycle through the answers elements and swap them around randomly
-				$temp_str1 = 'gpoll_shuffle_placeholder1';
-				$temp_str2 = 'gpoll_shuffle_placeholder2';
-				for ( $i = $nodes->length - 1; $i >= 0; $i -- ) {
-					$n = rand( 0, $i );
-					if ( $i <> $n ) {
-						$i_str   = $dom->saveXML( $nodes->item( $i ) );
-						$n_str   = $dom->saveXML( $nodes->item( $n ) );
-						// Make sure we are not shuffling any of the following :
-                        // select all option for checkboxes, select one placeholder for dropdown or other for radio buttons.
-						$no_shuffle_strings = array( 'gchoice_select_all', 'gf_placeholder', 'gf_other_choice');
-						if( str_replace( $no_shuffle_strings, '', $i_str ) !== $i_str ||
-                            str_replace( $no_shuffle_strings, '', $n_str ) !== $n_str ){
-							continue;
-                        }
-
-						$content = str_replace( $i_str, $temp_str1, $content );
-						$content = str_replace( $n_str, $temp_str2, $content );
-						$content = str_replace( $temp_str2, $i_str, $content );
-						$content = str_replace( $temp_str1, $n_str, $content );
-					}
+		// Cycle through the answers elements and reorder them randomly.
+		$temp_str1 = 'gpoll_shuffle_placeholder1';
+		$temp_str2 = 'gpoll_shuffle_placeholder2';
+		for ( $i = $nodes->length - 1; $i >= 0; $i -- ) {
+			$n = rand( 0, $i );
+			if ( $i <> $n ) {
+				$i_str = $dom->saveXML( $nodes->item( $i ) );
+				$n_str = $dom->saveXML( $nodes->item( $n ) );
+				// Make sure we are not shuffling any of the following:
+				// select all option for checkboxes, select one placeholder for dropdown or other for radio buttons.
+				$no_shuffle_strings = array( 'gchoice_select_all', 'gf_placeholder', 'gf_other_choice' );
+				if ( str_replace( $no_shuffle_strings, '', $i_str ) !== $i_str ||
+					str_replace( $no_shuffle_strings, '', $n_str ) !== $n_str ) {
+					continue;
 				}
-				//snip off the tags that DOMdocument adds
-				$content = str_replace( '<html><body>', '', $content );
-				$content = str_replace( '</body></html>', '', $content );
+
+				$content = str_replace( $i_str, $temp_str1, $content );
+				$content = str_replace( $n_str, $temp_str2, $content );
+				$content = str_replace( $temp_str2, $i_str, $content );
+				$content = str_replace( $temp_str1, $n_str, $content );
 			}
 		}
 
+		// Snip off the tags that DOMdocument adds.
+		$content = str_replace( '<html><body>', '', $content );
+		$content = str_replace( '</body></html>', '', $content );
+
+
 		return $content;
+	}
+
+	/**
+	 * Check if field choices should be randomized.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int    $lead_id The Lead ID.
+	 * @param object $field   GF Field Object.
+	 *
+	 * @return bool If choices should be randomized.
+	 */
+	private function should_randomize_choices( $lead_id, $field ) {
+		return (
+			! $this->is_form_editor()
+			&& ! rgpost( 'action' ) // Don't randomize if we have just changed an option in the form editor.
+			&& $lead_id === 0
+			&& $field->type == 'poll'
+			&& $field->enableRandomizeChoices
+		);
+	}
+
+	/**
+	 * Extract the choices from the field markup so that we can randomize them.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param object $dom   DOMDocument of the field markup
+	 * @param int $form_id  Form ID
+	 * @param object $field Field object
+	 *
+	 * @return object Nodes comprising the field choices that need to be randomized.
+	 */
+	private function get_choices_to_randomize( $dom, $form_id, $field ) {
+		$is_legacy = method_exists( 'GFCommon', 'is_legacy_markup_enabled' ) ? GFCommon::is_legacy_markup_enabled( $form_id ) : true;
+		$element   = $is_legacy ? 'li' : 'div';
+
+		if ( 'select' === $field->inputType ) {
+			return $dom->getElementsByTagName( 'select' )->item( 0 )->childNodes;
+		} else {
+			$xpath = new DOMXpath( $dom );
+			return $xpath->query( "//" . $element . "[contains(@class,'gchoice')]" );
+		}
 	}
 
 	/**
@@ -1436,7 +1469,7 @@ class GFPolls extends GFAddOn {
 			<li class="randomize_choices_setting field_setting">
 
 				<input type="checkbox" id="field_randomize_choices"
-				       onclick="var value = jQuery(this).is(':checked'); SetFieldProperty('enableRandomizeChoices', value); UpdateFieldChoices(GetInputType(field));"/>
+				       onclick="var value = jQuery(this).is(':checked'); SetFieldProperty('enableRandomizeChoices', value);"/>
 				<label for="field_randomize_choices" class="inline">
 					<?php esc_html_e( 'Randomize order of choices', 'gravityformspolls' ); ?>
 					<?php gform_tooltip( 'form_field_randomize_choices' ) ?>
@@ -2279,7 +2312,13 @@ class GFPolls extends GFAddOn {
 	} // end function poll_shortcode
 
 	public function build_poll_ui( $form_id, $field_id, $style, $mode, $percentages, $counts, $title, $description, $confirmation, $show_results_link, $ajax, $cookie, $display_results, $field_values, $disable_scripts, $tabindex, $return = true ) {
+
+		if ( ! $this->should_render_form( $form_id ) ) {
+			return;
+		}
+
 		$form = RGFormsModel::get_form_meta( $form_id );
+
 		if ( empty( $form ) ) {
 			return;
 		}
@@ -2332,6 +2371,20 @@ class GFPolls extends GFAddOn {
 		} else {
 			return $output;
 		}
+	}
+
+	/**
+	 * Decides if the form ui should be rendered or not.
+	 *
+	 * @since 3.9
+	 *
+	 * @param int $form_id The form id.
+	 *
+	 * @return bool
+	 */
+	private function should_render_form( $form_id ) {
+		$form = GFAPI::get_form( $form_id );
+		return $form && rgar( $form, 'is_active' );
 	}
 
 	private function generate_checksum( $display_results, $show_results_link, $cookie, $confirmation, $percentages, $counts, $style ) {

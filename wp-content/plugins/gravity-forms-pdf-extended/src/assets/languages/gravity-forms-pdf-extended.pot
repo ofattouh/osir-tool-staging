@@ -525,7 +525,7 @@ msgstr ""
 msgid "Cannot find file %s"
 msgstr ""
 
-#: ../../Helper/Helper_Data.php:154, ../../Helper/Helper_PDF_List_Table.php:344, ../../Model/Model_Mergetags.php:125
+#: ../../Helper/Helper_Data.php:154, ../../Model/Model_Mergetags.php:125
 msgid "PDF"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ../../Helper/Helper_Data.php:232, ../../Helper/Helper_PDF_List_Table.php:336
+#: ../../Helper/Helper_Data.php:232, ../../Helper/Helper_PDF_List_Table.php:351
 msgid "Delete"
 msgstr ""
 
@@ -1373,35 +1373,47 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:284, ../../View/html/PDF/entry_list_pdf_single.php:23
+#: ../../Helper/Helper_PDF_List_Table.php:288, ../../View/html/PDF/entry_list_pdf_single.php:23
 msgid "Download PDF"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:287
-msgid "Copy Download %s Shortcode"
+#: ../../Helper/Helper_PDF_List_Table.php:291
+msgid "Copy the %s PDF shortcode to the clipboard"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:334
+#: ../../Helper/Helper_PDF_List_Table.php:296
+msgid "Shortcode copied!"
+msgstr ""
+
+#: ../../Helper/Helper_PDF_List_Table.php:297
+msgid "Copy Shortcode"
+msgstr ""
+
+#: ../../Helper/Helper_PDF_List_Table.php:349
 msgid "Edit this PDF"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:334
+#: ../../Helper/Helper_PDF_List_Table.php:349
 msgid "Edit"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:335
+#: ../../Helper/Helper_PDF_List_Table.php:350
 msgid "Duplicate this PDF"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:335
+#: ../../Helper/Helper_PDF_List_Table.php:350
 msgid "Duplicate"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:336
+#: ../../Helper/Helper_PDF_List_Table.php:351
 msgid "Delete this PDF"
 msgstr ""
 
-#: ../../Helper/Helper_PDF_List_Table.php:374
+#: ../../Helper/Helper_PDF_List_Table.php:359
+msgid "%s PDF"
+msgstr ""
+
+#: ../../Helper/Helper_PDF_List_Table.php:389
 msgid "This form doesn't have any PDFs. Let's go %1$screate one%2$s."
 msgstr ""
 
@@ -1638,23 +1650,11 @@ msgid "Licensing"
 msgstr ""
 
 #: ../../View/View_Settings.php:393
-msgid "WP Memory Available"
+msgid "PDF Download Link"
 msgstr ""
 
 #: ../../View/View_Settings.php:393
-msgid "Producing PDF documents is hard work and Gravity PDF requires more resources than most plugins. We strongly recommend you have at least 128MB, but you may need more."
-msgstr ""
-
-#: ../../View/View_Settings.php:394
-msgid "Direct PDF Protection"
-msgstr ""
-
-#: ../../View/View_Settings.php:394
-msgid "Your PDFs might be saved to a temporary directory that is publicly accessible. We will check if your PDFs are automatically protected, and let you know what you can do if they are not."
-msgstr ""
-
-#: ../../View/View_Settings.php:395
-msgid "Having trouble displaying images in PDFs? If this PHP setting is disabled it could be the cause."
+msgid "Include the [gravitypdf] shortcode in the form's Confirmation or Notification settings to display a PDF download link. %1$sGet more info%2$s."
 msgstr ""
 
 #: ../../View/View_System_Report.php:76

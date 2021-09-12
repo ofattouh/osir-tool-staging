@@ -38,7 +38,6 @@ class Stla_Addons_Page {
 			<ul>
 				<li>Material Design</li>
 				<li>Theme Pack</li>
-				<li>Grid Layout</li>
 				<li>Field Icons</li>
 				<li>Custom Themes</li>
 				<li>Bootstrap</li>
@@ -76,19 +75,6 @@ class Stla_Addons_Page {
 		</div>
 		</div> <!-- End Stla Box -->
 
-
-		
-		<div class="stla-extend stla-box">
-		<img src="<?php echo GF_STLA_URL; ?>/css/images/grid-layout.jpg">
-		<h2>Grid Layout</h2>
-		<div class="stla-extend-content">
-		<p>Divide your form into multiple columns to arrange fields side by side</p>
-		<div class="stla-extend-buttons">
-		<a href="https://wpmonks.com/downloads/grid-layout/?utm_source=dashboard&utm_medium=addons_menu&utm_campaign=styles_layout_plugin" target="_blank" class="button-secondary nf-doc-button">Documentation</a>
-		<a href="https://wpmonks.com/downloads/grid-layout/?utm_source=dashboard&utm_medium=addons_menu&utm_campaign=styles_layout_plugin" target="_blank" title="Conditional Logic" class="button-primary nf-button">Learn More</a>
-		</div>
-		</div>
-		</div> <!-- End Stla Box -->
 
 		<div class="stla-extend stla-box stla-admin-field-icons">
 		<img src="<?php echo GF_STLA_URL; ?>/css/images/field-icons.jpg">

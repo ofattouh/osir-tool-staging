@@ -77,7 +77,7 @@ if ( ! function_exists( 'wpuxss_eml_register_setting' ) ) {
  *  @created  28/04/18
  */
 
-add_action( 'admin_menu', 'wpuxss_eml_admin_media_menu' );
+add_action( 'admin_menu', 'wpuxss_eml_admin_media_menu', 12 );
 
 if ( ! function_exists( 'wpuxss_eml_admin_media_menu' ) ) {
 
@@ -191,8 +191,8 @@ if ( ! function_exists( 'wpuxss_eml_network_admin_menu' ) ) {
 
         $eml_network_options_page = add_submenu_page(
             'settings.php',
-            __('Enhanced Media Library','enhanced-media-library'),
-            __('Enhanced Media Library','enhanced-media-library'),
+            __('Enhanced Media Library Utilities','enhanced-media-library'),
+            __('EML Utilities','enhanced-media-library'),
             'manage_options',
             'eml-settings',
             'wpuxss_eml_print_network_settings'

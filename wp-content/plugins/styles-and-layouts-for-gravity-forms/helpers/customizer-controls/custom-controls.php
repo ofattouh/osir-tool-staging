@@ -20,25 +20,6 @@ class Themes_Pack_Custom_Control extends WP_Customize_Control
 }
 
 
-class Grid_Layout_Custom_Control extends WP_Customize_Control
-{
-  /**
-   * Render the control's content.
-   * Allows the content to be overriden without having to rewrite the wrapper.
-   */
-  public function render_content() {
-    ?>
-    <label>
-        <h2><?php echo esc_html( $this->label ); ?></h2>
-        <a href="https://wpmonks.com/downloads/grid-layout?utm_source=dashboard&utm_medium=customizer&utm_campaign=styles_layout_plugin" target="_blank"><img src="<?php echo GF_STLA_URL; ?>/css/images/grid-layout.jpg"></a>
-        <h3>Divide your form into multiple columns to arrange fields side by side</h3>
-        <hr>
-      </textarea>
-    </label>
-    <?php
-  }
-}
-
 class Field_Icons_Custom_Control extends WP_Customize_Control
 {
   /**

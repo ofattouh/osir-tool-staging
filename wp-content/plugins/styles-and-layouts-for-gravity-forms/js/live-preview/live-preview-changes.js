@@ -1043,20 +1043,15 @@ wp.customize( 'gf_stla_form_id_'+formId+'[checkbox-inputs][padding-top]', functi
   } );
 //********************************* Field Labels *******************************************
 
-  // wp.customize( 'gf_stla_form_id_'+formId+'[field-labels][display]', function( value ) {
-  //   value.bind( function( to ) {
-  //           if(to){
-  //             $( '#gform_wrapper_'+formId+' .gform_body .gform_fields .gfield .gfield_label' ).css( 'display','none' );
-  //           }
-  //           else{
-  //             $( '#gform_wrapper_'+formId+' .gform_body .gform_fields .gfield .gfield_label' ).css( 'display','inherit' );
-  //           }
-  //        } );
-  // } );
-  
   wp.customize( 'gf_stla_form_id_'+formId+'[field-labels][font-color]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .gform_body .gform_fields .gfield .gfield_label' ).css( 'color',to );
+         } );
+  } );
+
+  wp.customize( 'gf_stla_form_id_'+formId+'[field-labels][asterisk-color]', function( value ) {
+    value.bind( function( to ) {
+            $( '#gform_wrapper_'+formId+' .gform_body .gform_fields .gfield .gfield_label .gfield_required' ).css( 'color',to );
          } );
   } );
 
@@ -1853,6 +1848,7 @@ wp.customize( 'gf_stla_form_id_'+formId+'[submit-button][height]', function( val
 wp.customize( 'gf_stla_form_id_'+formId+'[submit-button][button-align]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .gform_footer' ).css( 'text-align',to );
+            $( '#gform_wrapper_'+formId+' .gform_page_footer' ).css( 'text-align',to );
          } );
   } );
 
@@ -2228,12 +2224,14 @@ wp.customize( 'gf_stla_form_id_'+formId+'[confirmation-message][padding-top]', f
   wp.customize( 'gf_stla_form_id_'+formId+'[error-message][font-color]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'color',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'color',to );
          } );
   } );
 
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][text-align]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'text-align',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'text-align',to );
          } );
   } );
 
@@ -2241,6 +2239,7 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][text-align]', function(
     value.bind( function( to ) {
       to = addPxToValue(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'font-size',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'font-size',to );
          } );
   } );
 
@@ -2249,12 +2248,14 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][max-width]', function( 
     value.bind( function( to ) {
       to = addPxToValue(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'width',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'width',to );
          } );
   } );
 
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][background-color]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'background',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'background',to );
          } );
   } );
 
@@ -2262,18 +2263,21 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][border-size]', function
     value.bind( function( to ) {
       to = addPxToValue(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'border-width',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'border-width',to );
          } );
   } );
 
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][border-type]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'border-style',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'border-style',to );
          } );
   } );
 
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][border-color]', function( value ) {
     value.bind( function( to ) {
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'border-color',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'border-color',to );
          } );
   } );
 
@@ -2281,6 +2285,7 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][border-radius]', functi
     value.bind( function( to ) {
       to = addPxToValue(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'border-radius',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'border-radius',to );
          } );
   } );
 
@@ -2288,6 +2293,7 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][margin]', function( val
     value.bind( function( to ) {
       to = addPxToMarginPadding(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'margin',to );
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'margin',to );
          } );
   } );
 
@@ -2295,6 +2301,7 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][padding-top]', function
     value.bind( function( to ) {
       to = addPxToMarginPadding(to);
             $( '#gform_wrapper_'+formId+' .validation_error').css( 'padding-top',to);
+            $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'padding-top',to);
          } );
 } );
 
@@ -2302,18 +2309,21 @@ wp.customize( 'gf_stla_form_id_'+formId+'[error-message][padding-bottom]', funct
   value.bind( function( to ) {
     to = addPxToMarginPadding(to);
           $( '#gform_wrapper_'+formId+' .validation_error').css( 'padding-bottom',to);
+          $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'padding-bottom',to);
        } );
 } );
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][padding-right]', function( value ) {
   value.bind( function( to ) {
     to = addPxToMarginPadding(to);
           $( '#gform_wrapper_'+formId+' .validation_error').css( 'padding-right',to);
+          $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'padding-right',to);
        } );
 } );
 wp.customize( 'gf_stla_form_id_'+formId+'[error-message][padding-left]', function( value ) {
   value.bind( function( to ) {
     to = addPxToMarginPadding(to);
           $( '#gform_wrapper_'+formId+' .validation_error').css( 'padding-left',to);
+          $( '#gform_wrapper_'+formId+' .gform_validation_errors').css( 'padding-left',to);
        } );
 } );
 

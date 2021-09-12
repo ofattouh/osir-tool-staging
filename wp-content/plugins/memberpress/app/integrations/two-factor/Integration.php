@@ -5,6 +5,7 @@ class MeprTwoFactorIntegration {
     add_action('template_redirect', [$this, 'enqueue_twofactor_scripts']);
     add_action('mepr_account_nav_content', [$this, 'add_two_factor_nav_content']);
     add_action('mepr_account_nav', [$this, 'add_two_factor_nav']);
+    add_action('mepr_buddypress_integration_setup_menus', [$this, 'add_two_factor_nav_buddypress']);
   }
 
   public function enqueue_twofactor_scripts() {
@@ -15,6 +16,35 @@ class MeprTwoFactorIntegration {
         Two_Factor_FIDO_U2F_Admin::enqueue_assets('profile.php');
       }
     }
+  }
+
+  public function add_two_factor_nav_buddypress($main_slug) {
+    if(defined('TWO_FACTOR_DIR')) {
+      global $bp;
+      bp_core_new_subnav_item(
+        array(
+          'name' => _x('Two Factor Authentication', 'ui', 'memberpress-buddypress', 'memberpress'),
+          'slug' => 'mp-two-factor-auth',
+          'parent_url' => $bp->loggedin_user->domain . $main_slug . '/',
+          'parent_slug' => $main_slug,
+          'screen_function' => array($this, 'bbpress_twofactor_nav'),
+          'position' => 20,
+          'user_has_access' => bp_is_my_profile(),
+          'site_admin_only' => false,
+          'item_css_id' => 'mepr-bp-two-factor-auth'
+        )
+      );
+    }
+  }
+
+  public function bbpress_twofactor_nav() {
+    add_action('bp_template_content', array($this, 'bbpress_twofactor_content'));
+
+    //Enqueue the account page scripts here yo
+    $acct_ctrl = new MeprAccountCtrl();
+    $acct_ctrl->enqueue_scripts(true);
+
+    bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
   }
 
   public function add_two_factor_nav() {
@@ -31,11 +61,28 @@ class MeprTwoFactorIntegration {
     }
   }
 
-  public function add_two_factor_nav_content($action) {
+  public function add_two_factor_nav_content($action = null) {
     if ($action !== '2fa') {
       return null;
     }
 
+    if(defined('TWO_FACTOR_DIR')) {
+      $user = MeprUtils::get_currentuserinfo();
+
+      if ( ! empty( $_POST ) ) {
+        $this->user_two_factor_options_update( $user->ID );
+        echo '<p>' . __('Settings Have been saved!', 'memberpress') . '</p>';
+      } else {
+        echo '<form action="" method="post">';
+        $wp_user = get_user_by( 'id', $user->ID );
+        $this->user_two_factor_options( $wp_user );
+        echo '<input type="submit" value="' . __('SAVE OPTIONS', 'memberpress'). '"/>';
+        echo '</form>';
+      }
+    }
+  }
+
+  public function bbpress_twofactor_content() {
     if(defined('TWO_FACTOR_DIR')) {
       $user = MeprUtils::get_currentuserinfo();
 

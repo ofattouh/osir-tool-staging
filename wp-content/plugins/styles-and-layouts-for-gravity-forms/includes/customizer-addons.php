@@ -44,22 +44,6 @@ $wp_customize->add_control(
 );
 
 
- $wp_customize->add_setting( 'gf_stla_form_id_[addons][grid-layout]' , array(
-      'default'     => '',
-      'transport'   => 'postMessage',
-      'type' => 'option'
-  ) );
-
-$wp_customize->add_control(
-  new Grid_Layout_Custom_Control(
-    $wp_customize, // WP_Customize_Manager
-    'gf_stla_form_id_[addons][grid-layout]', // Setting id
-    array( // Args, including any custom ones.
-     'label' => __( 'Grid Layout' ),
-      'section' => 'gf_stla_form_id_addons',
-    )
-  )
-);
 
  $wp_customize->add_setting( 'gf_stla_form_id_[addons][theme-pack]' , array(
       'default'     => '',

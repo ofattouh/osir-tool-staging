@@ -1,4 +1,5 @@
 window.wp = window.wp || {};
+window.wpCookies = window.wpCookies || {};
 window.eml = window.eml || { l10n: {} };
 
 
@@ -52,7 +53,6 @@ window.eml = window.eml || { l10n: {} };
 
 
 
-
     _.extend( media.view.Attachment.Details.prototype, {
 
         editAttachment: function( event ) {
@@ -87,7 +87,9 @@ window.eml = window.eml || { l10n: {} };
 
         toggleCollapse: function( event ) {
 
-            var collapsed = this.controller._attachmentDetailsCollapsed;
+            var collapsed = ( this.controller._attachmentDetailsCollapsed === 'true' ),
+                secure = ( 'https:' === window.location.protocol );
+
 
             if ( typeof event !== 'undefined' && 'eml-toggle-collapse' === event.currentTarget.className ) {
 
@@ -105,7 +107,8 @@ window.eml = window.eml || { l10n: {} };
                 return ! collapsed ? eml.l10n.less_details+' \u2191' : eml.l10n.more_details+' \u2193';
             });
 
-            this.controller._attachmentDetailsCollapsed = collapsed;
+            this.controller._attachmentDetailsCollapsed = collapsed ? 'true' : 'false';
+            wpCookies.set( 'eml-details-collapsed', collapsed, 30 * 24 * 60 * 60, false, false, secure );
         }
     });
 
@@ -343,11 +346,9 @@ window.eml = window.eml || { l10n: {} };
      */
     media.view.MediaFrame.emlGrid = media.view.MediaFrame.Select.extend({
 
-        _attachmentDetailsCollapsed: true,
+        _attachmentDetailsCollapsed: wpCookies.get( 'eml-details-collapsed' ) || 'true',
 
         initialize: function() {
-
-            var self = this;
 
             _.defaults( this.options, {
                 title    : '',
@@ -355,14 +356,19 @@ window.eml = window.eml || { l10n: {} };
 
                 selection: [],
                 library:   {}, // Options hash for the query to the media library.
-                // uploader:  true,
+                uploader:  true,
 
-                multiple : 'reset',
+                multiple : true, 
                 state    : 'library',
                 mode     : [ 'eml-grid', 'edit' ]
             });
 
-            $( document ).on( 'click', '.page-title-action', _.bind( this.addNewClickHandler, this ) );
+            // this.$body = $( document.body );
+            // this.$window = $( window );
+            // this.$adminBar = $( '#wpadminbar' );
+            this.$uploaderToggler = $( '.page-title-action' )
+                .attr( 'aria-expanded', 'false' )
+                .on( 'click', _.bind( this.addNewClickHandler, this ) );
 
             // Ensure core and media grid view UI is enabled.
             this.$el.addClass('wp-core-ui');
@@ -375,8 +381,9 @@ window.eml = window.eml || { l10n: {} };
             // Append the frame view directly the supplied container.
             this.$el.appendTo( this.options.container );
 
-            this.createStates();
+            this.bindRegionModeHandlers();
             this.render();
+            this.bindSearchHandler();
 
             media.frames.browse = this;
         },
@@ -394,31 +401,84 @@ window.eml = window.eml || { l10n: {} };
                 new media.controller.Library({
                     library            : media.query( options.library ),
                     title              : options.title,
-                    multiple           : options.multiple,
+                    multiple           : options.multiple ? 'reset' : false,
 
                     content            : 'browse',
                     toolbar            : 'bulk-edit',
                     menu               : false,
                     router             : false,
 
-                    contentUserSetting : true,
+                    // contentUserSetting : false, //true,
 
-                    searchable         : true,
+                    // searchable         : true,
                     filterable         : 'all',
 
-                    autoSelect         : true,
+                    // autoSelect         : false, // true,
                     idealColumnWidth   : $( window ).width() < 640 ? 135 : 175
+  
+                    // editable:   true,
                 })
             ]);
         },
 
-        bindHandlers: function() {
+        bindRegionModeHandlers: function() {
 
-            media.view.MediaFrame.Select.prototype.bindHandlers.apply( this, arguments );
+            this.on( 'select:activate', this.bindKeydown, this );
+            this.on( 'select:deactivate', this.unbindKeydown, this );
 
             this.on( 'toolbar:create:bulk-edit', this.createToolbar, this );
             this.on( 'toolbar:render:bulk-edit', this.selectionStatusToolbar, this );
             this.on( 'edit:attachment', this.openEditAttachmentModal, this );
+        },
+
+        bindSearchHandler: function() {
+
+            var search = this.$( '#media-search-input' ),
+                searchView = this.browserView.toolbar.get( 'search' ).$el,
+                listMode = this.$( '.view-list' ),
+
+
+                input  = _.throttle( function (e) {
+
+                    var val = $( e.currentTarget ).val(),
+                        url = val ? '?search=' + val : '';
+
+                    this.gridRouter.navigate( this.gridRouter.baseUrl( url ), { replace: true } );
+
+                }, 1000 );
+
+            // Update the URL when entering search string (at most once per second).
+            search.on( 'input', _.bind( input, this ) );
+
+            this.gridRouter
+                .on( 'route:search', function () {
+                    var href = window.location.href;
+                    if ( href.indexOf( 'mode=' ) > -1 ) {
+                        href = href.replace( /mode=[^&]+/g, 'mode=list' );
+                    } else {
+                        href += href.indexOf( '?' ) > -1 ? '&mode=list' : '?mode=list';
+                    }
+                    href = href.replace( 'search=', 's=' );
+                    listMode.prop( 'href', href );
+                })
+                .on( 'route:reset', function() {
+                    searchView.val( '' ).trigger( 'input' );
+                });
+        },
+
+        handleKeydown: function( e ) {
+            if ( 27 === e.which ) {
+                e.preventDefault();
+                this.deactivateMode( 'select' ).activateMode( 'edit' );
+            }
+        },
+
+        bindKeydown: function() {
+            this.$body.on( 'keydown.select', _.bind( this.handleKeydown, this ) );
+        },
+
+        unbindKeydown: function() {
+            this.$body.off( 'keydown.select' );
         },
 
         selectionStatusToolbar: function( view ) {
@@ -451,7 +511,7 @@ window.eml = window.eml || { l10n: {} };
                 sortable:   state.get('sortable'),
                 search:     state.get('searchable'),
                 filters:    state.get('filterable'),
-                date:       state.get('date'), // ???
+                date:       state.get('date'),
                 display:    state.has('display') ? state.get('display') : state.get('displaySettings'),
                 dragInfo:   state.get('dragInfo'),
 
@@ -474,11 +534,14 @@ window.eml = window.eml || { l10n: {} };
         },
 
         startHistory: function() {
-
-            // Verify pushState support and activate
+            
+            // Verify pushState support and activate.
             if ( window.history && window.history.pushState ) {
+                if ( Backbone.History.started ) {
+                    Backbone.history.stop();
+                }
                 Backbone.history.start( {
-                    root: _wpMediaGridSettings.adminUrl,
+                    root: window._wpMediaGridSettings.adminUrl,
                     pushState: true
                 } );
             }
@@ -486,7 +549,7 @@ window.eml = window.eml || { l10n: {} };
 
         openEditAttachmentModal: function( model ) {
 
-            wp.media( {
+            media.frames.edit = wp.media( {
                 frame:       'edit-attachments',
                 controller:  this,
                 library:     this.state().get('library'),
@@ -497,22 +560,35 @@ window.eml = window.eml || { l10n: {} };
 
 
 
+    original.UploaderInline = {
+
+        show: media.view.UploaderInline.prototype.show,
+        hide: media.view.UploaderInline.prototype.hide
+    };
 
     _.extend( media.view.UploaderInline.prototype, {
 
         show: function() {
 
-            this.$el.removeClass( 'hidden' );
+            var attachments;
+
+            original.UploaderInline.show.apply( this, arguments );
+
             if ( this.controller.browserView ) {
-                this.controller.browserView.attachments.$el.css( 'top', this.$el.outerHeight() + 20 + 'px' );
+                attachments = this.controller.browserView.attachmentsWrapper || this.controller.browserView.attachments;
+                attachments.$el.css( 'top', this.$el.outerHeight() + 20 + 'px' );
             }
         },
 
         hide: function() {
 
-            this.$el.addClass( 'hidden' );
+            var attachments;
+
+            original.UploaderInline.hide.apply( this, arguments );
+
             if ( this.controller.browserView ) {
-                this.controller.browserView.attachments.$el.css( 'top', 0 );
+                attachments = this.controller.browserView.attachmentsWrapper || this.controller.browserView.attachments;
+                attachments.$el.css( 'top', 0 );
             }
         }
     });
@@ -536,18 +612,7 @@ window.eml = window.eml || { l10n: {} };
 
 
 
-
-    $( document ).ready( function() {
-
-        media.frame = new media.view.MediaFrame.emlGrid({
-            container: $('#wp-media-grid')
-        });
-    });
-
-
-
-
-    // TODO: move to PHP side
+    //TODO: move to PHP side
     $('body').addClass('eml-grid');
 
 

@@ -44,9 +44,9 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 			$background_opacity = isset( $get_form_options['form-wrapper']['background-opacity'] ) ? $get_form_options['form-wrapper']['background-opacity']: 1;
 			
 			$gradient_direction = isset( $get_form_options['form-wrapper']['gradient-direction'] ) ? $get_form_options['form-wrapper']['gradient-direction']: 'left';
-			$gradient1 = isset( $get_form_options['form-wrapper']['gradient-color-1'] ) ?$get_form_options['form-wrapper']['gradient-color-1'] : '#ffffff' ;
+			$gradient1 = ! empty( $get_form_options['form-wrapper']['gradient-color-1'] ) ?$get_form_options['form-wrapper']['gradient-color-1'] : '#ffffff' ;
 			$gradient1 = $main_class_object->hex_rgba( $gradient1, $background_opacity );
-			$gradient2 = isset( $get_form_options['form-wrapper']['gradient-color-2'] ) ? $get_form_options['form-wrapper']['gradient-color-2'] : '#ffffff';
+			$gradient2 = ! empty( $get_form_options['form-wrapper']['gradient-color-2'] ) ? $get_form_options['form-wrapper']['gradient-color-2'] : '#ffffff';
 			$gradient2 = $main_class_object->hex_rgba( $gradient2, $background_opacity );
 			$gradient_css =  $main_class_object->set_gradient_properties( $gradient1,$gradient2,$gradient_direction ); 
 			echo $gradient_css;
@@ -97,15 +97,12 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 <?php } ?>
 
 <?php if ( isset( $get_form_options['submit-button'] ) ) { ?>
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button {
-		<?php echo 'border-style: solid;'; ?>
-		<?php echo $main_class_object->gf_sb_get_saved_styles( $css_form_id, 'submit-button', $important ); ?>
-		<?php
-		if ( empty( $get_form_options['submit-button']['border-size'] ) ) {
-			echo 'border-width: 0px;';
-		} ?>
-	}
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button{
+
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_previous_button,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_next_button
+	{
 		<?php echo 'border-style: solid;'; ?>
 		<?php echo $main_class_object->gf_sb_get_saved_styles( $css_form_id, 'submit-button', $important ); ?>
 
@@ -114,16 +111,16 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 			echo 'border-width: 0px;';
 		} ?>
 	}
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button:hover {
+	
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button:hover,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button:hover,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_previous_button:hover
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_next_button:hover {
 		<?php echo 'border-style: solid;'; ?>
-		<?php echo isset( $get_form_options['submit-button']['hover-color'] ) ? 'background-color:'. $get_form_options['submit-button']['hover-color'].';' : ''; ?>
-		<?php echo isset( $get_form_options['submit-button']['font-hover-color'] ) ? 'color:'. $get_form_options['submit-button']['font-hover-color'].';' : ''; ?>
+		<?php echo ! empty( $get_form_options['submit-button']['hover-color'] ) ? 'background-color:'. $get_form_options['submit-button']['hover-color'].';' : ''; ?>
+		<?php echo ! empty( $get_form_options['submit-button']['font-hover-color'] ) ? 'color:'. $get_form_options['submit-button']['font-hover-color'].';' : ''; ?>
 	}
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button:hover {
-		<?php echo 'border-style: solid;'; ?>
-		<?php echo isset( $get_form_options['submit-button']['hover-color'] ) ? 'background-color:'. $get_form_options['submit-button']['hover-color'].';' : ''; ?>
-		<?php echo isset( $get_form_options['submit-button']['font-hover-color'] ) ? 'color:'. $get_form_options['submit-button']['font-hover-color'].';' : ''; ?>
-	}
+
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer button.mdc-button {
 		<?php echo $main_class_object->gf_sb_get_saved_styles( $css_form_id, 'submit-button', $important ); ?>
 		<?php
@@ -138,7 +135,8 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 		<?php echo isset( $get_form_options['submit-button']['hover-color'] ) ? 'background-color:'. $get_form_options['submit-button']['hover-color'].';' : ''; ?>
 		<?php echo isset( $get_form_options['submit-button']['font-hover-color'] ) ? 'color:'. $get_form_options['submit-button']['font-hover-color'].';' : ''; ?>
 	}
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer {
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer {
 		<?php echo isset( $get_form_options['submit-button']['button-align'] ) ? 'text-align:'. $get_form_options['submit-button']['button-align'].';' : ''; ?>
 	}
 <?php } ?>
@@ -203,7 +201,7 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 		<?php echo empty( $get_form_options['text-fields']['font-size'] ) ? '' : 'font-size:'. $get_form_options['text-fields']['font-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['text-fields']['font-size'] ).';'; ?>
 		<?php echo empty( $get_form_options['text-fields']['font-color'] ) ? '' : 'color:'. $get_form_options['text-fields']['font-color'].';'; ?>
 		<?php
-		if ( ! empty( $get_form_options['text-fields']['border-radius'] ) ) {
+		if ( isset( $get_form_options['text-fields']['border-radius'] ) ) {
 			echo 'border-radius: '.$get_form_options['text-fields']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['text-fields']['border-radius'] ).';';
 			echo '-web-border-radius: '.$get_form_options['text-fields']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['text-fields']['border-radius'] ).';';
 			echo '-moz-border-radius: '.$get_form_options['text-fields']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['text-fields']['border-radius'] ).';';
@@ -221,8 +219,6 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 		} ?>
 	}
 <?php } ?>
-
-
 
 <?php if ( isset( $get_form_options['radio-inputs'] ) ) { ?>
 	body #gform_wrapper_<?php echo $css_form_id ?> .gfield_radio label {
@@ -259,7 +255,12 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .gfield_label {
 		<?php echo $main_class_object->gf_sb_get_saved_styles( $css_form_id, 'field-labels', $important ); ?>
 	}
+
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .gfield_label .gfield_required {
+		color: <?php echo $get_form_options['field-labels']['asterisk-color'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['field-labels']['asterisk-color'] ) ?>;
+	}
 <?php } ?>
+
 
 <?php if ( isset( $get_form_options['field-descriptions'] ) ) { ?>
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .gfield_description {
@@ -318,89 +319,39 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 <?php } ?>
 
 <?php if ( isset( $get_form_options['error-message'] ) ) { ?>
-	body #gform_wrapper_<?php echo $css_form_id ?> .validation_error {
+	body #gform_wrapper_<?php echo $css_form_id ?> .validation_error,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors {
 		<?php echo $main_class_object->gf_sb_get_saved_styles( $css_form_id, 'error-message', $important ); ?>
 		<?php
 		if ( ! isset( $get_form_options['error-message']['border-size'] ) ) {
 			echo 'border-width: 1px;';
 		} ?>
 	}
-<?php } ?>
-
-<?php if ( isset( $get_form_options['submit-button'] ) ) { ?>
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button {
-		<?php echo 'border-style: solid;'; ?>
-		<?php echo empty( $get_form_options['submit-button']['button-color'] ) ? '' : 'background: '. $get_form_options['submit-button']['button-color'].';'; ?>
-		<?php echo ! isset( $get_form_options['submit-button']['border-size'] ) ? '' : 'border-width: '. $get_form_options['submit-button']['border-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-color'] ) ? '' : 'border-color: '. $get_form_options['submit-button']['border-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-type'] ) ? '': 'border-style: '. $get_form_options['submit-button']['border-type'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-size'] ) ? '' : 'font-size: '. $get_form_options['submit-button']['font-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['font-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-color'] ) ?'' : 'color: '. $get_form_options['submit-button']['font-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['height'] ) ? '' : 'height: '. $get_form_options['submit-button']['height'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['height'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['width'] ) ? '' : 'width: '. $get_form_options['submit-button']['width'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['width'] ).';'; ?>
-		<?php
-		if ( ! empty( $get_form_options['submit-button']['border-radius'] ) ) {
-			echo 'border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-web-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-moz-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-		} ?>
-	}
-
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button:hover {
-		<?php echo empty( $get_form_options['submit-button']['hover-color'] ) ? '' : 'background: '. $get_form_options['submit-button']['hover-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-hover-color'] ) ? '' : 'color: '. $get_form_options['submit-button']['font-hover-color'].';'; ?>
-	}
 	
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_previous_button {
-		<?php echo empty( $get_form_options['submit-button']['button-color'] ) ? '' : 'background: '. $get_form_options['submit-button']['button-color'].';'; ?>
-		<?php echo ! isset( $get_form_options['submit-button']['border-size'] ) ? '' : 'border-width: '. $get_form_options['submit-button']['border-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-color'] ) ? '' : 'border-color: '. $get_form_options['submit-button']['border-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-type'] ) ? '' : 'border-style: '. $get_form_options['submit-button']['border-type'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-size'] ) ? '' : 'font-size: '. $get_form_options['submit-button']['font-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['font-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-color'] ) ? '' : 'color: '. $get_form_options['submit-button']['font-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['height'] ) ? '' : 'height: '. $get_form_options['submit-button']['height'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['height'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['width'] ) ? '' : 'width: '. $get_form_options['submit-button']['width'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['width'] ).';'; ?>
-		<?php
-		if ( ! empty( $get_form_options['submit-button']['border-radius'] ) ) {
-			echo 'border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-web-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-moz-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-		} ?>
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors h2.gform_submission_error{
+		<?php echo ! empty( $get_form_options['error-message']['font-color'] ) ? 'color:'.$get_form_options['error-message']['font-color'].';' : ''; ?>
+
+		<?php echo ! empty( $get_form_options['error-message']['font-size'] ) ? 'font-size:'.$get_form_options['error-message']['font-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['error-message']['font-size']  ) .';' : ''; ?>
+
+		<?php echo ! empty( $get_form_options['error-message']['line-height'] ) ? 'line-height:'.$get_form_options['error-message']['line-height'].';' : ''; ?>
 	}
 
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_previous_button:hover {
-		<?php echo empty( $get_form_options['submit-button']['hover-color'] ) ? '' : 'background: '. $get_form_options['submit-button']['hover-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-hover-color'] ) ? '' : 'color: '. $get_form_options['submit-button']['font-hover-color'].';'; ?>
-	}
-
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_button {
-		<?php echo empty( $get_form_options['submit-button']['button-color'] ) ? '' : 'background: '. $get_form_options['submit-button']['button-color'].';'; ?>
-		<?php echo ! isset( $get_form_options['submit-button']['border-size'] ) ? '' : 'border-width: '. $get_form_options['submit-button']['border-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-color'] ) ? '' : 'border-color: '. $get_form_options['submit-button']['border-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['border-type'] ) ? '' : 'border-style: '. $get_form_options['submit-button']['border-type'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-size'] ) ? '' : 'font-size: '. $get_form_options['submit-button']['font-size'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['font-size'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-color'] ) ? '' : 'color: '. $get_form_options['submit-button']['font-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['height'] ) ? '' : 'height: '. $get_form_options['submit-button']['height'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['height'] ).';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['width'] ) ? '' : 'width: '. $get_form_options['submit-button']['width'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['width'] ).';'; ?>
-		<?php
-		if ( ! empty( $get_form_options['submit-button']['border-radius'] ) ) {
-			echo 'border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-web-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-			echo '-moz-border-radius: '.$get_form_options['submit-button']['border-radius'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['submit-button']['border-radius'] ).';';
-		} ?>
-	}
-
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_button:hover {
-		<?php echo empty( $get_form_options['submit-button']['hover-color'] ) ? '' :'background:'. $get_form_options['submit-button']['hover-color'].';'; ?>
-		<?php echo empty( $get_form_options['submit-button']['font-hover-color'] ) ? '' :'color:'. $get_form_options['submit-button']['font-hover-color'].';'; ?>
-	}
 <?php } ?>
+
+	
+
+
+
+
 
 <?php if ( isset( $get_form_options['field-sub-labels'] ) ) { ?>
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .ginput_complex .ginput_full label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .ginput_complex .ginput_right label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .ginput_complex .ginput_left label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .name_first label,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .name_prefix label,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .name_middle label,
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .name_suffix label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .name_last label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .address_line_1 label,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield .address_line_2 label,
@@ -477,24 +428,19 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'submit-button', array( 'font-size-tab', 'max-width-tab', 'height-tab', 'line-height-tab' ) ) ) { ?>
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button {
-				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
-			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button {
-				<?php echo 'border-style: solid;'; ?>
+
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button,
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button,
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button,
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_previous_button {
+			<?php echo 'border-style: solid;'; ?>
 			<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
-				}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer button.mdc-button {
-				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
 			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button {
-				<?php echo 'border-style: solid;'; ?>
-				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
-			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_previous_button {
-				<?php echo 'border-style: solid;'; ?>
-				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
-			}
+			
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer button.mdc-button {
+			<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'submit-button', $important ); ?>
+		}
+
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'text-fields', array( 'font-size-tab', 'max-width-tab', 'height-tab', 'line-height-tab' ) ) ) { ?>
@@ -502,7 +448,8 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=email],
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=tel],
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=url],
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=password] {
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=password],
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=number] {
 				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'text-fields', $important ); ?>
 			}
 	<?php } ?>
@@ -604,8 +551,16 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'error-message', array( 'font-size-tab', 'max-width-tab', 'line-height-tab' ) ) ) { ?>
-		body #gform_wrapper_<?php echo $css_form_id ?> .validation_error{
+		body #gform_wrapper_<?php echo $css_form_id ?> .validation_error,
+		body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors{
 				<?php echo $main_class_object->gf_sb_get_saved_styles_tab( $css_form_id, 'error-message',$important ); ?>
+			}
+
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors h2.gform_submission_error{
+
+				<?php echo ! empty( $get_form_options['error-message']['font-size-tab'] ) ? 'font-size:'.$get_form_options['error-message']['font-size-tab'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['error-message']['font-size-tab']  ) .';' : ''; ?>
+
+				<?php echo ! empty( $get_form_options['error-message']['line-height-tab'] ) ? 'line-height:'.$get_form_options['error-message']['line-height-tab'].';' : ''; ?>
 			}
 	<?php } ?>
 	<?php if ( stla_isset_checker( $get_form_options, 'field-sub-labels', array( 'font-size-tab', 'line-height-tab' ) ) ) { ?>
@@ -686,33 +641,28 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'submit-button', array( 'font-size-phone', 'max-width-phone', 'height-phone', 'line-height-phone' ) ) ) { ?>
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button {
-				<?php echo 'border-style: solid;'; ?>
-				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button', $important ); ?>
-			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button{
-				<?php echo 'border-style: solid;'; ?>
-				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button', $important ); ?>
-			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer button.mdc-button{
-				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button', $important ); ?>
-			}
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button{
-				<?php echo 'border-style: solid;'; ?>
-				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button',$important ); ?>
-			}
+
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button,
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button,
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_next_button,
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_page_footer .gform_previous_button{
 				<?php echo 'border-style: solid;'; ?>
 				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button', $important ); ?>
 			}
+
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer button.mdc-button{
+				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'submit-button', $important ); ?>
+			}
+			
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'text-fields', array( 'font-size-phone', 'max-width-phone', 'height-phone','line-height-phone' ) ) ) { ?>
-		body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=text],
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=text],
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=email],
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=tel],
 			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=url],
-			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=password] {
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=password],
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_body .gform_fields .gfield input[type=number] {
 				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'text-fields', $important ); ?>
 			} 
 
@@ -812,8 +762,15 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	<?php } ?>
 
 	<?php if ( stla_isset_checker( $get_form_options, 'error-message', array( 'font-size-phone','max-width-phone', 'line-height-phone' ) ) ) { ?>
-			body #gform_wrapper_<?php echo $css_form_id ?> .validation_error {
+			body #gform_wrapper_<?php echo $css_form_id ?> .validation_error,
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors{
 				<?php echo $main_class_object->gf_sb_get_saved_styles_phone( $css_form_id, 'error-message', $important ); ?>
+			}
+			body #gform_wrapper_<?php echo $css_form_id ?> .gform_validation_errors h2.gform_submission_error{
+
+				<?php echo ! empty( $get_form_options['error-message']['font-size-phone'] ) ? 'font-size:'.$get_form_options['error-message']['font-size-phone'].$main_class_object->gf_stla_add_px_to_value( $get_form_options['error-message']['font-size-phone']  ) .';' : ''; ?>
+
+				<?php echo ! empty( $get_form_options['error-message']['line-height-phone'] ) ? 'line-height:'.$get_form_options['error-message']['line-height-phone'].';' : ''; ?>
 			}
 	<?php } ?>
 

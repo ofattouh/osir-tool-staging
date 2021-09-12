@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf3493ea69e426015921d90bd85ca8866
+class ComposerStaticInit0430f6411d24184151cbf3a06294c9f0
 {
     public static $files = array (
         '3af723442581d6c310bf44543f9f5c60' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Functions/adjoint.php',
@@ -356,10 +356,10 @@ class ComposerStaticInitf3493ea69e426015921d90bd85ca8866
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf3493ea69e426015921d90bd85ca8866::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf3493ea69e426015921d90bd85ca8866::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf3493ea69e426015921d90bd85ca8866::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf3493ea69e426015921d90bd85ca8866::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0430f6411d24184151cbf3a06294c9f0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0430f6411d24184151cbf3a06294c9f0::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0430f6411d24184151cbf3a06294c9f0::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit0430f6411d24184151cbf3a06294c9f0::$classMap;
 
         }, null, ClassLoader::class);
     }

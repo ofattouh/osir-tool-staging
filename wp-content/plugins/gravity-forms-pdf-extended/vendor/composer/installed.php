@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '6.0.3',
-        'version' => '6.0.3.0',
+        'pretty_version' => '6.1.0',
+        'version' => '6.1.0.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a7abe99f069cdd30c3eaa558f9a0c374a53b9f4a',
+        'reference' => 'f105ad46fef8572502c51304464c75d771256008',
         'name' => 'gravitypdf/gravitypdf',
         'dev' => false,
     ),
@@ -20,12 +20,12 @@
             'dev_requirement' => false,
         ),
         'gravitypdf/gravitypdf' => array(
-            'pretty_version' => '6.0.3',
-            'version' => '6.0.3.0',
+            'pretty_version' => '6.1.0',
+            'version' => '6.1.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a7abe99f069cdd30c3eaa558f9a0c374a53b9f4a',
+            'reference' => 'f105ad46fef8572502c51304464c75d771256008',
             'dev_requirement' => false,
         ),
         'league/uri' => array(

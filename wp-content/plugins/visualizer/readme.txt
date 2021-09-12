@@ -2,7 +2,7 @@
 Contributors: codeinwp,themeisle,marius2012,marius_codeinwp,hardeepasrani,rozroz,Madalin_ThemeIsle
 Tags: tables, charts, pie, visualization, graphs
 Requires at least: 3.5
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPL v2.0 or later
@@ -162,6 +162,16 @@ Pay attention that to turn your shortcodes into graphs, your theme has to have `
 13. Bar chart
 
 == Changelog ==
+
+##### [Version 3.6.1](https://github.com/Codeinwp/visualizer/compare/v3.6.0...v3.6.1) (2021-08-04)
+
+- Fix broken dropdown style issue 
+- Add block support in widget area
+- Add wp alpha color picker support
+- Fix broken chart layout issue when add long title
+
+
+
 
 #### [Version 3.6.0](https://github.com/Codeinwp/visualizer/compare/v3.5.1...v3.6.0) (2021-07-08)
 

@@ -1,3 +1,8 @@
+### 3.9 | 2021-09-08
+- Fixed an issue where the polls blocks enqueue breaks the Gutenberg editor in WordPress 5.8.x and later.
+- Fixed an issue where the polls shortcode renders the form even when it is not active.
+- Fixed markup errors when poll choices are randomized in Gravity Forms 2.5.
+
 ### 3.8 | 2021-04-29
 - Added an icon for the form editor in Gravity Forms 2.5.
 - Fixed an issue where script tags are being output above the document head element.

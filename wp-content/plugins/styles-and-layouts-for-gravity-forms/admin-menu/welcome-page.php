@@ -29,7 +29,7 @@ class Gf_Stla_Welcome_Page {
 			<?php add_thickbox(); ?>
 
 			<a href="https://www.youtube.com/embed/bkiBdaxIPjY?autoplay=1?TB_iframe=true&width=1180&height=750" class="thickbox">
-			<img class="" src="<?php echo GF_STLA_URL . '/css/images/video-image.png'; ?>" />
+			<img class="" src="<?php echo GF_STLA_URL . '/css/images/video-image.jpg'; ?>" />
 			</a>
 		</div>
 
@@ -94,31 +94,26 @@ class Gf_Stla_Welcome_Page {
 					<h6>Carefully designed set of addons to make your forms look amazing with minimal effort.</h6>
 				</div>
 				<div class="stla-wel-left-cont stla-wel-feature-box">
-					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/gird-layout.png'; ?>">
-					<h5><a href="http://wpmonks.com/downloads/grid-layout/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Grid Layout</a></h5>
-					<h6>Easily create multi column layout without writing any code.</h6>
-				</div>
-				<div class="stla-wel-right-cont stla-wel-feature-box">
 					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/material.png'; ?>">
 					<h5><a href="https://wpmonks.com/downloads/material-design/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Material Design</a></h5>
 					<h6>Implement Material design on your form with single click.</h6>
 				</div>
-				<div class="stla-wel-left-cont stla-wel-feature-box">
+				<div class="stla-wel-right-cont stla-wel-feature-box">
 					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/bootstrap-icon.png'; ?>">
 					<h5><a href="https://wpmonks.com/downloads/gravity-forms-bootstrap-addon/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Bootstrap</a></h5>
 					<h6>Implement Bootstrap design on your form with single click.</h6>
 				</div>
-				<div class="stla-wel-right-cont stla-wel-feature-box">
+				<div class="stla-wel-left-cont stla-wel-feature-box">
 					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/field-icons.png'; ?>">
 					<h5><a href="http://wpmonks.com/downloads/field-icons/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Field Icons</a></h5>
 					<h6>Add image or fontawesome icons to form fields and position them.</h6>
 				</div>
-				<div class="stla-wel-left-cont stla-wel-feature-box">
+				<div class="stla-wel-right-cont stla-wel-feature-box">
 					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/tooltip.png'; ?>">
 					<h5><a href="http://wpmonks.com/downloads/tooltips/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Tooltip</a></h5>
 					<h6>Add helpful tips for each form field with a wide range of tooltip icon selection</h6>
 				</div>
-				<div class="stla-wel-right-cont stla-wel-feature-box">
+				<div class="stla-wel-left-cont stla-wel-feature-box">
 					<img src="<?php echo GF_STLA_URL . '/css/images/welcome/cs-theme.png'; ?>">
 					<h5><a href="http://wpmonks.com/downloads/custom-themes/?utm_source=dashboard&utm_medium=welcome&utm_campaign=styles_layout_plugin" target="_blank">Custom Themes</a></h5>
 					<h6>Save your current form theme design and implement it on other forms in one click.</h6>
@@ -130,7 +125,6 @@ class Gf_Stla_Welcome_Page {
 			<div class="stla-update-left">
 				<h2> Addon Bundle</h2>
 				<ul>
-					<li><span class="dashicons dashicons-yes"></span> Grid Layout </li>
 					<li><span class="dashicons dashicons-yes"></span> Material Design </li>
 					<li><span class="dashicons dashicons-yes"></span> Bootstrap </li>
 					<li><span class="dashicons dashicons-yes"></span> Theme Pack </li>
@@ -180,7 +174,7 @@ class Gf_Stla_Welcome_Page {
 			</div>
 		</div>
 	</div>
-	<div class="stla-wel-review-cont" style="background:url('<?php echo GF_STLA_URL . '/css/images/review-bc.png'; ?>')">
+	<div class="stla-wel-review-cont" style="background:url('<?php echo GF_STLA_URL . '/css/images/suggestions.jpg'; ?>')">
 		<div class="stla-wel-padding-container">
 			<div class="stla-update-left">
 				<h2> Let us Know your Suggestions.</h2>
