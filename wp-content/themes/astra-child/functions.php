@@ -80,7 +80,10 @@ function add_my_script_astra_entry_content_after() {
 	}
 	$GFSurveyInstance = GFSurvey::get_instance();
 
+	var_dump($survey_entry);
+	
 	// Survey fields
+	/*
 	foreach ( $survey_form['fields'] as $field ) {
 
 		// ---------------------------------------------------------------------
@@ -162,28 +165,29 @@ function add_my_script_astra_entry_content_after() {
 	
 		}
 	}
+	*/
 
 	// Debug
-	// echo '<br><br>Entry ID: '.$survey_entry['id'];
+	echo '<br><br>Entry ID: '.$survey_entry['id'];
 	// echo '<h4>Survey Total Score: ' . $survey_entry['gsurvey_score'].'</h4>';
 	// echo '<h4>OSIR Score: ' . $total_osir_score.'</h4>';
 	// echo '<h4>Outlook Score: ' . $total_outlook_score;
 	// echo '<h4>OSIR Profile: ' . getUserProfile($total_osir_score).'</h4>';
 
 	// https://docs.gravitypdf.com/v6/users/shortcodes-and-mergetags
-	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
+	/* echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
 	echo " | ";
-	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
+	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']"); */
 
 	// Survey submission confirmation messages
 	echo getUserProfileGenericMsg();
-	echo getUserProfileMsg(getUserProfile($total_osir_score));
+	// echo getUserProfileMsg(getUserProfile($total_osir_score));
 
 	// Add dynamic charts meta data to DB
-	gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_osir_score,
+	/* gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_osir_score,
 		$total_outlook_score, $demographic_vocation, $osir_years_of_service, $absenteeism_osir_profile,
 		$number_trauma_events, $tobacco_use, $clinically_diagnosed_mental_illness, $short_term_disability, 
-		$wcb_claim, $my_gform_id, $gf_moderator_uid );
+		$wcb_claim, $my_gform_id, $gf_moderator_uid ); */
 }
 
 // Add survey meta DB entry for each user submission
