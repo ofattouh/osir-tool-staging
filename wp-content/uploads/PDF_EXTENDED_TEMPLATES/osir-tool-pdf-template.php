@@ -85,10 +85,16 @@ if ( ! class_exists( 'GFForms' ) ) {
 
     if ( $entry_id > 0 && $is_survey_entry_submitted_by_user !== false && $is_survey_entry_submitted_by_user === 'yes') {    
       $total_osir_score = gform_get_meta( $entry_id, 'total_osir_score' );
+      $total_resiliency_behaviours_score = gform_get_meta( $entry_id, 'total_resiliency_behaviours_score' );
+      $total_support_programs_score = gform_get_meta( $entry_id, 'total_support_programs_score' );
+      $total_supportive_leadership_score = gform_get_meta( $entry_id, 'total_supportive_leadership_score' );
+      $total_supportive_environment_score = gform_get_meta( $entry_id, 'total_supportive_environment_score' );
 
       if ($total_osir_score > 0) {
         echo getUserProfileGenericMsg();
-        echo getUserProfileMsg(getUserProfile($total_osir_score));
+        echo getUserProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
+		      $total_support_programs_score, $total_supportive_leadership_score, 
+          $total_supportive_environment_score);
       }
     }
   ?>

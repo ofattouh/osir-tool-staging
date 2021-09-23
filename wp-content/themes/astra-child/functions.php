@@ -63,27 +63,46 @@ function add_my_script_astra_entry_content_after() {
 	global $survey_entry;
 	global $survey_form;
 
+	$total_resiliency_behaviours_score = 0;
+	$total_support_programs_score = 0;
+	$total_supportive_leadership_score = 0;
+	$total_supportive_environment_score = 0;
 	$total_osir_score = 0;
-	$total_outlook_score = 0;
-	$demographic_vocation = '';
-	$osir_years_of_service = 0;
-	$absenteeism_osir_profile = 0;
-	$number_trauma_events = 0;
-	$tobacco_use = '';
-	$clinically_diagnosed_mental_illness = '';
-	$short_term_disability = '';
-	$wcb_claim = '';
 
+	$mental_health_score = 0;
+	$physical_health_score = 0;
+	$health_fatigue_concerns_score = 0;
+	$health_burnout_concerns_score = 0;
+	$health_stress_concerns_score = 0;
+	$health_alcohol_stress_score = 0;
+	$health_cannabis_stress_score = 0;
+	$health_tobacco_stress_score = 0;
+
+	$impact_questions_attendance = 0;
+	$impact_questions_presenteeism = 0;
+	$impact_questions_motivation_score = 0;
+	$impact_questions_disability = '';
+	$impact_questions_wcb_claim = '';
+
+	$demographics_vocation = '';
+	$demographics_province = '';
+	$demographics_gender = '';
+	$demographics_age = 0;
+
+	// $osir_years_of_service = 0;
+	// $number_trauma_events = 0;
+	// $clinically_diagnosed_mental_illness = '';
+	
 	// Create GFSurvey instance
 	if ( ! class_exists( 'GFSurvey' ) ) {
 		require_once ABSPATH . 'wp-content/plugins/gravityformssurvey/class-gf-survey.php';
 	}
 	$GFSurveyInstance = GFSurvey::get_instance();
 
-	var_dump($survey_entry);
-	
+	// var_dump($survey_entry);
+	// echo "<br><br><br><br>====================Survey fields<br>";
+
 	// Survey fields
-	/*
 	foreach ( $survey_form['fields'] as $field ) {
 
 		// ---------------------------------------------------------------------
@@ -98,103 +117,199 @@ function add_my_script_astra_entry_content_after() {
 			$gf_moderator_uid = $field->defaultValue;
 		}
 
-		// ---------------------------------------------------------------------
-		// likert fields
+		// likert fields ---------------------------------------------------------------------
+ 
 		if ( $field->get_input_type() == 'likert' && $field->gsurveyLikertEnableScoring ) {
 
-			// OSIR Profile Pie Chart
-			if ($field->cssClass === 'osir') {
+			// 4 Sub Scales-------------------------------------------------------------------------
+
+			// Resiliency Behaviours
+			if ($field->cssClass === 'resiliency_behaviours') {	
 				// echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				// echo "<br>OSIR score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
-				$total_osir_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				// echo "<br>Resiliency Behaviours score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$total_resiliency_behaviours_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
-			// General Mental Outlook Score (Average score by vulnerability profile)
-			else if ($field->cssClass === 'outlook') {	
-				$total_outlook_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			// Support Programs
+			else if ($field->cssClass === 'support_programs') {
+				$total_support_programs_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+			// Supportive Leadership
+			else if ($field->cssClass === 'supportive_leadership') {
+				$total_supportive_leadership_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// Supportive Environment
+			else if ($field->cssClass === 'supportive_environment') {
+				$total_supportive_environment_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+
+			// Health----------------------------------------------------------------------------------
+
+			// Good mental health
+			else if ($field->cssClass === 'mental_health') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>mental_health score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$mental_health_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// Good physical health
+			else if ($field->cssClass === 'physical_health') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>physical_health score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$physical_health_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// Fatigue concerns
+			else if ($field->cssClass === 'health_fatigue_concerns') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_fatigue_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_fatigue_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// Burnout concerns
+			else if ($field->cssClass === 'health_burnout_concerns') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_burnout_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_burnout_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// Stress concerns
+			else if ($field->cssClass === 'health_stress_concerns') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_stress_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_stress_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// cope with substances
+			else if ($field->cssClass === 'health_alcohol_stress') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_alcohol score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_alcohol_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// cope with substances
+			else if ($field->cssClass === 'health_cannabis_stress') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_cannabis score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_cannabis_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+			// cope with substances
+			else if ($field->cssClass === 'health_tobacco_stress') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>health_tobacco score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$health_tobacco_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+
+			// Impact Questions: Motivation
+			else if ($field->cssClass === 'impact_questions_motivation') {
+				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				echo "<br>impact_questions_motivation score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+				$impact_questions_motivation_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			}
+
 		}
 
-		// ---------------------------------------------------------------------
-		// Radio button fields
+		//  -----------------------------------------------------------------
+
+		// Impact Questions: Attendance 
+		if ($field->cssClass === 'impact_questions_attendance') {
+			$impact_questions_attendance = GFFormsModel::get_field_value($field);
+			echo "<br><br>impact_questions_attendance field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+		}
+
+		// Impact Questions: Presenteeism 
+		if ($field->cssClass === 'impact_questions_presenteeism') {
+			$impact_questions_presenteeism = GFFormsModel::get_field_value($field);
+			echo "<br><br>impact_questions_presenteeism field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+		}
+
+		// Demographics: What is your age? 
+		if ($field->cssClass === 'demographics_age') {
+			$demographics_age = GFFormsModel::get_field_value($field);
+			echo "<br><br>demographics_age field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+		}
+
+		// Radio button fields ------------------------------------------------------------
+
 		if ( $field->get_input_type() == 'radio' ) {
+
+			// Impact Questions: Short term disability
+			if ($field->cssClass === 'impact_questions_disability') {
+				echo "<br><br>impact_questions_disability field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				$impact_questions_disability = GFFormsModel::get_field_value($field);
+			}
+
+			// Impact Questions:	WCB claim
+			if ($field->cssClass === 'impact_questions_wcb_claim') {
+				echo "<br><br>impact_questions_wcb_claim field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				$impact_questions_wcb_claim = GFFormsModel::get_field_value($field);
+			}
 
 			// Demographic and Bio Data Questions
 
 			// What is your current vocation?
-			if ($field->cssClass === 'demographic_vocation') {
-				$demographic_vocation = GFFormsModel::get_field_value($field);
+			if ($field->cssClass === 'demographics_vocation') {
+				echo "<br><br>demographics_vocation field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				$demographics_vocation = GFFormsModel::get_field_value($field);
 			}
 
-			// How many total years of service have you spent as a First Responder (in all applicable roles)?
-			if ($field->cssClass === 'osir_years_of_service') {
-				$osir_years_of_service = GFFormsModel::get_field_value($field);
+			// In which province or territory do you live? 
+			if ($field->cssClass === 'demographics_province') {
+				echo "<br><br>demographics_province field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				$demographics_province = GFFormsModel::get_field_value($field);
 			}
 
-			// 1.	Attendance – number of days missed work due to illness
-			if ($field->cssClass === 'absenteeism_osir_profile') {
-				$absenteeism_osir_profile = GFFormsModel::get_field_value($field);
+			// What gender do you identify with? 
+			if ($field->cssClass === 'demographics_gender') {
+				echo "<br><br>demographics_gender field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
+				$demographics_gender = GFFormsModel::get_field_value($field);
 			}
-			
-			// 6.	Trauma/Very stressful situation exposures – Please estimate how many events have you 
-			// deal with that you have found traumatic/very stressful in the past 12 months
-			if ($field->cssClass === 'number_trauma_events') {
+
+			// 6.	Trauma/Very stressful situation exposures
+			/* if ($field->cssClass === 'number_trauma_events') {
 				$number_trauma_events = GFFormsModel::get_field_value($field);
-			}
-
-			// Do you use tobacco products? This includes smoking cigarettes and cigars as well as using chewing tobacco
-			if ($field->cssClass === 'tobacco_use') {
-				$tobacco_use = GFFormsModel::get_field_value($field);
-			}
+			} */
 
 			// Have you ever been clinically diagnosed with a mental illness or addictive disorder?
-			if ($field->cssClass === 'clinically_diagnosed_mental_illness') {
+			/* if ($field->cssClass === 'clinically_diagnosed_mental_illness') {
 				$clinically_diagnosed_mental_illness = GFFormsModel::get_field_value($field);
-			}
-
-			// 3.	Short term disability – Over the past 12 months, have you been off work for a mental 
-			// health-related matter?
-			if ($field->cssClass === 'short_term_disability') {
-				$short_term_disability = GFFormsModel::get_field_value($field);
-			}
-
-			// 4.	WCB claim – Over the past 12 months, have you made a worker’s compensation claim related
-			// to an Occupational Stress Injury (such as PTSD and other similar mental illnesses)?
-			if ($field->cssClass === 'wcb_claim') {
-				$wcb_claim = GFFormsModel::get_field_value($field);
-			}
+			} */
 	
 		}
 	}
-	*/
+	
+	$total_osir_score = $total_resiliency_behaviours_score + $total_support_programs_score +
+		$total_supportive_leadership_score + $total_supportive_environment_score;
 
 	// Debug
-	echo '<br><br>Entry ID: '.$survey_entry['id'];
+	// echo '<br><br>Entry ID: '.$survey_entry['id'];
 	// echo '<h4>Survey Total Score: ' . $survey_entry['gsurvey_score'].'</h4>';
-	// echo '<h4>OSIR Score: ' . $total_osir_score.'</h4>';
-	// echo '<h4>Outlook Score: ' . $total_outlook_score;
+	// echo '<h4>total_osir_score Score: '. $total_osir_score.'</h4>';
 	// echo '<h4>OSIR Profile: ' . getUserProfile($total_osir_score).'</h4>';
 
 	// https://docs.gravitypdf.com/v6/users/shortcodes-and-mergetags
-	/* echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
+	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
 	echo " | ";
-	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']"); */
+	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
 
 	// Survey submission confirmation messages
 	echo getUserProfileGenericMsg();
-	// echo getUserProfileMsg(getUserProfile($total_osir_score));
+	echo getUserProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
+		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
 
 	// Add dynamic charts meta data to DB
-	/* gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_osir_score,
-		$total_outlook_score, $demographic_vocation, $osir_years_of_service, $absenteeism_osir_profile,
-		$number_trauma_events, $tobacco_use, $clinically_diagnosed_mental_illness, $short_term_disability, 
-		$wcb_claim, $my_gform_id, $gf_moderator_uid ); */
+	gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_resiliency_behaviours_score,
+		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score,
+		$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
+		$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
+		$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
+		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+		$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
+		$my_gform_id, $gf_moderator_uid );
 }
 
 // Add survey meta DB entry for each user submission
-function gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_osir_score, 
-	$total_outlook_score, $demographic_vocation, $osir_years_of_service, $absenteeism_osir_profile, 
-	$number_trauma_events, $tobacco_use, $clinically_diagnosed_mental_illness, $short_term_disability,
-	$wcb_claim, $my_gform_id, $gf_moderator_uid ){
+function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_resiliency_behaviours_score,
+	$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score,
+	$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
+	$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
+	$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
+	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+	$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
+	$my_gform_id, $gf_moderator_uid ){
 	global $survey_entry;
 
 	// save gf submission user meta entry
@@ -204,17 +319,36 @@ function gform_add_meta_entry_survey( $GFSurveyInstance, $survey_entry, $total_o
 	gform_add_meta( $survey_entry['id'], 'gf_subscriber_uid', get_current_user_id() );
 	gform_add_meta( $survey_entry['id'], 'gf_moderator_uid', $gf_moderator_uid );
 	gform_add_meta( $survey_entry['id'], 'my_gform_id', $my_gform_id );
+
+	gform_add_meta( $survey_entry['id'], 'total_resiliency_behaviours_score', $total_resiliency_behaviours_score );
+	gform_add_meta( $survey_entry['id'], 'total_support_programs_score', $total_support_programs_score );
+	gform_add_meta( $survey_entry['id'], 'total_supportive_leadership_score', $total_supportive_leadership_score );
+	gform_add_meta( $survey_entry['id'], 'total_supportive_environment_score', $total_supportive_environment_score );
 	gform_add_meta( $survey_entry['id'], 'total_osir_score', $total_osir_score );
 	gform_add_meta( $survey_entry['id'], 'osir_profile', getUserProfile($total_osir_score) );
-	gform_add_meta( $survey_entry['id'], 'total_outlook_score', $total_outlook_score );
-	gform_add_meta( $survey_entry['id'], 'demographic_vocation', $demographic_vocation );
-	gform_add_meta( $survey_entry['id'], 'osir_years_of_service', $osir_years_of_service );
-	gform_add_meta( $survey_entry['id'], 'absenteeism_osir_profile', $absenteeism_osir_profile );
-	gform_add_meta( $survey_entry['id'], 'number_trauma_events', $number_trauma_events );
-	gform_add_meta( $survey_entry['id'], 'tobacco_use', $tobacco_use );
-	gform_add_meta( $survey_entry['id'], 'clinically_diagnosed_mental_illness', $clinically_diagnosed_mental_illness );
-	gform_add_meta( $survey_entry['id'], 'short_term_disability', $short_term_disability );
-	gform_add_meta( $survey_entry['id'], 'wcb_claim', $wcb_claim );
+
+	gform_add_meta( $survey_entry['id'], 'mental_health_score', $mental_health_score );
+	gform_add_meta( $survey_entry['id'], 'physical_health_score', $physical_health_score );
+	gform_add_meta( $survey_entry['id'], 'health_fatigue_concerns_score', $health_fatigue_concerns_score );
+	gform_add_meta( $survey_entry['id'], 'health_burnout_concerns_score', $health_burnout_concerns_score );
+	gform_add_meta( $survey_entry['id'], 'health_stress_concerns_score', $health_stress_concerns_score );
+	gform_add_meta( $survey_entry['id'], 'health_alcohol_stress_score', $health_alcohol_stress_score);
+	gform_add_meta( $survey_entry['id'], 'health_cannabis_stress_score', $health_cannabis_stress_score );
+	gform_add_meta( $survey_entry['id'], 'health_tobacco_stress_score', $health_tobacco_stress_score );
+
+	gform_add_meta( $survey_entry['id'], 'impact_questions_attendance', $impact_questions_attendance);
+	gform_add_meta( $survey_entry['id'], 'impact_questions_presenteeism', $impact_questions_presenteeism );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_motivation_score', $impact_questions_motivation_score );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_disability', $impact_questions_disability );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_wcb_claim', $impact_questions_wcb_claim );
+	
+	gform_add_meta( $survey_entry['id'], 'demographics_vocation', $demographics_vocation );
+	gform_add_meta( $survey_entry['id'], 'demographics_province', $demographics_province );
+	gform_add_meta( $survey_entry['id'], 'demographics_gender', $demographics_gender );
+	gform_add_meta( $survey_entry['id'], 'demographics_age', $demographics_age );
+
+	// gform_add_meta( $survey_entry['id'], 'number_trauma_events', $number_trauma_events );
+	// gform_add_meta( $survey_entry['id'], 'clinically_diagnosed_mental_illness', $clinically_diagnosed_mental_illness );
 	
 	// Track number of user submissions instead of relying on GF entry_id
 	gform_add_meta( $survey_entry['id'], 'is_survey_entry_submitted_by_user', 'yes' );
