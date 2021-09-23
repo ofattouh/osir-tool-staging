@@ -100,7 +100,6 @@ function add_my_script_astra_entry_content_after() {
 	$GFSurveyInstance = GFSurvey::get_instance();
 
 	// var_dump($survey_entry);
-	// echo "<br><br><br><br>====================Survey fields<br>";
 
 	// Survey fields
 	foreach ( $survey_form['fields'] as $field ) {
@@ -129,74 +128,66 @@ function add_my_script_astra_entry_content_after() {
 				// echo "<br>Resiliency Behaviours score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
 				$total_resiliency_behaviours_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+			
 			// Support Programs
-			else if ($field->cssClass === 'support_programs') {
+			if ($field->cssClass === 'support_programs') {
 				$total_support_programs_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// Supportive Leadership
-			else if ($field->cssClass === 'supportive_leadership') {
+			if ($field->cssClass === 'supportive_leadership') {
 				$total_supportive_leadership_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+			
 			// Supportive Environment
-			else if ($field->cssClass === 'supportive_environment') {
+			if ($field->cssClass === 'supportive_environment') {
 				$total_supportive_environment_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
 
 			// Health----------------------------------------------------------------------------------
 
 			// Good mental health
-			else if ($field->cssClass === 'mental_health') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>mental_health score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'mental_health') {
 				$mental_health_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// Good physical health
-			else if ($field->cssClass === 'physical_health') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>physical_health score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'physical_health') {
 				$physical_health_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// Fatigue concerns
-			else if ($field->cssClass === 'health_fatigue_concerns') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_fatigue_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_fatigue_concerns') {
 				$health_fatigue_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// Burnout concerns
-			else if ($field->cssClass === 'health_burnout_concerns') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_burnout_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_burnout_concerns') {
 				$health_burnout_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// Stress concerns
-			else if ($field->cssClass === 'health_stress_concerns') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_stress_concerns score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_stress_concerns') {
 				$health_stress_concerns_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// cope with substances
-			else if ($field->cssClass === 'health_alcohol_stress') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_alcohol score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_alcohol_stress') {
 				$health_alcohol_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// cope with substances
-			else if ($field->cssClass === 'health_cannabis_stress') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_cannabis score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_cannabis_stress') {
 				$health_cannabis_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
+
 			// cope with substances
-			else if ($field->cssClass === 'health_tobacco_stress') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>health_tobacco score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'health_tobacco_stress') {
 				$health_tobacco_stress_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
 
 			// Impact Questions: Motivation
-			else if ($field->cssClass === 'impact_questions_motivation') {
-				echo "<br><br>field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
-				echo "<br>impact_questions_motivation score: ". $GFSurveyInstance:: get_field_score($field, $survey_entry);
+			if ($field->cssClass === 'impact_questions_motivation') {
 				$impact_questions_motivation_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
 
@@ -207,19 +198,16 @@ function add_my_script_astra_entry_content_after() {
 		// Impact Questions: Attendance 
 		if ($field->cssClass === 'impact_questions_attendance') {
 			$impact_questions_attendance = GFFormsModel::get_field_value($field);
-			echo "<br><br>impact_questions_attendance field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 		}
 
 		// Impact Questions: Presenteeism 
 		if ($field->cssClass === 'impact_questions_presenteeism') {
 			$impact_questions_presenteeism = GFFormsModel::get_field_value($field);
-			echo "<br><br>impact_questions_presenteeism field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 		}
 
 		// Demographics: What is your age? 
 		if ($field->cssClass === 'demographics_age') {
 			$demographics_age = GFFormsModel::get_field_value($field);
-			echo "<br><br>demographics_age field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 		}
 
 		// Radio button fields ------------------------------------------------------------
@@ -228,13 +216,11 @@ function add_my_script_astra_entry_content_after() {
 
 			// Impact Questions: Short term disability
 			if ($field->cssClass === 'impact_questions_disability') {
-				echo "<br><br>impact_questions_disability field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$impact_questions_disability = GFFormsModel::get_field_value($field);
 			}
 
 			// Impact Questions: WCB claim
 			if ($field->cssClass === 'impact_questions_wcb_claim') {
-				echo "<br><br>impact_questions_wcb_claim field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$impact_questions_wcb_claim = GFFormsModel::get_field_value($field);
 			}
 
@@ -242,19 +228,16 @@ function add_my_script_astra_entry_content_after() {
 
 			// What is your current vocation?
 			if ($field->cssClass === 'demographics_vocation') {
-				echo "<br><br>demographics_vocation field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$demographics_vocation = GFFormsModel::get_field_value($field);
 			}
 
 			// In which province or territory do you live? 
 			if ($field->cssClass === 'demographics_province') {
-				echo "<br><br>demographics_province field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$demographics_province = GFFormsModel::get_field_value($field);
 			}
 
 			// What gender do you identify with? 
 			if ($field->cssClass === 'demographics_gender') {
-				echo "<br><br>demographics_gender field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$demographics_gender = GFFormsModel::get_field_value($field);
 			}
 
