@@ -232,7 +232,7 @@ function add_my_script_astra_entry_content_after() {
 				$impact_questions_disability = GFFormsModel::get_field_value($field);
 			}
 
-			// Impact Questions:	WCB claim
+			// Impact Questions: WCB claim
 			if ($field->cssClass === 'impact_questions_wcb_claim') {
 				echo "<br><br>impact_questions_wcb_claim field: ". $field->id. ", ". $field->cssClass. ", ". $field->label;
 				$impact_questions_wcb_claim = GFFormsModel::get_field_value($field);
