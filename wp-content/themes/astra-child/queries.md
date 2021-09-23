@@ -7,12 +7,12 @@ SELECT SUM(totalNumberAnswers.`meta_value`) AS 'grandTotalNumberAnswers' FROM
 
 //
 
-// OSIR Profile Pie Chart (Occupational Stress Injury Resiliency (OSIR) Index Score)
+// OSIR Profile Pie Chart (The overall ratio of people within each vulnerability profile)
 
 SELECT `meta_value` AS OSIR_Profile, COUNT(*) AS Count
 FROM `wp_gf_entry_meta`
 WHERE `meta_key` = 'osir_profile'
-AND `form_id` = 17
+AND `form_id` = 18
 GROUP BY `meta_value`
 
 SELECT `wp_gf_entry_meta`.`meta_value` AS OSIR_Profile, COUNT(*) AS Count
@@ -20,7 +20,7 @@ FROM `wp_gf_entry_meta`, (select * FROM `wp_gf_entry_meta`
  WHERE `meta_key` = 'my_gform_id' AND `meta_value` = 10) my_gform_id
  WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'
  AND `wp_gf_entry_meta`.`entry_id` = my_gform_id.`entry_id`
- AND `wp_gf_entry_meta`.`form_id` = 17
+ AND `wp_gf_entry_meta`.`form_id` = 18
 GROUP BY OSIR_Profile
 
 
@@ -200,8 +200,27 @@ GROUP BY employeeByTobaccoUse.`meta_value`
 
 //
 
-// 3.	Short term disability – Over the past 12 months, have you been off work for a mental 
-// health-related matter?
+// Short term disability – Over past year, have you been off work for a mental health-related matter?
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+Count(impactQuestionsDisability.`meta_value`) AS "Short Term Disability (Yes)"
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_disability' ) impactQuestionsDisability
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsDisability.`entry_id`
+AND impactQuestionsDisability.`meta_value` = 'Yes'
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+impactQuestionsDisability.`meta_value` AS "Short Term Disability",
+Count(impactQuestionsDisability.`meta_value`) AS "Short Term Disability Count"
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_disability' ) impactQuestionsDisability
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsDisability.`entry_id`
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
 
 SELECT employeeByShorTermDisability.`meta_value` AS 'Short Term Disability',
 count(*) AS 'Number of Employees'
@@ -215,8 +234,17 @@ GROUP BY employeeByShorTermDisability.`meta_value`
 
 //
 
-// 4.	WCB claim – Over the past 12 months, have you made a worker’s compensation claim related
-// to an Occupational Stress Injury (such as PTSD and other similar mental illnesses)?
+// 4.	WCC claim – Over the past 12 months, have you made a worker’s compensation claim related /// to an Occupational Stress Injury (such as PTSD and other similar mental illnesses)? 
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+Count(impactQuestionsWCC.`meta_value`) AS "Yes"
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_wcc_claim' ) impactQuestionsWCC
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsWCC.`entry_id`
+AND impactQuestionsWCC.`meta_value` = 'Yes'
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
 
 SELECT employeeByWCBClaim.`meta_value` AS 'WCB Claim',
 count(*) AS 'Number of Employees'

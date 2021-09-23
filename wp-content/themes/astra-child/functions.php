@@ -82,7 +82,7 @@ function add_my_script_astra_entry_content_after() {
 	$impact_questions_presenteeism = 0;
 	$impact_questions_motivation_score = 0;
 	$impact_questions_disability = '';
-	$impact_questions_wcb_claim = '';
+	$impact_questions_wcc_claim = '';
 
 	$demographics_vocation = '';
 	$demographics_province = '';
@@ -219,9 +219,9 @@ function add_my_script_astra_entry_content_after() {
 				$impact_questions_disability = GFFormsModel::get_field_value($field);
 			}
 
-			// Impact Questions: WCB claim
-			if ($field->cssClass === 'impact_questions_wcb_claim') {
-				$impact_questions_wcb_claim = GFFormsModel::get_field_value($field);
+			// Impact Questions: WCC claim
+			if ($field->cssClass === 'impact_questions_wcc_claim') {
+				$impact_questions_wcc_claim = GFFormsModel::get_field_value($field);
 			}
 
 			// Demographic and Bio Data Questions
@@ -279,7 +279,7 @@ function add_my_script_astra_entry_content_after() {
 		$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
 		$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
 		$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
-		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcc_claim,
 		$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
 		$my_gform_id, $gf_moderator_uid );
 }
@@ -290,7 +290,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
 	$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
 	$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
-	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcc_claim,
 	$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
 	$my_gform_id, $gf_moderator_uid ){
 	global $survey_entry;
@@ -323,7 +323,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	gform_add_meta( $survey_entry['id'], 'impact_questions_presenteeism', $impact_questions_presenteeism );
 	gform_add_meta( $survey_entry['id'], 'impact_questions_motivation_score', $impact_questions_motivation_score );
 	gform_add_meta( $survey_entry['id'], 'impact_questions_disability', $impact_questions_disability );
-	gform_add_meta( $survey_entry['id'], 'impact_questions_wcb_claim', $impact_questions_wcb_claim );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_wcc_claim', $impact_questions_wcc_claim );
 	
 	gform_add_meta( $survey_entry['id'], 'demographics_vocation', $demographics_vocation );
 	gform_add_meta( $survey_entry['id'], 'demographics_province', $demographics_province );

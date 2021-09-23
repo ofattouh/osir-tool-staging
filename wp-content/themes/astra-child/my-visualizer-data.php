@@ -11,7 +11,7 @@
 add_filter( 'visualizer-get-chart-series', 'myplugin_filter_charts_series', 10, 3 );
 function myplugin_filter_charts_series( $series, $chart_id, $type ) {
 
-  // Occupational Stress Injury Resiliency (OSIR) Index Score
+  // The overall ratio of people within each vulnerability profile
   if ( ($chart_id === 59 || $chart_id === 297 ) && $type === 'pie'){
 		return OSIRPieChartHeader();
 	}
@@ -61,9 +61,19 @@ function myplugin_filter_charts_data( $data, $chart_id, $type ) {
     // echo "<br><br>page id: ".$post->ID.", my_gform_id: ".$my_gform_id;
   }
 
-  // Occupational Stress Injury Resiliency (OSIR) Index Score
-  if ( $chart_id === 297 && $type === 'pie' && $my_gform_id == 10){
+  // The overall ratio of people within each vulnerability profile
+  if ( $chart_id === 297 && $type === 'pie' && $my_gform_id == 18){
 		return OSIRPieChartData($my_gform_id);
+	}
+
+	// Short term disability – Over past year, have you been off work for a mental health-related matter?
+	if ( $chart_id === 84 && $type === 'column' && $my_gform_id == 18){
+		return OSIRDisabilityChartData($my_gform_id);
+	}
+
+	// Worker’s compensation claim – Over past year, have you made a worker’s compensation claim
+	if ( $chart_id === 91 && $type === 'column' && $my_gform_id == 18){
+		return OSIRWCCChartData($my_gform_id);
 	}
 
   // Occupational Stress Injury Resiliency (OSIR) Index Score
@@ -145,6 +155,107 @@ function OSIRPieChartHeader() {
 	);
 
 	return $series;
+}
+
+function OSIRPieChartData($my_gform_id) {
+  global $wpdb;
+
+	$sql  = "SELECT `meta_value` AS osirProfile, COUNT(*) AS Count";
+  $sql  .= " FROM `wp_gf_entry_meta`";
+  $sql  .= " WHERE `meta_key` = 'osir_profile'";
+  $sql  .= " AND `form_id` = ".$my_gform_id;
+  $sql  .= " GROUP BY `meta_value`";
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: '';
+		$osirProfileCount = isset($v['Count'])? (double)$v['Count']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $osirProfileCount;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$counter++;
+	}
+
+/* 	echo "<br><br>sql:<br>".$sql;
+	echo "<br><br>results:<br>";
+	print_r($results);
+	echo "<br><br>chartData:<br>";
+	print_r($chartData); */
+	
+	return $chartData;
+}
+
+function OSIRDisabilityChartData($my_gform_id) {
+  global $wpdb;
+
+	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',"; 
+	$sql .= " Count(impactQuestionsDisability.`meta_value`) AS 'Yes'";
+	$sql .= " FROM `wp_gf_entry_meta`,";
+	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_disability' ) impactQuestionsDisability";
+	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
+	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsDisability.`entry_id`";
+	$sql .= " AND impactQuestionsDisability.`meta_value` = 'Yes'";
+	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
+	$sql .= " GROUP BY osirProfile";
+	
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: '';
+		$osirProfileCount = isset($v['Yes'])? (double)$v['Yes']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $osirProfileCount;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$counter++;
+	}
+	
+	return $chartData;
+}
+
+function OSIRWCCChartData($my_gform_id) {
+  global $wpdb;
+
+	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',"; 
+	$sql .= " Count(impactQuestionsWCC.`meta_value`) AS 'Yes'";
+	$sql .= " FROM `wp_gf_entry_meta`,";
+	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_wcc_claim' ) impactQuestionsWCC";
+	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
+	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsWCC.`entry_id`";
+	$sql .= " AND impactQuestionsWCC.`meta_value` = 'Yes'";
+	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
+	$sql .= " GROUP BY osirProfile";
+	
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: '';
+		$osirProfileCount = isset($v['Yes'])? (double)$v['Yes']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $osirProfileCount;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$counter++;
+	}
+	
+	return $chartData;
 }
 
 // OSIR By Department Chart Header & Data types
@@ -255,40 +366,7 @@ function absenteeismProfileChartHeader() {
 	return $series;
 }
 
-function OSIRPieChartData($my_gform_id) {
-  global $wpdb;
-
-	$sql  = "SELECT `meta_value` AS osirProfile, COUNT(*) AS Count";
-  $sql  .= " FROM `wp_gf_entry_meta`";
-  $sql  .= " WHERE `meta_key` = 'osir_profile'";
-  $sql  .= " AND `form_id` = ".$my_gform_id;
-  $sql  .= " GROUP BY `meta_value`";
-
-	$results = $wpdb->get_results( $sql, ARRAY_A );
-
-	$counter = 0;
-	$chartData = [];
-	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
-		"fill-color: #eeee22", "fill-color: #81d742" );
-
-	// Build chart data
-	foreach ($results as $k => $v){
-		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: '';
-		$osirProfileCount = isset($v['Count'])? (double)$v['Count']: 0;
-		$chartData[$counter][0] = $osirProfile;
-		$chartData[$counter][1] = $osirProfileCount;
-		$chartData[$counter][2] = $seriesColors[$counter];
-		$counter++;
-	}
-
-/* 	echo "<br><br>sql:<br>".$sql;
-	echo "<br><br>results:<br>";
-	print_r($results);
-	echo "<br><br>chartData:<br>";
-	print_r($chartData); */
-	
-	return $chartData;
-}
+// ----------------------------------------------------------------------------------------
 
 // OSIR By Department Chart Data
 function OSIRByDepartmentChartData($my_gform_id){
