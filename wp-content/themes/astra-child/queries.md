@@ -44,7 +44,32 @@ ORDER BY osirProfile ASC
 
 //
 
-// General Mental Outlook Score (Average score by vulnerability profile)
+// General Mental Outlook Score (Coping with Substances)
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(healthAlcoholStress.`meta_value`) AS 'I cope with stress using alcohol' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_alcohol_stress_score' ) healthAlcoholStress 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = healthAlcoholStress.`entry_id`
+AND `wp_gf_entry_meta`.`form_id` = 18
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(healthCannabisStress.`meta_value`) AS 'I cope with stress using Cannabis' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_cannabis_stress_score' ) healthCannabisStress 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = healthCannabisStress.`entry_id`
+AND `wp_gf_entry_meta`.`form_id` = 18
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(healthTobaccoStress.`meta_value`) AS 'I cope with stress using tobacco' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_tobacco_stress_score' ) healthTobaccoStress 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = healthTobaccoStress.`entry_id`
+AND `wp_gf_entry_meta`.`form_id` = 18
+
 
 SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
 AVG(outlookScore.`meta_value`) AS 'Outlook Score Average' 
@@ -52,7 +77,7 @@ FROM `wp_gf_entry_meta`,
 ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'total_outlook_score' ) outlookScore 
 WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
 AND `wp_gf_entry_meta`.`entry_id` = outlookScore.`entry_id`
-AND `wp_gf_entry_meta`.`form_id` = 17
+AND `wp_gf_entry_meta`.`form_id` = 18
 GROUP BY osirProfile
 
 SELECT AVG(mentalOutlookScoreAvg.outlookScoreAverage) as "Company Score Average"
@@ -64,7 +89,7 @@ FROM `wp_gf_entry_meta`,
 ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'total_outlook_score' ) outlookScore 
 WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
 AND `wp_gf_entry_meta`.`entry_id` = outlookScore.`entry_id`
-AND `wp_gf_entry_meta`.`form_id` = 17
+AND `wp_gf_entry_meta`.`form_id` = 18
 GROUP BY osirProfile
 ) AS mentalOutlookScoreAvg
 
@@ -73,7 +98,7 @@ FROM `wp_gf_entry_meta`,
 ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'total_outlook_score' ) outlookScore 
 WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
 AND `wp_gf_entry_meta`.`entry_id` = outlookScore.`entry_id`
-AND `wp_gf_entry_meta`.`form_id` = 17 
+AND `wp_gf_entry_meta`.`form_id` = 18
 GROUP BY osirProfile
 
 SELECT `wp_gf_entry_meta`.`entry_id`, `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
@@ -82,7 +107,7 @@ FROM `wp_gf_entry_meta`,
 ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'total_outlook_score' ) outlookScore 
 WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
 AND `wp_gf_entry_meta`.`entry_id` = outlookScore.`entry_id`
-AND `wp_gf_entry_meta`.`form_id` = 17
+AND `wp_gf_entry_meta`.`form_id` = 18
 
 
 //
@@ -293,7 +318,7 @@ SELECT count(*) AS 'numberSubmissions'
 FROM `wp_gf_entry_meta`
 WHERE `wp_gf_entry_meta`.`meta_key` = 'is_survey_entry_submitted_by_user' 
 AND `wp_gf_entry_meta`.`meta_value` = 'yes'
-AND `wp_gf_entry_meta`.`form_id` = 17
+AND `wp_gf_entry_meta`.`form_id` = 18
 
 // OSIR average company score (Pie chart)
 

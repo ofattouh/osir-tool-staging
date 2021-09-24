@@ -29,7 +29,8 @@ function total_number_of_answers(){
 
 	$results = $wpdb->get_results( $sql, ARRAY_A );
 
-	return $results[0]['numberSubmissions'];
+	$numberSubmissions = isset($results[0]) ? $results[0]['numberSubmissions'] : 0;
+	return $numberSubmissions;
 }
 
 // OSIR average company score (Pie chart)

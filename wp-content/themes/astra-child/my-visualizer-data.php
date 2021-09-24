@@ -16,9 +16,9 @@ function myplugin_filter_charts_series( $series, $chart_id, $type ) {
 		return OSIRPieChartHeader();
 	}
 
-  // General Mental Outlook Score (Average score by vulnerability profile)
-	if (($chart_id === 95 || $chart_id === 208 ) && $type === 'column'){
-		 return outlookAvgScorebyVulnerabilityChartHeader();
+  // General Mental Outlook Score (Coping with Substances)
+	if (($chart_id === 95 || $chart_id === 800 || $chart_id === 802 || $chart_id === 208 ) && $type === 'column'){
+		 return outlookMentalScoreCopingChartHeader();
 	}
 
 	// What is your current vocation? (OSIR Index Score by Department). Percentage of employees per vulnerability profile
@@ -66,6 +66,21 @@ function myplugin_filter_charts_data( $data, $chart_id, $type ) {
 		return OSIRPieChartData($my_gform_id);
 	}
 
+	// General Mental Outlook Score (Coping with Substances: I cope with stress using alcohol)
+	if ( $chart_id === 95 && $type === 'column' && $my_gform_id == 18){
+		 return outlookMentalScoreCopingAlcoholChartData($my_gform_id);
+	}
+
+	// General Mental Outlook Score (Coping with Substances: I cope with stress using cannabis)
+	if ( $chart_id === 800 && $type === 'column' && $my_gform_id == 18){
+		 return outlookMentalScoreCopingCannabisChartData($my_gform_id);
+	}
+
+	// General Mental Outlook Score (Coping with Substances: I cope with stress using tobacco products)
+	if ( $chart_id === 802 && $type === 'column' && $my_gform_id == 18){
+		 return outlookMentalScoreCopingTobaccoChartData($my_gform_id);
+	}
+
 	// Short term disability – Over past year, have you been off work for a mental health-related matter?
 	if ( $chart_id === 84 && $type === 'column' && $my_gform_id == 18){
 		return OSIRDisabilityChartData($my_gform_id);
@@ -81,14 +96,9 @@ function myplugin_filter_charts_data( $data, $chart_id, $type ) {
 		return OSIRPieChartData($my_gform_id);
 	}
 
-  // General Mental Outlook Score (Average score by vulnerability profile)
-	if ( $chart_id === 95 && $type === 'column' && $my_gform_id == 10){
-		 return outlookAvgScorebyVulnerabilityChartData($my_gform_id);
-	}
-
-  // General Mental Outlook Score (Average score by vulnerability profile)
+  // General Mental Outlook Score (Coping with Substances)
 	if ( $chart_id === 208 && $type === 'column' && $my_gform_id == 17){
-		 return outlookAvgScorebyVulnerabilityChartData($my_gform_id);
+		 return outlookMentalScoreCopingChartData($my_gform_id);
 	}
 
 	// What is your current vocation? (OSIR Index Score by Department). Percentage of employees per vulnerability profile
@@ -192,6 +202,180 @@ function OSIRPieChartData($my_gform_id) {
 	return $chartData;
 }
 
+// OSIR By Department Chart Header & Data types
+function OSIRByDepartmentChartHeader(){
+		$series = array(
+			array(
+					'label' => 'Vocation',
+					'type' => 'string',
+			),
+			array(
+				'label' => 'Challenge(%)',
+				'type' => 'number',
+			),
+			array(
+				'label' => 'Concern(%)',
+				'type' => 'number',
+			),
+			array(
+				'label' => 'OK(%)', 
+				'type' => 'number',
+			),
+			array(
+				'label' => 'Thriving(%)',
+				'type' => 'number',
+			),
+	);
+
+	return $series;
+}
+
+function OSIRByYearsOfServiceChartHeader() {
+	$series = array(
+		array(
+			'label' => 'Years Of Service',
+			'type' => 'string',
+		),
+		array(
+			'label' => 'Average OSIR Score',
+			'type' => 'number',
+		),
+		array(
+			'label' => 'annotation',
+			'type' => 'number',
+		),
+	);
+
+	return $series;
+}
+
+function outlookMentalScoreCopingChartHeader(){
+	$series = array(
+		array(
+			'label' => 'OSIR Profile',
+			'type' => 'string',
+		),
+		array(
+			'label' => 'Outlook Mental Average Score',
+			'type' => 'number',
+		),
+		array(
+			'label' => 'style',
+			'type' => 'string',
+		),
+		array(
+			'label' => 'annotation',
+			'type' => 'number',
+		),
+	);
+
+	return $series;
+}
+
+function outlookMentalScoreCopingAlcoholChartData($my_gform_id = 0) {
+	global $wpdb;
+
+	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',";
+	$sql .= " AVG(healthAlcoholStress.`meta_value`) AS 'outlookAverageScore'";
+	$sql .= " FROM `wp_gf_entry_meta`,";
+	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_alcohol_stress_score' ) healthAlcoholStress";
+	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
+	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = healthAlcoholStress.`entry_id`";
+	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: 0;
+		$outlookAverageScore = isset($v['outlookAverageScore'])? (double)$v['outlookAverageScore']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $outlookAverageScore;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$chartData[$counter][3] = $outlookAverageScore;
+		$counter++;
+	}
+
+	/* echo "<br><br>sql:<br>".$sql;
+	echo "<br><br>results:<br>";
+	print_r($results);
+	echo "<br><br>seriesColors:<br>";
+	print_r($seriesColors);
+	echo "<br><br>chartData:<br>";
+	print_r($chartData); */
+	
+	return $chartData;
+}
+
+function outlookMentalScoreCopingCannabisChartData($my_gform_id = 0) {
+	global $wpdb;
+
+	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',";
+	$sql .= " AVG(healthCannabisStress.`meta_value`) AS 'outlookAverageScore'";
+	$sql .= " FROM `wp_gf_entry_meta`,";
+	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_cannabis_stress_score' ) healthCannabisStress";
+	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
+	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = healthCannabisStress.`entry_id`";
+	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: 0;
+		$outlookAverageScore = isset($v['outlookAverageScore'])? (double)$v['outlookAverageScore']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $outlookAverageScore;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$chartData[$counter][3] = $outlookAverageScore;
+		$counter++;
+	}
+	
+	return $chartData;
+}
+
+function outlookMentalScoreCopingTobaccoChartData($my_gform_id = 0) {
+	global $wpdb;
+
+	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',";
+	$sql .= " AVG(healthTobaccoStress.`meta_value`) AS 'outlookAverageScore'";
+	$sql .= " FROM `wp_gf_entry_meta`,";
+	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'health_tobacco_stress_score' ) healthTobaccoStress";
+	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
+	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = healthTobaccoStress.`entry_id`";
+	$sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$counter = 0;
+	$chartData = [];
+	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
+		"fill-color: #eeee22", "fill-color: #81d742" );
+
+	// Build chart data
+	foreach ($results as $k => $v){
+		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: 0;
+		$outlookAverageScore = isset($v['outlookAverageScore'])? (double)$v['outlookAverageScore']: 0;
+		$chartData[$counter][0] = $osirProfile;
+		$chartData[$counter][1] = $outlookAverageScore;
+		$chartData[$counter][2] = $seriesColors[$counter];
+		$chartData[$counter][3] = $outlookAverageScore;
+		$counter++;
+	}
+	
+	return $chartData;
+}
+
 function OSIRDisabilityChartData($my_gform_id) {
   global $wpdb;
 
@@ -256,76 +440,6 @@ function OSIRWCCChartData($my_gform_id) {
 	}
 	
 	return $chartData;
-}
-
-// OSIR By Department Chart Header & Data types
-function OSIRByDepartmentChartHeader(){
-		$series = array(
-			array(
-					'label' => 'Vocation',
-					'type' => 'string',
-			),
-			array(
-				'label' => 'Challenge(%)',
-				'type' => 'number',
-			),
-			array(
-				'label' => 'Concern(%)',
-				'type' => 'number',
-			),
-			array(
-				'label' => 'OK(%)', 
-				'type' => 'number',
-			),
-			array(
-				'label' => 'Thriving(%)',
-				'type' => 'number',
-			),
-	);
-
-	return $series;
-}
-
-function OSIRByYearsOfServiceChartHeader() {
-	$series = array(
-		array(
-			'label' => 'Years Of Service',
-			'type' => 'string',
-		),
-		array(
-			'label' => 'Average OSIR Score',
-			'type' => 'number',
-		),
-		array(
-			'label' => 'annotation',
-			'type' => 'number',
-		),
-	);
-
-	return $series;
-}
-
-function outlookAvgScorebyVulnerabilityChartHeader(){
-	$series = array(
-		array(
-			'label' => 'OSIR Profile',
-			'type' => 'string',
-		),
-		array(
-			'label' => 'Outlook Average Score',
-			'type' => 'number',
-		),
-		array(
-			'label' => 'style',
-			'type' => 'string',
-		),
-		array(
-			'label' => 'annotation',
-			'type' => 'number',
-		),
-	);
-
-	return $series;
 }
 
 function traumaAvgScorebyProfileChartHeader() {
@@ -455,47 +569,6 @@ function OSIRByYearsOfServiceChartData($my_gform_id = 0){
 	/* echo "<br><br>sql:<br>".$sql;
 	echo "<br><br>results:<br>";
 	print_r($results);
-	echo "<br><br>chartData:<br>";
-	print_r($chartData); */
-	
-	return $chartData;
-}
-
-function outlookAvgScorebyVulnerabilityChartData($my_gform_id = 0) {
-	global $wpdb;
-
-	$sql  = "SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile',"; 
-	$sql .= " AVG(outlookScore.`meta_value`) AS 'outlookAverageScore'";
-	$sql .= " FROM `wp_gf_entry_meta`,";
-	$sql .= " ( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'total_outlook_score' ) outlookScore";
-	$sql .= " WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile'";
-	$sql .= " AND `wp_gf_entry_meta`.`entry_id` = outlookScore.`entry_id`";
-  $sql .= " AND `wp_gf_entry_meta`.`form_id` = ".$my_gform_id;
-	$sql .= " GROUP BY osirProfile";
-
-	$results = $wpdb->get_results( $sql, ARRAY_A );
-
-	$counter = 0;
-	$chartData = [];
-	$seriesColors = array( "fill-color: #dd3333", "fill-color: #ff9205", 
-		"fill-color: #eeee22", "fill-color: #81d742" );
-
-	// Build chart data
-	foreach ($results as $k => $v){
-		$osirProfile = isset($v['osirProfile'])? $v['osirProfile']: 0;
-		$outlookAverageScore = isset($v['outlookAverageScore'])? (double)$v['outlookAverageScore']: 0;
-		$chartData[$counter][0] = $osirProfile;
-		$chartData[$counter][1] = $outlookAverageScore;
-		$chartData[$counter][2] = $seriesColors[$counter];
-		$chartData[$counter][3] = $outlookAverageScore;
-		$counter++;
-	}
-
-	/* echo "<br><br>sql:<br>".$sql;
-	echo "<br><br>results:<br>";
-	print_r($results);
-	echo "<br><br>seriesColors:<br>";
-	print_r($seriesColors);
 	echo "<br><br>chartData:<br>";
 	print_r($chartData); */
 	
