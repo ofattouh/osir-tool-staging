@@ -225,6 +225,21 @@ GROUP BY employeeByTobaccoUse.`meta_value`
 
 //
 
+// Impact Questions 
+
+// Motivation - On a scale from 1 to 10, on a typical day, I am very motivated at work
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(impactQuestionsMotivation.`meta_value`) AS "Average per OSIR category"
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'impact_questions_motivation_score' ) impactQuestionsMotivation
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = impactQuestionsMotivation.`entry_id`
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
+
+//
+
 // Short term disability – Over past year, have you been off work for a mental health-related matter?
 
 SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
