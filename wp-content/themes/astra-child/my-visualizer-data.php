@@ -3,6 +3,9 @@
 //----------------------------------------------------------------------------------------
 // Visualizer charts calculations & data
 
+// https://developers.google.com/chart/interactive/docs/gallery/columnchart
+// https://docs.themeisle.com/category/657-visualizer
+// https://docs.themeisle.com/article/728-manual-configuration
 // https://docs.themeisle.com/article/605-how-can-i-populate-chart-series-and-data-dynamically
 // https://docs.themeisle.com/article/970-visualizer-sample-queries-to-generate-charts
 

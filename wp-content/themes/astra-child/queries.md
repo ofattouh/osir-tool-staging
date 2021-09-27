@@ -42,6 +42,36 @@ AND `wp_gf_entry_meta`.`form_id` = 17
 GROUP BY osirProfile, demographicVocation.`meta_value`
 ORDER BY osirProfile ASC
 
+// I have good mental health, I am in good physical health, I have no concerns about fatigue
+// I have little concern about job burnout, I have little concern about job stress.
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(mentalHealthScore.`meta_value`) AS 'Average mental health outlook score' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'mental_health_score' ) mentalHealthScore 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = mentalHealthScore.`entry_id` 
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(physicalHealthScore.`meta_value`) AS 'Average physical health outlook score' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'physical_health_score' ) physicalHealthScore 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = physicalHealthScore.`entry_id` 
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
+
+SELECT `wp_gf_entry_meta`.`meta_value` AS 'osirProfile', 
+AVG(mentalHealthScore.`meta_value`) AS 'Average mental health outlook score' 
+FROM `wp_gf_entry_meta`, 
+( SELECT * FROM `wp_gf_entry_meta` WHERE meta_key = 'mental_health_score' ) mentalHealthScore 
+WHERE `wp_gf_entry_meta`.`meta_key` = 'osir_profile' 
+AND `wp_gf_entry_meta`.`entry_id` = mentalHealthScore.`entry_id` 
+AND `wp_gf_entry_meta`.`form_id` = 18
+GROUP BY osirProfile
+
 //
 
 // General Mental Outlook Score (Coping with Substances)
