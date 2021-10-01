@@ -1,11 +1,80 @@
 <?php
 
 //----------------------------------------------------------------------------------------
-// Member Press & gravity form custom hooks
+// Member Press & Gravity Form custom hooks
 
-// https://ristrettoapps.com/downloads/gravity-press/
-// https://members-plugin.com/docs/snippets/
 
+// Numeric fields custom validation
+add_filter( 'gform_field_validation_18_176', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_178', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_181', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_177', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
+function validate_attendance_presenteeism_wcb_claim_fields( $result, $value, $form, $field ) {
+
+  if (is_numeric($value)){
+    $validated_value = ($value == (int) $value) ? (int) $value : (float) $value;
+  } else{
+    $validated_value = $value;
+  }
+
+  /*
+  echo "<br><br>result";
+  echo $field->id;
+  print_r($result);
+  
+  echo "<br><br>value<br>";
+  var_dump($value);
+  var_dump($validated_value);
+  */
+
+  /*
+  echo "<br><br>is_numeric<br>";
+  print_r(is_numeric($value));
+  echo "<br>is_numeric2<br>";
+  print_r(is_numeric($validated_value));
+
+  echo "<br><br>is_int<br>";
+  print_r(is_int($value));
+  echo "<br>is_int2<br>";
+  print_r(is_int($validated_value));
+
+  echo "<br><br>is_float<br>";
+  print_r(is_float($value));
+  echo "<br>is_float2<br>";
+  print_r(is_float($validated_value));
+  */
+
+  if ( $result['is_valid'] && !is_int($validated_value) ) {
+    $result['is_valid'] = false;
+    $result['message'] = 'Only positive whole numeric values between 0 to 90 (inclusive) are allowed';
+  } else if ($result['is_valid'] && (0 > $validated_value || $validated_value > 90) ){
+    $result['is_valid'] = false;
+    $result['message'] = 'Only positive whole numeric values between 0 to 90 (inclusive) are allowed';
+  }
+
+  return $result;
+}
+
+// Numeric fields custom validation. What is your age?
+add_filter( 'gform_field_validation_18_180', 'validate_age_field', 10, 4 );
+function validate_age_field( $result, $value, $form, $field ) {
+
+  if (is_numeric($value)){
+    $validated_value = ($value == (int) $value) ? (int) $value : (float) $value;
+  } else{
+    $validated_value = $value;
+  }
+
+  if ( $result['is_valid'] && !is_int($validated_value) ) {
+    $result['is_valid'] = false;
+    $result['message'] = 'Only whole numbers between 20 to 70 years (inclusive) are allowed';
+  } else if ($result['is_valid'] && (20 > $validated_value || $validated_value > 70) ){
+    $result['is_valid'] = false;
+    $result['message'] = 'Only whole numbers between 20 to 70 years (inclusive) are allowed';
+  }
+
+  return $result;
+}
 
 // Adds custom link to the Account subscription page to manage sub accounts when there's an 
 // associated corporate account record but ONLY showing the corporate parent account
@@ -59,15 +128,22 @@ function get_ca_parent () {
 
 //--------------------------------------------------------------------------------------
 
-// check if user is logged in
-/* function member_only_shortcode_func($atts){
+/* 
+add_shortcode('memberonly', 'member_only_shortcode'); 
+function member_only_shortcode($atts){
   if ( !is_user_logged_in() ) {
     return '<h4>PLEASE LOGIN TO YOUR ACCOUNT</h4>';
   }
 }
-add_shortcode('memberonly', 'member_only_shortcode_func'); */
+*/
 
-/* function mepr_admin_capability($cap) {
+/*
+add_filter('mepr-admin-capability', 'mepr_admin_capability');  
+function mepr_admin_capability($cap) {
   return $cap;
 }
-add_filter('mepr-admin-capability', 'mepr_admin_capability'); */
+*/
+
+// https://docs.gravityforms.com/gform_field_validation/
+// https://ristrettoapps.com/downloads/gravity-press/
+// https://members-plugin.com/docs/snippets/
