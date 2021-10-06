@@ -1,6 +1,6 @@
 <?php
 /**
- * Astra Child Theme Theme functions and definitions
+ * Astra Child Theme functions and definitions
  *
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
  *
@@ -47,8 +47,31 @@ function gf_adding_scripts(){
 }
 add_action('wp_enqueue_scripts', 'gf_adding_scripts');
 
+// Validate survey membership before GF is rendered
+add_filter( 'gform_pre_render', 'gf_pre_render' );
+function gf_pre_render($form ) {
+	$gform_id = 0; // fall back
+
+	// Setup on memberpress membership page
+	$gf_id = (isset($_GET['my_gform_id']) && $_GET['my_gform_id'] > 0) ? $_GET['my_gform_id'] : 0;
+
+	// Setup on gravity form fields
+	foreach( $form['fields'] as $field ) {
+		if ($field->get_input_type() === 'hidden' && $field->cssClass === 'my_gform_id') {
+			$gform_id = $field->defaultValue;
+		}
+	}
+
+	if ( $gf_id == 0 || $gform_id == 0 || $gf_id != $gform_id ) {
+		echo "<p style='color:red;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service</p><a href='/'>Go Back</a>";
+		exit;
+	}
+
+	return $form;
+}
+
 // GF survey form submissions hook
-add_action( 'gform_after_submission_'.$my_gform_id, 'gf_after_submission', 10, 2);
+add_action( 'gform_after_submission_'.$my_gform_id, 'gf_after_submission', 10, 2 );
 function gf_after_submission($entry, $form ) {
 	global $survey_entry;
 	global $survey_form;
@@ -82,16 +105,13 @@ function add_my_script_astra_entry_content_after() {
 	$impact_questions_presenteeism = 0;
 	$impact_questions_motivation_score = 0;
 	$impact_questions_disability = '';
-	$impact_questions_wcc_claim = '';
+	$impact_questions_wcb_claim = 0;
+	$impact_questions_trauma_stress_exposures = 0;
 
 	$demographics_vocation = '';
 	$demographics_province = '';
 	$demographics_gender = '';
 	$demographics_age = 0;
-
-	// $osir_years_of_service = 0;
-	// $number_trauma_events = 0;
-	// $clinically_diagnosed_mental_illness = '';
 	
 	// Create GFSurvey instance
 	if ( ! class_exists( 'GFSurvey' ) ) {
@@ -190,7 +210,6 @@ function add_my_script_astra_entry_content_after() {
 			if ($field->cssClass === 'impact_questions_motivation') {
 				$impact_questions_motivation_score += $GFSurveyInstance:: get_field_score($field, $survey_entry);
 			}
-
 		}
 
 		//  -----------------------------------------------------------------
@@ -205,6 +224,16 @@ function add_my_script_astra_entry_content_after() {
 			$impact_questions_presenteeism = GFFormsModel::get_field_value($field);
 		}
 
+		// Impact Questions: WCB claim
+		if ($field->cssClass === 'impact_questions_wcb_claim') {
+			$impact_questions_wcb_claim = GFFormsModel::get_field_value($field);
+		}
+
+		// Impact Questions: Trauma/Very stressful situation exposures
+		if ($field->cssClass === 'impact_questions_trauma_stress_exposures') {
+			$impact_questions_trauma_stress_exposures = GFFormsModel::get_field_value($field);
+		}
+
 		// Demographics: What is your age? 
 		if ($field->cssClass === 'demographics_age') {
 			$demographics_age = GFFormsModel::get_field_value($field);
@@ -217,11 +246,6 @@ function add_my_script_astra_entry_content_after() {
 			// Impact Questions: Short term disability
 			if ($field->cssClass === 'impact_questions_disability') {
 				$impact_questions_disability = GFFormsModel::get_field_value($field);
-			}
-
-			// Impact Questions: WCC claim
-			if ($field->cssClass === 'impact_questions_wcc_claim') {
-				$impact_questions_wcc_claim = GFFormsModel::get_field_value($field);
 			}
 
 			// Demographic and Bio Data Questions
@@ -240,17 +264,6 @@ function add_my_script_astra_entry_content_after() {
 			if ($field->cssClass === 'demographics_gender') {
 				$demographics_gender = GFFormsModel::get_field_value($field);
 			}
-
-			// 6.	Trauma/Very stressful situation exposures
-			/* if ($field->cssClass === 'number_trauma_events') {
-				$number_trauma_events = GFFormsModel::get_field_value($field);
-			} */
-
-			// Have you ever been clinically diagnosed with a mental illness or addictive disorder?
-			/* if ($field->cssClass === 'clinically_diagnosed_mental_illness') {
-				$clinically_diagnosed_mental_illness = GFFormsModel::get_field_value($field);
-			} */
-	
 		}
 	}
 	
@@ -269,19 +282,19 @@ function add_my_script_astra_entry_content_after() {
 	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
 
 	// Survey submission confirmation messages
-	echo getUserProfileGenericMsg();
-	echo getUserProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
-		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
+	echo getParticipantReportMsg();
+	// echo getUserProfileGenericMsg();
+	// echo getUserProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
+		// $total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
 
-	// Add dynamic charts meta data to DB
 	gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_resiliency_behaviours_score,
 		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score,
 		$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
 		$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
 		$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
-		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcc_claim,
-		$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
-		$my_gform_id, $gf_moderator_uid );
+		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+		$impact_questions_trauma_stress_exposures, $demographics_vocation, $demographics_province, 
+		$demographics_gender, $demographics_age, $my_gform_id, $gf_moderator_uid );
 }
 
 // Add survey meta DB entry for each user submission
@@ -290,9 +303,9 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	$mental_health_score, $physical_health_score, $health_fatigue_concerns_score, $health_burnout_concerns_score,
 	$health_stress_concerns_score, $health_alcohol_stress_score, $health_cannabis_stress_score,
 	$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
-	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcc_claim,
-	$demographics_vocation, $demographics_province, $demographics_gender, $demographics_age,
-	$my_gform_id, $gf_moderator_uid ){
+	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
+	$impact_questions_trauma_stress_exposures, $demographics_vocation, $demographics_province, 
+	$demographics_gender, $demographics_age, $my_gform_id, $gf_moderator_uid ){
 	global $survey_entry;
 
 	// save gf submission user meta entry
@@ -323,16 +336,14 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	gform_add_meta( $survey_entry['id'], 'impact_questions_presenteeism', $impact_questions_presenteeism );
 	gform_add_meta( $survey_entry['id'], 'impact_questions_motivation_score', $impact_questions_motivation_score );
 	gform_add_meta( $survey_entry['id'], 'impact_questions_disability', $impact_questions_disability );
-	gform_add_meta( $survey_entry['id'], 'impact_questions_wcc_claim', $impact_questions_wcc_claim );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_wcb_claim', $impact_questions_wcb_claim );
+	gform_add_meta( $survey_entry['id'], 'impact_questions_trauma_stress_exposures', $impact_questions_trauma_stress_exposures );
 	
 	gform_add_meta( $survey_entry['id'], 'demographics_vocation', $demographics_vocation );
 	gform_add_meta( $survey_entry['id'], 'demographics_province', $demographics_province );
 	gform_add_meta( $survey_entry['id'], 'demographics_gender', $demographics_gender );
 	gform_add_meta( $survey_entry['id'], 'demographics_age', $demographics_age );
 
-	// gform_add_meta( $survey_entry['id'], 'number_trauma_events', $number_trauma_events );
-	// gform_add_meta( $survey_entry['id'], 'clinically_diagnosed_mental_illness', $clinically_diagnosed_mental_illness );
-	
 	// Track number of user submissions instead of relying on GF entry_id
 	gform_add_meta( $survey_entry['id'], 'is_survey_entry_submitted_by_user', 'yes' );
 }

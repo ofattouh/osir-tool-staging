@@ -5,11 +5,11 @@
 
 
 // Numeric fields custom validation
-add_filter( 'gform_field_validation_18_176', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
-add_filter( 'gform_field_validation_18_178', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
-add_filter( 'gform_field_validation_18_181', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
-add_filter( 'gform_field_validation_18_177', 'validate_attendance_presenteeism_wcb_claim_fields', 10, 4 );
-function validate_attendance_presenteeism_wcb_claim_fields( $result, $value, $form, $field ) {
+add_filter( 'gform_field_validation_18_176', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_178', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_177', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_18_181', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+function validate_attendance_presenteeism_wcb_claim_trauma_fields( $result, $value, $form, $field ) {
 
   if (is_numeric($value)){
     $validated_value = ($value == (int) $value) ? (int) $value : (float) $value;
@@ -55,7 +55,7 @@ function validate_attendance_presenteeism_wcb_claim_fields( $result, $value, $fo
   return $result;
 }
 
-// Numeric fields custom validation. What is your age?
+// Numeric field custom validation. What is your age?
 add_filter( 'gform_field_validation_18_180', 'validate_age_field', 10, 4 );
 function validate_age_field( $result, $value, $form, $field ) {
 

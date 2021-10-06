@@ -147,4 +147,40 @@ function getUserProfileGenericMsg () {
 	return $userProfileGenericMsg;
 }
 
+// Participant Report
+function getParticipantReportMsg(){
+	$participantReportMsg  = '<br><br><p>Thank you for your participation.</p>';
+
+	$participantReportMsg .= '<p>Understanding and regularly monitoring your behaviours, perceptions, ';
+	$participantReportMsg .= 'and experiences, can help increase your level of awareness of your ';
+	$participantReportMsg .= 'vulnerability and risk for stress and other health concerns that can ';
+	$participantReportMsg .= 'increase your risk of experiencing an Occupational Stress Injury (OSI). ';
+	$participantReportMsg .= 'It is ok and helpful to acknowledge when you are feeling unwanted levels ';
+	$participantReportMsg .= 'of stress and concern. Spend time to identify what might be contributing ';
+	$participantReportMsg .= 'to your levels of stress. It is also ok to ask for help.</p>';
+
+	$participantReportMsg .= '<p>Through early recognition and intervention, you can mitigate your ';
+	$participantReportMsg .= 'risk for OSI. You will find some general tips and recommendations below:</p>';
+	
+	$participantReportMsg .= '<h3>Resiliency Behaviours</h3>';
+	$participantReportMsg .= '<p><ul><li>Research suggests that resilience involves a combination of activating internal qualities and accessing external resources to positively deal with stress, setbacks and work through problems. Put simply, resilient people draw from both their strengths and support systems to face challenges. Actively practicing self-care and resilience techniques can increase your capacity to cope, overcome, and thrive through challenging times. Learning more about resilience is encouraged. Find out more by accessing <a href="https://www.pshsa.ca/training/free-training/resilientme" target="_blank">ResilientME</a></li>';
+	$participantReportMsg .= '<li>Take steps to make self-care a priority including establishing positive routines and structures, nurturing your social connections and relationships, staying active and eating healthy. You may find additional resources at <a href="https://www.pshsa.ca/healthy-workers" target="_blank">https://www.pshsa.ca/healthy-workers</a></li>';
+	$participantReportMsg .= '<li>It is important to recognize your limits and signs of burn out. Here is a webinar that explores different ways that people can <a href="https://www.pshsa.ca/training/free-training/beating-the-burnout-blues" target="_blank">cope with feelings of stress and burnout</a></li></ul></p>';
+
+	$participantReportMsg .= '<h3>Supportive Environment</h3>';
+	$participantReportMsg .= '<p><ul><li>Being treated with respect, having healthy workplace social connections, and feeling that at least some aspects of your organization are a good fit for you are some factors that build a supportive environment. Create open dialogue on how your work team can take steps to be a more supportive environment to not only yourself but those around you.</li>';
+	$participantReportMsg .= '<li>Keep in mind you do not need to figure this out alone. There is help. Even talking to a family member or trusted peer about support options can be a good place to start. With support there is a way to move toward feeling better.  If you are interested in free confidential peer-support, consider contacting Boots on the Ground Peer Support for First Responders at 1-833-677-2668 or visit <a href="https://www.bootsontheground.ca" target="_blank">www.bootsontheground.ca</a>. Here is a webinar that you may find helpful about <a href="https://www.pshsa.ca/training/free-training/speaking-to-colleagues-and-staff-about-mental-health" target="_blank">speaking to colleagues about mental health</a></li></ul></p>';
+
+	$participantReportMsg .= '<h3>Support Programs</h3>';
+	$participantReportMsg .= '<p><ul><li>Consider speaking to a mental health professional if you are not already doing so. They can help you explore options to reduce your current feelings of stress. To access mental health professionals, you can consider various options including EFAP (e.g., trauma care), paramedical psychological services, and in-house psychological services. If you are having any thoughts of suicide, contact National Crisis line at 1-833-456-4566</li>';
+	$participantReportMsg .= '<li>The right support programs can be meaningful and helpful in times of need. Seek out and ask for information on what mental health programs your organization offers. There may be existing supports and resources that you don’t know about either within your organization or within your community.</li>';
+	$participantReportMsg .= '<li>Stay active in organizational health and wellness initiatives.</li></ul></p>';
+
+	$participantReportMsg .= '<h3>Supportive Leadership</h3>';
+	$participantReportMsg .= '<p><ul><li>A trusting relationship between you and your leadership is important to help support you in times of stress. Other roles within the organization that can offer support include colleagues, human resources, health & safety groups, etc.</li>';
+	$participantReportMsg .= '<li>Take time to understand what resources are available to you to help you cope with stress. This can include supportive relationships, resources offered through your organization, as well as self-care.</li></ul></p>';
+
+	return $participantReportMsg;
+}
+
 //

@@ -8,7 +8,6 @@
 
 // GF ID
 $my_gform_id = (isset($_GET['my_gform_id']) && $_GET['my_gform_id'] > 0) ? $_GET['my_gform_id'] : 0;
-// echo "<br><br>my_gform_id: ".$my_gform_id;
 
 // Disable next/previous navigation links for membership pages
 add_filter( 'astra_single_post_navigation_enabled', '__return_false' );
