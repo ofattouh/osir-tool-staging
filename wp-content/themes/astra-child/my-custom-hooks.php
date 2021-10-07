@@ -126,6 +126,49 @@ function get_ca_parent () {
   return '';
 }
 
+// show organization report link header inside management page 
+add_action('mepr-account-subscriptions-th', 'show_organization_report_header', 10, 2);
+function show_organization_report_header($user, $subscriptions) { ?>
+  <th>ORGANIZATION REPORT</th>
+<?php
+}
+
+// show organization report link cell inside management page 
+add_action('mepr-account-subscriptions-td', 'show_organization_report_cell', 10, 4);
+function show_organization_report_cell($user, $row, $transaction, $issub) {
+  $obj_type = ($issub ? 'subscriptions' : 'transactions');
+  $ca = MPCA_Corporate_Account::find_corporate_account_by_obj_id($row->id, $obj_type);
+
+  $ca_parent = get_ca_parent();
+
+  echo "<br>ca:". $ca;
+  echo "<br>ca_parent: ".$ca_parent;
+  // Link should match organization report back end page permalink consisting of:  
+  // /organization-report-{corporate_parent_account_user_id} for: $ca_parent->user_id NOT $ca->user_id
+  // AND matching gravity form back end field: corporate_parent_account_moderator_id 
+  if(!empty($ca_parent) && isset($ca_parent->id) && !empty($ca_parent->id) && $ca_parent->is_enabled()) {
+    ?>
+    <td><a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Show Report</a></td>
+    <?php
+  }
+}
+
+// Show organization report hook
+add_action( 'astra_entry_content_after', 'astra_entry_content_after_organization_report');
+function astra_entry_content_after_organization_report () {
+  echo do_shortcode("[organizationreport]");
+}
+
+// Should shown only on frontend
+add_shortcode('organizationreport', 'show_organization_report'); 
+function show_organization_report($atts){
+  if( !is_admin() ){
+    print_r($atts);
+  }
+  
+
+}
+
 //--------------------------------------------------------------------------------------
 
 /* 

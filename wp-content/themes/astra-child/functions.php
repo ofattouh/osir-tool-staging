@@ -78,11 +78,11 @@ function gf_after_submission($entry, $form ) {
 	$survey_entry = $entry;
 	$survey_form = $form;
 
-	add_action( 'astra_entry_content_after', 'add_my_script_astra_entry_content_after');
+	add_action( 'astra_entry_content_after', 'astra_entry_content_after_gform_submission');
 }
 
 // Astra theme hook
-function add_my_script_astra_entry_content_after() {
+function astra_entry_content_after_gform_submission() {
 	global $survey_entry;
 	global $survey_form;
 
@@ -133,7 +133,7 @@ function add_my_script_astra_entry_content_after() {
 
 		// Corporate Parent Account Moderator ID (1 parent account per each membership)
 		if ($field->get_input_type() === 'hidden' && $field->cssClass === 'corporate_parent_account_moderator_id') {
-			$gf_moderator_uid = $field->defaultValue;
+			$gf_corporate_parent_uid = $field->defaultValue;
 		}
 
 		// likert fields ---------------------------------------------------------------------
@@ -283,9 +283,9 @@ function add_my_script_astra_entry_content_after() {
 
 	// Survey submission confirmation messages
 	echo getParticipantReportMsg();
-	// echo getUserProfileGenericMsg();
-	// echo getUserProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
-		// $total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
+	echo getOrganizationGenericMsg();
+	echo getOrganizationProfileMsg(getOrganizationProfile($total_osir_score), $total_resiliency_behaviours_score,
+		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
 
 	gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_resiliency_behaviours_score,
 		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score,
@@ -294,7 +294,7 @@ function add_my_script_astra_entry_content_after() {
 		$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
 		$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
 		$impact_questions_trauma_stress_exposures, $demographics_vocation, $demographics_province, 
-		$demographics_gender, $demographics_age, $my_gform_id, $gf_moderator_uid );
+		$demographics_gender, $demographics_age, $my_gform_id, $gf_corporate_parent_uid );
 }
 
 // Add survey meta DB entry for each user submission
@@ -305,7 +305,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	$health_tobacco_stress_score, $impact_questions_attendance, $impact_questions_presenteeism,
 	$impact_questions_motivation_score, $impact_questions_disability, $impact_questions_wcb_claim,
 	$impact_questions_trauma_stress_exposures, $demographics_vocation, $demographics_province, 
-	$demographics_gender, $demographics_age, $my_gform_id, $gf_moderator_uid ){
+	$demographics_gender, $demographics_age, $my_gform_id, $gf_corporate_parent_uid ){
 	global $survey_entry;
 
 	// save gf submission user meta entry
@@ -313,7 +313,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 
 	// add gf meta entries
 	gform_add_meta( $survey_entry['id'], 'gf_subscriber_uid', get_current_user_id() );
-	gform_add_meta( $survey_entry['id'], 'gf_moderator_uid', $gf_moderator_uid );
+	gform_add_meta( $survey_entry['id'], 'gf_corporate_parent_uid', $gf_corporate_parent_uid );
 	gform_add_meta( $survey_entry['id'], 'my_gform_id', $my_gform_id );
 
 	gform_add_meta( $survey_entry['id'], 'total_resiliency_behaviours_score', $total_resiliency_behaviours_score );

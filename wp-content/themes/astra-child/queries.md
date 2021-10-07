@@ -1,6 +1,16 @@
 /*******************************************************************************
 // Charts DB Queries
 
+// Organization report 4 average subscales
+SELECT SUM(resiliencysBehavioursScore.`meta_value`) AS 'Grand Total Score',
+AVG(resiliencysBehavioursScore.`meta_value`) AS 'Average Total Score',
+COUNT(resiliencysBehavioursScore.`meta_value`) AS 'Number submissions'
+FROM 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') resiliencysBehavioursScore
+WHERE `form_id` = 18
+
+//
+
 // Grand total number of all answers
 SELECT SUM(totalNumberAnswers.`meta_value`) AS 'grandTotalNumberAnswers' FROM 
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_number_of_answers') totalNumberAnswers
