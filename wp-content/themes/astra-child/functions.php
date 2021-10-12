@@ -41,11 +41,11 @@ require "my-astra-theme-config.php";
 
 // https://www.wpbeginner.com/wp-tutorials/how-to-properly-add-javascripts-and-styles-in-wordpress/
 // Gravity Forms custom JS (loaded in footer)
+add_action('wp_enqueue_scripts', 'gf_adding_scripts');
 function gf_adding_scripts(){
 	wp_register_script('gf_custom_js', get_stylesheet_directory_uri().'/js/gf_custom.js', array('jquery'), '1.1', true);
 	wp_enqueue_script('gf_custom_js');
 }
-add_action('wp_enqueue_scripts', 'gf_adding_scripts');
 
 // Validate survey membership before GF is rendered
 add_filter( 'gform_pre_render', 'gf_pre_render' );
