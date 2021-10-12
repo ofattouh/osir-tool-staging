@@ -1,7 +1,7 @@
 [
     {
         "key": "group_60ffaded7e456",
-        "title": "Corporate Parent Accounts Moderators",
+        "title": "Corporate Parent Accounts Moderators Parent User ID",
         "fields": [
             {
                 "key": "field_60ffadffcb72f",
@@ -158,6 +158,90 @@
                     "param": "user_form",
                     "operator": "==",
                     "value": "all"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_6165049761151",
+        "title": "Show Membership Users for My Account Page",
+        "fields": [
+            {
+                "key": "field_616504976e7c4",
+                "label": "show_membership_users",
+                "name": "show_membership_users",
+                "type": "text",
+                "instructions": "Show the Membership Users in the member press moderator account page",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "",
+                "maxlength": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_type",
+                    "operator": "==",
+                    "value": "top_level"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_616503421c53f",
+        "title": "Show Organization Report for My Account Page",
+        "fields": [
+            {
+                "key": "field_61650342277d9",
+                "label": "show_organization_report",
+                "name": "show_organization_report",
+                "type": "text",
+                "instructions": "Show the organization report in the member press moderator account page",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "",
+                "maxlength": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_type",
+                    "operator": "==",
+                    "value": "top_level"
                 }
             ]
         ],

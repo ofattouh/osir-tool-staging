@@ -93,7 +93,7 @@ if ( ! class_exists( 'GFForms' ) ) {
       if ($total_osir_score > 0) {
         echo getParticipantReportMsg();
         // echo getOrganizationGenericMsg();
-        // echo getOrganizationProfileMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
+        // echo getOrganizationScalesMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
 		      // $total_support_programs_score, $total_supportive_leadership_score, 
           // $total_supportive_environment_score);
       }

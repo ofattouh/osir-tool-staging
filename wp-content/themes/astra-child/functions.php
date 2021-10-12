@@ -131,8 +131,8 @@ function astra_entry_content_after_gform_submission() {
 			$my_gform_id = $field->defaultValue;
 		}
 
-		// Corporate Parent Account Moderator ID (1 parent account per each membership)
-		if ($field->get_input_type() === 'hidden' && $field->cssClass === 'corporate_parent_account_moderator_id') {
+		// Corporate Parent Account User ID (1 parent account per each membership)
+		if ($field->get_input_type() === 'hidden' && $field->cssClass === 'corporate_parent_account_user_id') {
 			$gf_corporate_parent_uid = $field->defaultValue;
 		}
 
@@ -283,9 +283,6 @@ function astra_entry_content_after_gform_submission() {
 
 	// Survey submission confirmation messages
 	echo getParticipantReportMsg();
-	echo getOrganizationGenericMsg();
-	echo getOrganizationProfileMsg(getOrganizationProfile($total_osir_score), $total_resiliency_behaviours_score,
-		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score);
 
 	gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_resiliency_behaviours_score,
 		$total_support_programs_score, $total_supportive_leadership_score, $total_supportive_environment_score,

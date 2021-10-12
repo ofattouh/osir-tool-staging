@@ -20,49 +20,44 @@ function getOrganizationProfile ($total_score = 0) {
 }
 
 // Organization Report profile message
-function getOrganizationProfileMsg ($organizationProfile ='N/A', $avg_resiliency_behaviours_score,
-		$avg_support_programs_score, $avg_supportive_leadership_score, $avg_supportive_environment_score) {
-
-	if ($organizationProfile !== 'Challenge' || 
-		$organizationProfile !== 'Concern' || 
-		$organizationProfile !== 'Thriving') {
-		return '';
-	}
+function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behaviours_score, $avg_support_programs_score, 
+	$avg_supportive_leadership_score, $avg_supportive_environment_score) {
+	$organizationProfile = getOrganizationProfile($osirAverageGrandScore);
 
 	$organizationProfileMsg  = '<h2>Overall</h2>';
-	$organizationProfileMsg .= '<p>Your OSI Risk score is: <b>'.$organizationProfile.'</b></p>'; 
+	$organizationProfileMsg .= '<p>Your OSI Risk score is: <b>'.$osirAverageGrandScore.'</b></p>'; 
 
 	$organizationProfileMsg .= '<p>Below you will find 3 profiles: Thriving, Concern, and Challenge. ';
 	$organizationProfileMsg .= 'Each of these profiles has information that can help increase your ';
 	$organizationProfileMsg .= 'awareness, and tips that you can act on.</p><br>';
 
-	$organizationProfileMsg .= '<table>';
-	$organizationProfileMsg .= '<th><td>Results</td><td>Challenge</td><td>Concern</td><td>Thriving</td></th>';
-	$organizationProfileMsg .= '<tr><td>Your results</td>';
+	$organizationProfileMsg .= '<div style="overflow-x:auto;"><table class="organization-report-results">';
+	$organizationProfileMsg .= '<tr><th class="organization-report-th">Results</th><th class="organization-report-th2">Challenge</th><th class="organization-report-th3">Concern</th><th class="organization-report-th4">Thriving</th></tr>';
+	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td>Your results</td>';
 
 	if ($organizationProfile === 'Challenge') {
-		$organizationProfileMsg .= '<td>Average Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
-		$organizationProfileMsg .= 'Average Support programs score: '.$avg_support_programs_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive environment score: '.$avg_supportive_environment_score.
+		$organizationProfileMsg .= '<td class="organization-report-your-results-td">Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
+		$organizationProfileMsg .= 'Support programs score: '.$avg_support_programs_score.'<br>';
+		$organizationProfileMsg .= 'Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
+		$organizationProfileMsg .= 'Supportive environment score: '.$avg_supportive_environment_score;
 		$organizationProfileMsg .= '</td><td></td><td></td></tr>';
 	} else if ($organizationProfile === 'Concern') {
-		$organizationProfileMsg .= '<td></td><td>Average Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
-		$organizationProfileMsg .= 'Average Support programs score: '.$avg_support_programs_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive environment score: '.$avg_supportive_environment_score;
+		$organizationProfileMsg .= '<td></td><td class="organization-report-your-results-td">Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
+		$organizationProfileMsg .= 'Support programs score: '.$avg_support_programs_score.'<br>';
+		$organizationProfileMsg .= 'Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
+		$organizationProfileMsg .= 'Supportive environment score: '.$avg_supportive_environment_score;
 		$organizationProfileMsg .= '</td><td></td></tr>';
 	
 	} else if ($organizationProfile === 'Thriving') {
-		$organizationProfileMsg .= '<td></td><td></td><td>Average Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
-		$organizationProfileMsg .= 'Average Support programs score: '.$avg_support_programs_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
-		$organizationProfileMsg .= 'Average Supportive environment score: '.$avg_supportive_environment_score;
+		$organizationProfileMsg .= '<td></td><td></td><td class="organization-report-your-results-td">Resiliency behaviours score: '.$avg_resiliency_behaviours_score.'<br>';
+		$organizationProfileMsg .= 'Support programs score: '.$avg_support_programs_score.'<br>';
+		$organizationProfileMsg .= 'Supportive leadership score: '.$avg_supportive_leadership_score.'<br>';
+		$organizationProfileMsg .= 'Supportive environment score: '.$avg_supportive_environment_score;
 		$organizationProfileMsg .= '</td></tr>';
 	}
 	
-	$organizationProfileMsg .= '<tr><td>Recommendations</td>';
-	$organizationProfileMsg .= '<td><ul><li>Encourage employees to seek help from a mental health professional</li>';
+	$organizationProfileMsg .= '<tr><td class="organization-report-recommendations">Recommendations</td>';
+	$organizationProfileMsg .= '<td valign="top"><ul><li>Encourage employees to seek help from a mental health professional</li>';
 	$organizationProfileMsg .= '<li>Consider examining your current benefits programs to ensure adequate health coverage</li>';
 	$organizationProfileMsg .= '<li>Do an outreach or communications campaign to advertise the programs available within your organization (e.g., EFAP, trauma care, paramedical psychological services, in-house psychological services)</li>';
 	$organizationProfileMsg .= '<li>Develop programs for leaders to be better able to discuss health and trauma at work</li>';
@@ -70,7 +65,7 @@ function getOrganizationProfileMsg ($organizationProfile ='N/A', $avg_resiliency
 	$organizationProfileMsg .= '<li>Consider providing paid time off to utilize support programs and resources</li>';
 	$organizationProfileMsg .= '</ul></td>';
 
-	$organizationProfileMsg .= '<td><ul><li>Offer specialized campaigns or webinars on lower scoring areas to ensure all groups are aware of available resources</li>';
+	$organizationProfileMsg .= '<td valign="top"><ul><li>Offer specialized campaigns or webinars on lower scoring areas to ensure all groups are aware of available resources</li>';
 	$organizationProfileMsg .= '<li>Examine whether subgroups of people are facing struggles over others (e.g., newer employees, females, those with children)</li>';
 	$organizationProfileMsg .= '<li>Provide supports and resources to allow for better work-life balance/integration</li>';
 	$organizationProfileMsg .= '<li>Evaluate whether current programs are effective and where improvements can be made</li>';
@@ -80,14 +75,14 @@ function getOrganizationProfileMsg ($organizationProfile ='N/A', $avg_resiliency
 	$organizationProfileMsg .= '<li>Interventions such as civility training and team building exercises may improve team interpersonal relationships</li>';
 	$organizationProfileMsg .= '</ul></td>';
 
-	$organizationProfileMsg .= '<td><ul><li>Celebrate successes through communication campaigns on best practices and success stories</li>';
+	$organizationProfileMsg .= '<td valign="top"><ul><li>Celebrate successes through communication campaigns on best practices and success stories</li>';
 	$organizationProfileMsg .= '<li>Encourage programs to maintain resiliency such as wellness challenges</li>';
 	$organizationProfileMsg .= '<li>Examine which programs are most effective and consider offering webinars to external organizations</li>';
 	$organizationProfileMsg .= '<li>Ensure programs stay relevant and top of mind for when traumatic events or challenging times occur</li>';
 	$organizationProfileMsg .= '</ul></td>';
 
-	$organizationProfileMsg .= '</tr></table>';
-	
+	$organizationProfileMsg .= '</tr></table></div>';
+
 	return $organizationProfileMsg;
 }
 
@@ -102,7 +97,6 @@ function getOrganizationGenericMsg () {
 	$organizationGenericMsg .= 'risk for stress and other health concerns that can increase your ';
 	$organizationGenericMsg .= 'employees’ risk of experiencing an OSI. Through early recognition ';
 	$organizationGenericMsg .= 'and intervention, you can mitigate your employees’ risk for OSI.</p>';
-	$organizationGenericMsg .= 'Scoring high on these scales indicates that you have the resources ';
 	
 	$organizationGenericMsg .= '<p>The OSI risk assessment is based on four themes (or scales). ';
 	$organizationGenericMsg .= 'Scoring high on these scales indicates that an employee has ';
@@ -209,6 +203,25 @@ function getParticipantReportMsg(){
 	$participantReportMsg .= '<li>Take time to understand what resources are available to you to help you cope with stress. This can include supportive relationships, resources offered through your organization, as well as self-care.</li></ul></p>';
 
 	return $participantReportMsg;
+}
+
+// Calculate Organization Average Score per Scale (4 sub scales)
+function calculateOrganizationAverageScore($meta_key, $my_gform_id) {
+	global $wpdb;
+
+	$sql  = "SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM ";
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') ";
+	$sql .= "scaleScore WHERE `form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$averageScore = (isset($results[0]) && isset($results[0]['averageScore'])) ? 
+		$results[0]['averageScore'] : 0;
+
+	// echo "<br><br>sql: ".$sql;
+	// print_r($results);
+
+	return $averageScore;
 }
 
 //

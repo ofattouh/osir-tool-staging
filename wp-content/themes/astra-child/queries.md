@@ -9,6 +9,12 @@ FROM
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') resiliencysBehavioursScore
 WHERE `form_id` = 18
 
+SELECT COUNT(*) AS 'Number submissions'
+FROM `wp_gf_entry_meta`
+WHERE meta_key = 'is_survey_entry_submitted_by_user' AND meta_value = 'yes'
+AND `form_id` = 18
+
+
 //
 
 // Grand total number of all answers
