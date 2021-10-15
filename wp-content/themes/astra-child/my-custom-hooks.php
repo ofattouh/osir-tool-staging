@@ -145,8 +145,8 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
     $show_organization_report = get_post_meta( $prd->ID, 'show_organization_report', true );
   }
 
-  // echo "<br>ca_parent cell: ".$ca_parent;
-  /* echo "<br>obj_type: "; echo $obj_type;
+  /* echo "<br>ca_parent cell: ".$ca_parent;
+  echo "<br>obj_type: "; echo $obj_type;
   echo "<br>prd->ID: ".$prd->ID;
   echo "<br>show_organization_report: "; print_r($show_organization_report); */
   
@@ -156,8 +156,12 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
   if( !empty($ca_parent) && isset($ca_parent->id) && !empty($ca_parent->id) && $ca_parent->is_enabled()
       && !empty($show_organization_report) && $show_organization_report === 'yes' ) {
     ?>
-    <td>Start Date: End Date:<br>
-      <a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Display Report</a></td>
+
+    <td>
+      <p><input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Select Start Date" /></p>
+      <p><input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="Select End Date" /></p>
+      <a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Show Report</a>
+    </td>
     <?php
   }
 }

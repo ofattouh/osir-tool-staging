@@ -48,13 +48,23 @@ Template: astra
   width: 30% !important;
 }
 
+/* Report start & end dates fields */
+.report-start-date, .report-end-date {
+  width: 60% !important;
+}
+
+/* Report start & end dates fields */
+div.ui-datepicker{
+  font-size: 12px;
+}
+
 /* Personal information fields 
 .mepr-form-input {
   width: 60% !important;
 }
 */
 
-/**************************** Organization Report ****************************/
+/**************************** Organization Report Page ****************************/
 
 /* Results Table */
 table.organization-report-results {
