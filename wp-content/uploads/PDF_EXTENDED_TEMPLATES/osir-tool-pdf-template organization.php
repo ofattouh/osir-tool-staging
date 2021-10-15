@@ -1,7 +1,7 @@
 <?php 
 
 /**
-  * Template Name: Occupational Stress Injury Resiliency Tool
+  * Template Name: OSIR Tool Organizaion Report
   * Version: 1.0
   * Description: Custom PDF template used to output the layout of PDF generated downloadable file outlining the recommendations according to calculated OSIR score when the user completes Gravity Forms OSIR survey submission
   * Author: PSHSA
@@ -81,21 +81,23 @@ if ( ! class_exists( 'GFForms' ) ) {
     require_once ABSPATH . 'wp-content/themes/astra-child/my-survey-confirmation-messages.php';
   
     $entry_id = $form_data['entry_id'];
+    $my_gform_id = gform_get_meta( $entry_id, 'my_gform_id');
     $is_survey_entry_submitted_by_user = gform_get_meta( $entry_id, 'is_survey_entry_submitted_by_user' );
 
-    if ( $entry_id > 0 && $is_survey_entry_submitted_by_user !== false && $is_survey_entry_submitted_by_user === 'yes') {    
-      $total_osir_score = gform_get_meta( $entry_id, 'total_osir_score' );
-      // $total_resiliency_behaviours_score = gform_get_meta( $entry_id, 'total_resiliency_behaviours_score' );
-      // $total_support_programs_score = gform_get_meta( $entry_id, 'total_support_programs_score' );
-      // $total_supportive_leadership_score = gform_get_meta( $entry_id, 'total_supportive_leadership_score' );
-      // $total_supportive_environment_score = gform_get_meta( $entry_id, 'total_supportive_environment_score' );
+    if ( $my_gform_id > 0 && $is_survey_entry_submitted_by_user !== false && $is_survey_entry_submitted_by_user === 'yes') {    
+      $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore ('total_resiliency_behaviours_score', $my_gform_id);
+      $supportProgramsAverageScore = calculateOrganizationAverageScore ('total_support_programs_score', $my_gform_id);
+      $supportiveLeadershipAverageScore = calculateOrganizationAverageScore ('total_supportive_leadership_score', $my_gform_id);
+      $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore ('total_supportive_environment_score', $my_gform_id);
 
-      if ($total_osir_score > 0) {
-        echo getParticipantReportMsg();
-        // echo getOrganizationGenericMsg();
-        // echo getOrganizationScalesMsg(getUserProfile($total_osir_score), $total_resiliency_behaviours_score,
-		      // $total_support_programs_score, $total_supportive_leadership_score, 
-          // $total_supportive_environment_score);
+    $osirAverageGrandScore = ( $resiliencyBehavioursAverageScore + $supportProgramsAverageScore + 
+      $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
+
+      if ( $entry_id > 0 && $osirAverageGrandScore > 0 ) {
+        echo getOrganizationGenericMsg($resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
+          $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
+        echo getOrganizationScalesMsg($osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
+          $supportProgramsAverageScore, $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
       }
     }
   ?>

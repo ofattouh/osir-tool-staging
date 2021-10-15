@@ -271,14 +271,11 @@ function astra_entry_content_after_gform_submission() {
 
 	// Debug
 	// echo '<br><br>Entry ID: '.$survey_entry['id'];
-	// echo '<h4>Survey Total Score: ' . $survey_entry['gsurvey_score'].'</h4>';
-	// echo '<h4>total_osir_score Score: '. $total_osir_score.'</h4>';
-	// echo '<h4>OSIR Profile: ' . getUserProfile($total_osir_score).'</h4>';
 
 	// https://docs.gravitypdf.com/v6/users/shortcodes-and-mergetags
-	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
+	echo do_shortcode("[gravitypdf name='OSIR Participant Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Save As PDF']");
 	echo " | ";
-	echo do_shortcode("[gravitypdf name='OSIR Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
+	echo do_shortcode("[gravitypdf name='OSIR Participant Report PDF' id='610c1fba96028' entry=".$survey_entry['id']." text='Print PDF' print='1']");
 
 	// Survey submission confirmation messages
 	echo getParticipantReportMsg();
@@ -317,7 +314,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 	gform_add_meta( $survey_entry['id'], 'total_supportive_leadership_score', $total_supportive_leadership_score );
 	gform_add_meta( $survey_entry['id'], 'total_supportive_environment_score', $total_supportive_environment_score );
 	gform_add_meta( $survey_entry['id'], 'total_osir_score', $total_osir_score );
-	gform_add_meta( $survey_entry['id'], 'osir_profile', getUserProfile($total_osir_score) );
+	gform_add_meta( $survey_entry['id'], 'osir_profile', getOSIRProfile($total_osir_score) );
 
 	gform_add_meta( $survey_entry['id'], 'mental_health_score', $mental_health_score );
 	gform_add_meta( $survey_entry['id'], 'physical_health_score', $physical_health_score );
@@ -342,6 +339,10 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 
 	// Track number of user submissions instead of relying on GF entry_id
 	gform_add_meta( $survey_entry['id'], 'is_survey_entry_submitted_by_user', 'yes' );
+
+	// Save submission entry date/time (EST)
+	date_default_timezone_set('America/New_York');
+	gform_add_meta( $survey_entry['id'], 'survey_entry_submitted_date_time', date("Y-m-d H:i:s") );
 }
 
 //----------------------------------------------------------------------------------------

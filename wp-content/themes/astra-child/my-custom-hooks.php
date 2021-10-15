@@ -156,7 +156,8 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
   if( !empty($ca_parent) && isset($ca_parent->id) && !empty($ca_parent->id) && $ca_parent->is_enabled()
       && !empty($show_organization_report) && $show_organization_report === 'yes' ) {
     ?>
-    <td><a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Display Report</a></td>
+    <td>Start Date: End Date:<br>
+      <a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Display Report</a></td>
     <?php
   }
 }
@@ -186,7 +187,9 @@ function show_organization_report($atts){
     echo "<br><br>supportiveEnvironmentAverageScore: ".$supportiveEnvironmentAverageScore;
     echo "<br><br>osirAverageGrandScore: ".$osirAverageGrandScore; */
 
-    echo getOrganizationGenericMsg();
+    // echo showPDFLinks();
+    echo getOrganizationGenericMsg($resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
+      $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
 	  echo getOrganizationScalesMsg($osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
       $supportProgramsAverageScore, $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
   }
