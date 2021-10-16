@@ -160,11 +160,11 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
     <td>
       <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $ca_parent->user_id; ?>" method="post">
         <p>From&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>
-          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (yyyy-mm-dd)" />
+          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (yyyy-mm-dd)" readonly />
         </p>
 
         <p>To&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (yyyy-mm-dd)" />
+          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (yyyy-mm-dd)" readonly />
         </p>
         <input type="submit" name="org-report-submit" id="org-report-submit" value="Display Report" />
       </form>
