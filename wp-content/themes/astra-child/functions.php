@@ -47,6 +47,7 @@ function gf_adding_scripts(){
 }
 
 // Validate survey membership before GF is rendered
+// https://docs.gravityforms.com/gform_pre_render/
 add_filter( 'gform_pre_render', 'gf_pre_render' );
 function gf_pre_render($form ) {
 	$gform_id = 0; // fall back
@@ -62,7 +63,7 @@ function gf_pre_render($form ) {
 	}
 
 	if ( $gf_id == 0 || $gform_id == 0 || $gf_id != $gform_id ) {
-		echo "<p style='color:red;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service</p><a href='/'>Go Back</a>";
+		echo "<a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service</p>";
 		exit;
 	}
 

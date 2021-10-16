@@ -158,24 +158,38 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
     ?>
 
     <td>
-      <p><input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Select Start Date" /></p>
-      <p><input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="Select End Date" /></p>
-      <a href="/organization-report-<?php echo $ca_parent->user_id; ?>">Show Report</a>
+      <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $ca_parent->user_id; ?>" method="post">
+        <p>From&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>
+          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (yyyy-mm-dd)" />
+        </p>
+
+        <p>To&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (yyyy-mm-dd)" />
+        </p>
+        <input type="submit" name="org-report-submit" id="org-report-submit" value="Display Report" />
+      </form>
     </td>
     <?php
   }
 }
 
-// Show organization report hook
-add_action( 'astra_entry_content_after', 'astra_entry_content_after_organization_report');
-function astra_entry_content_after_organization_report () {
-  echo do_shortcode("[organizationreport]");
-}
-
 // Setup short code on organization report back end page. Should only be shown on frontend
 add_shortcode('organizationreport', 'show_organization_report'); 
 function show_organization_report($atts){
+  /* var_dump(isset($_POST['org_report_start_date']) );
+  var_dump(empty($_POST['org_report_start_date']) );
+  var_dump(isset($_POST['org_report_end_date']) );
+  var_dump(empty($_POST['org_report_end_date']) );
+  print_r($_POST); */
+
   if( isset($atts['gformid']) && !is_admin() ){
+
+    if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
+      !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
+      echo "<br><a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization report is invalid. Please choose both start and end dates</p>";
+      return;
+    }
+
     $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore ('total_resiliency_behaviours_score', $atts['gformid']);
     $supportProgramsAverageScore = calculateOrganizationAverageScore ('total_support_programs_score', $atts['gformid']);
     $supportiveLeadershipAverageScore = calculateOrganizationAverageScore ('total_supportive_leadership_score', $atts['gformid']);
@@ -185,6 +199,7 @@ function show_organization_report($atts){
       $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
     
     // print_r($atts);
+
    /*  echo "<br><br>resiliencyBehavioursAverageScore: ".$resiliencyBehavioursAverageScore;
     echo "<br><br>supportProgramsAverageScore: ".$supportProgramsAverageScore;
     echo "<br><br>supportiveLeadershipAverageScore: ".$supportiveLeadershipAverageScore;
@@ -200,6 +215,12 @@ function show_organization_report($atts){
 }
 
 //--------------------------------------------------------------------------------------
+
+// Show organization report hook
+/* add_action( 'astra_entry_content_after', 'astra_entry_content_after_organization_report');
+function astra_entry_content_after_organization_report () {
+  echo do_shortcode("[organizationreport]");
+} */
 
 /* 
 add_shortcode('memberonly', 'member_only_shortcode'); 
