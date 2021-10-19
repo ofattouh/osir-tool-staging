@@ -50,21 +50,35 @@ function gf_adding_scripts(){
 // https://docs.gravityforms.com/gform_pre_render/
 add_filter( 'gform_pre_render', 'gf_pre_render' );
 function gf_pre_render($form ) {
-	$gform_id = 0; // fall back
+	global $post;
 
-	// Setup on memberpress membership page
-	$gf_id = (isset($_GET['my_gform_id']) && $_GET['my_gform_id'] > 0) ? $_GET['my_gform_id'] : 0;
+	// Setup on memberpress membership URL back end page
+	 if ( isset($_GET['my_gform_id']) ) {
+		 $gf_id = $_GET['my_gform_id'];
+	 }
 
-	// Setup on gravity form fields
+	// Setup on gravity form back end field
 	foreach( $form['fields'] as $field ) {
 		if ($field->get_input_type() === 'hidden' && $field->cssClass === 'my_gform_id') {
 			$gform_id = $field->defaultValue;
 		}
 	}
 
-	if ( $gf_id == 0 || $gform_id == 0 || $gf_id != $gform_id ) {
-		echo "<a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service</p>";
-		exit;
+	// Get current page id
+  if (isset($post->ID)) {
+    // Added manually using advanced custom fields inside each visualizer word press page
+    $page_gform_id = get_post_meta( $post->ID, 'my_gform_id', true );
+  }
+
+	// echo "<br>is_admin(): ".is_admin();
+	// echo "<br>gf_id: ".$gf_id.", gform_id: ".$gform_id.", page_gform_id: ".$page_gform_id;
+
+	// not back end page for gravity form
+	if ( !is_admin() && isset($page_gform_id) ) {
+		if ( !isset($gf_id) || !isset($gform_id) || $gf_id != $gform_id ) {
+			echo "<a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service</p>";
+			exit;
+		}
 	}
 
 	return $form;

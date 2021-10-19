@@ -71,20 +71,33 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   $obj_type = ($issub ? 'subscriptions' : 'transactions');
   $prd = ($obj_type === 'transactions') ? $transaction->product(): '';
   $ca = MPCA_Corporate_Account::find_corporate_account_by_obj_id($row->id, $obj_type);
+  $user = MeprUtils::get_currentuserinfo();
+
+  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
+  $ca_parent = get_ca_parent();
+  $cap = get_user_meta( $user->ID, 'wp_capabilities', true );
 
   // Added manually using advanced custom fields inside memberpress membership page
   if ( !empty($prd) && !empty($prd->ID) ) {
     $show_membership_users = get_post_meta( $prd->ID, 'show_membership_users', true );
   }
-
-  $ca_parent = get_ca_parent();
-  $my_ca = ( isset($ca_parent) && $ca_parent !== '' )? $ca_parent : $ca;
-
-  // echo "<br>ca:". $ca;
-  // echo "<br>ca_parent: ".$ca_parent;
-  /* echo "<br>obj_type: "; echo $obj_type;
+  
+  /* echo "<br>user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  echo "<br>"; var_dump($row); echo "<br>";
+  echo "<br>ca: ".$ca;
+  echo "<br>ca_parent: ".$ca_parent;
+  echo "<br>obj_type: "; echo $obj_type;
   echo "<br>prd->ID: ".$prd->ID;
-  echo "<br>show_membership_users: "; print_r($show_membership_users); */
+  echo "<br>show_membership_users: ".$show_membership_users; */
+
+  if ( isset($ca_parent) && $ca_parent !== '' ) {
+    $my_ca = $ca_parent;
+    // echo "<br>my_ca: ".$my_ca;
+  } else if ( is_array($cap) && !empty($cap['corporate_parent_account_moderator']) && 
+      isset($ca) && isset($ca->user_id) && $ca->user_id == $user->ID ) {
+    $my_ca = $ca;
+    // echo "<br>my_ca2: ".$my_ca;
+  }
 
   if( !empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()
      && !empty($show_membership_users) && $show_membership_users === 'yes' ) {
@@ -135,30 +148,47 @@ function show_organization_report_header($user, $subscriptions) { ?>
 // show organization report link cell inside management page 
 add_action('mepr-account-subscriptions-td', 'show_organization_report_cell', 10, 4);
 function show_organization_report_cell($user, $row, $transaction, $issub) {
-  $ca_parent = get_ca_parent();
   $show_organization_report = 'no';
   $obj_type = ($issub ? 'subscriptions' : 'transactions');
   $prd = ($obj_type === 'transactions') ? $transaction->product(): '';
+  $ca = MPCA_Corporate_Account::find_corporate_account_by_obj_id($row->id, $obj_type);
+  $user = MeprUtils::get_currentuserinfo();
+
+  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
+  $ca_parent = get_ca_parent();
+  $cap = get_user_meta( $user->ID, 'wp_capabilities', true );
 
   // Added manually using advanced custom fields inside memberpress membership page
   if ( !empty($prd) && !empty($prd->ID) ) {
     $show_organization_report = get_post_meta( $prd->ID, 'show_organization_report', true );
   }
 
-  /* echo "<br>ca_parent cell: ".$ca_parent;
+  /* echo "<br>user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  echo "<br>"; var_dump($row); echo "<br>";
+  echo "<br>ca: ".$ca;
+  echo "<br>ca_parent: ".$ca_parent;
   echo "<br>obj_type: "; echo $obj_type;
   echo "<br>prd->ID: ".$prd->ID;
-  echo "<br>show_organization_report: "; print_r($show_organization_report); */
+  echo "<br>show_organization_report: ".$show_organization_report; */
+
+  if ( isset($ca_parent) && $ca_parent !== '' ) {
+    $my_ca = $ca_parent;
+    // echo "<br>my_ca: ".$my_ca;
+  } else if ( is_array($cap) && !empty($cap['corporate_parent_account_moderator']) && 
+      isset($ca) && isset($ca->user_id) && $ca->user_id == $user->ID ) {
+    $my_ca = $ca;
+    // echo "<br>my_ca2: ".$my_ca;
+  }
   
   // Link should match organization report back end page permalink consisting of:  
-  // /organization-report-{corporate_parent_account_user_id} for: $ca_parent->user_id NOT $ca->user_id
+  // /organization-report-{corporate_parent_account_user_id} for: $ca_parent->user_id OR $ca->user_id
   // AND matching gravity form back end field: corporate_parent_account_user_id 
-  if( !empty($ca_parent) && isset($ca_parent->id) && !empty($ca_parent->id) && $ca_parent->is_enabled()
+  if( !empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()
       && !empty($show_organization_report) && $show_organization_report === 'yes' ) {
     ?>
 
     <td>
-      <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $ca_parent->user_id; ?>" method="post">
+      <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $my_ca->user_id; ?>" method="post">
         <p>From&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>
           <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (yyyy-mm-dd)" readonly />
         </p>
@@ -176,11 +206,11 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
 // Setup short code on organization report back end page. Should only be shown on frontend
 add_shortcode('organizationreport', 'show_organization_report'); 
 function show_organization_report($atts){
-  /* var_dump(isset($_POST['org_report_start_date']) );
+ /*  var_dump(isset($_POST['org_report_start_date']) );
   var_dump(empty($_POST['org_report_start_date']) );
   var_dump(isset($_POST['org_report_end_date']) );
-  var_dump(empty($_POST['org_report_end_date']) );
-  print_r($_POST); */
+  var_dump(empty($_POST['org_report_end_date']) ); */
+  print_r($_POST); echo "<br><br>";
 
   if( isset($atts['gformid']) && !is_admin() ){
 

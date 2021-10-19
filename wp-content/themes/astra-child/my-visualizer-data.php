@@ -100,9 +100,9 @@ function myplugin_filter_charts_data( $data, $chart_id, $type ) {
 	}
 
   // General Mental Outlook Score (Coping with Substances)
-	if ( $chart_id === 208 && $type === 'column' && $my_gform_id == 17){
+	/* if ( $chart_id === 208 && $type === 'column' && $my_gform_id == 17){
 		 return outlookMentalScoreCopingChartData($my_gform_id);
-	}
+	} */
 
 	// What is your current vocation? (OSIR Index Score by Department). Percentage of employees per vulnerability profile
 	if ( $chart_id === 66 && $type === 'column' && $my_gform_id == 10 || 
