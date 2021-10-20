@@ -211,36 +211,51 @@ function show_organization_report($atts){
   var_dump(isset($_POST['org_report_end_date']) );
   var_dump(empty($_POST['org_report_end_date']) ); */
   print_r($_POST); echo "<br><br>";
+  // print_r($atts);
 
-  if( isset($atts['gformid']) && !is_admin() ){
+  if( !is_admin() && isset($atts['gformid']) ) {
 
     if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
       !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
-      echo "<br><a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization report is invalid. Please choose both start and end dates</p>";
+      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization reporting period is invalid. Please choose both start and end dates.</p>";
       return;
+    } else {
+      $org_report_start_date = date_create($_POST['org_report_start_date']);
+      $org_report_end_date = date_create($_POST['org_report_end_date']);
+      $date_diff = date_diff($org_report_start_date, $org_report_end_date);
+      echo $date_diff->format("%R%a days");
+
+      if ($date_diff->format("%R%a days") < 0) {
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization reporting period is invalid. Start date should be after the end date.</p>";
+        return;
+      }
+
+      echo "<br>"; var_dump($org_report_start_date); echo"<br>";
+      var_dump($org_report_end_date);
+      
+
+      $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore ('total_resiliency_behaviours_score', $atts['gformid']);
+      $supportProgramsAverageScore = calculateOrganizationAverageScore ('total_support_programs_score', $atts['gformid']);
+      $supportiveLeadershipAverageScore = calculateOrganizationAverageScore ('total_supportive_leadership_score', $atts['gformid']);
+      $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore ('total_supportive_environment_score', $atts['gformid']);
+
+      $osirAverageGrandScore = ( $resiliencyBehavioursAverageScore + $supportProgramsAverageScore + 
+        $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
+
+      /*  
+      echo "<br><br>resiliencyBehavioursAverageScore: ".$resiliencyBehavioursAverageScore;
+      echo "<br><br>supportProgramsAverageScore: ".$supportProgramsAverageScore;
+      echo "<br><br>supportiveLeadershipAverageScore: ".$supportiveLeadershipAverageScore;
+      echo "<br><br>supportiveEnvironmentAverageScore: ".$supportiveEnvironmentAverageScore;
+      echo "<br><br>osirAverageGrandScore: ".$osirAverageGrandScore; 
+      */
+
+      // echo showPDFLinks();
+      echo getOrganizationGenericMsg($resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
+        $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
+      echo getOrganizationScalesMsg($osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
+        $supportProgramsAverageScore, $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
     }
-
-    $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore ('total_resiliency_behaviours_score', $atts['gformid']);
-    $supportProgramsAverageScore = calculateOrganizationAverageScore ('total_support_programs_score', $atts['gformid']);
-    $supportiveLeadershipAverageScore = calculateOrganizationAverageScore ('total_supportive_leadership_score', $atts['gformid']);
-    $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore ('total_supportive_environment_score', $atts['gformid']);
-
-    $osirAverageGrandScore = ( $resiliencyBehavioursAverageScore + $supportProgramsAverageScore + 
-      $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
-    
-    // print_r($atts);
-
-   /*  echo "<br><br>resiliencyBehavioursAverageScore: ".$resiliencyBehavioursAverageScore;
-    echo "<br><br>supportProgramsAverageScore: ".$supportProgramsAverageScore;
-    echo "<br><br>supportiveLeadershipAverageScore: ".$supportiveLeadershipAverageScore;
-    echo "<br><br>supportiveEnvironmentAverageScore: ".$supportiveEnvironmentAverageScore;
-    echo "<br><br>osirAverageGrandScore: ".$osirAverageGrandScore; */
-
-    // echo showPDFLinks();
-    echo getOrganizationGenericMsg($resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
-      $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
-	  echo getOrganizationScalesMsg($osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
-      $supportProgramsAverageScore, $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
   }
 }
 

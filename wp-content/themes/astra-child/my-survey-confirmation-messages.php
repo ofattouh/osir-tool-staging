@@ -89,7 +89,7 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 // Organization Report generic message
 function getOrganizationGenericMsg ($avg_resiliency_behaviours_score, $avg_support_programs_score, 
 	$avg_supportive_leadership_score, $avg_supportive_environment_score) {
-	$organizationGenericMsg  = '<a href="/">&#60;&#60;Go Back</a><br>';
+	$organizationGenericMsg  = '<a href="/?action=subscriptions">&#60;&#60;Go Back</a><br>';
 	$organizationGenericMsg .= '<br><h2>Organization Report</h2>';
 	$organizationGenericMsg .= '<h3>RISK OF DEVELOPING AN OCCUPATIONAL STRESS INJURY</h3>';
 	$organizationGenericMsg .= '<p>The organization’s overall OSI risk score is calculated ';
