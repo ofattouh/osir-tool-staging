@@ -88,9 +88,17 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 
 // Organization Report generic message
 function getOrganizationGenericMsg ($avg_resiliency_behaviours_score, $avg_support_programs_score, 
-	$avg_supportive_leadership_score, $avg_supportive_environment_score) {
+	$avg_supportive_leadership_score, $avg_supportive_environment_score, $report_start_date, $report_end_date) {
+	
+	// Submission entry date/time (EST)
+	date_default_timezone_set('America/New_York');
+	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('Y-m-d'): date('Y-m-d');
+	$end_date = (isset($report_end_date) ) ? $report_end_date->format('Y-m-d'): date('Y-m-d');
+
 	$organizationGenericMsg  = '<a href="/?action=subscriptions">&#60;&#60;Go Back</a><br>';
 	$organizationGenericMsg .= '<br><h2>Organization Report</h2>';
+	$organizationGenericMsg .= '<h5>From: '.$start_date.'</h5>';
+	$organizationGenericMsg .= '<h5>To: '.$end_date.'</h5>';
 	$organizationGenericMsg .= '<h3>RISK OF DEVELOPING AN OCCUPATIONAL STRESS INJURY</h3>';
 	$organizationGenericMsg .= '<p>The organization’s overall OSI risk score is calculated ';
 	$organizationGenericMsg .= 'using several data points from the survey. By regularly monitoring ';
@@ -171,6 +179,32 @@ function getOrganizationGenericMsg ($avg_resiliency_behaviours_score, $avg_suppo
 	return $organizationGenericMsg;
 }
 
+// Calculate Organization Average Score per Scale (4 sub scales) for this reporting period
+function calculateOrganizationAverageScore($meta_key, $my_gform_id, $report_start_date, $report_end_date) {
+	global $wpdb;
+
+	// Submission entry date/time (EST)
+	date_default_timezone_set('America/New_York');
+	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('Y-m-d'): date('Y-m-d');
+	$end_date = (isset($report_end_date) ) ? $report_end_date->format('Y-m-d'): date('Y-m-d');
+
+	$sql  = "SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM ";
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') scaleScore, ";
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' ";
+	$sql .= "AND `meta_value` BETWEEN '".$start_date."' AND '".$end_date."') reportingPeriod ";
+	$sql .= "WHERE reportingPeriod.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$averageScore = (isset($results[0]) && isset($results[0]['averageScore'])) ? 
+		$results[0]['averageScore'] : 0;
+
+	// echo "<br><br>sql: ".$sql;
+	// echo "<br>"; print_r($results);
+
+	return $averageScore;
+}
+
 // Participant Report
 function getParticipantReportMsg(){
 	$participantReportMsg  = '<br><br><p>Thank you for your participation.</p>';
@@ -207,26 +241,9 @@ function getParticipantReportMsg(){
 	return $participantReportMsg;
 }
 
-// Calculate Organization Average Score per Scale (4 sub scales)
-function calculateOrganizationAverageScore($meta_key, $my_gform_id) {
-	global $wpdb;
+// ------------------------------------------------------------------------------------------
 
-	$sql  = "SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM ";
-	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') ";
-	$sql .= "scaleScore WHERE `form_id` = ".$my_gform_id;
-
-	$results = $wpdb->get_results( $sql, ARRAY_A );
-
-	$averageScore = (isset($results[0]) && isset($results[0]['averageScore'])) ? 
-		$results[0]['averageScore'] : 0;
-
-	// echo "<br><br>sql: ".$sql;
-	// print_r($results);
-
-	return $averageScore;
-}
-
-// Show PDF Links in the organization report page
+// Show PDF Links in the organization report page (short code doesn't work for Gravity PDF)
 /* function showPDFLinks ($entry_id) {
 	if ($entry_id > 0) {
 		echo do_shortcode("[gravitypdf name='OSIR Organization Report PDF' id='61691d54897ef' entry=".$entry_id." text='Save As PDF']");

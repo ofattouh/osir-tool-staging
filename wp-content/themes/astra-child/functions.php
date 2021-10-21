@@ -357,7 +357,7 @@ function gform_add_meta_entry_survey( $survey_entry, $total_osir_score, $total_r
 
 	// Save submission entry date/time (EST)
 	date_default_timezone_set('America/New_York');
-	gform_add_meta( $survey_entry['id'], 'survey_entry_submitted_date_time', date("Y-m-d H:i:s") );
+	gform_add_meta( $survey_entry['id'], 'survey_entry_submitted_date', date("Y-m-d") );
 }
 
 //----------------------------------------------------------------------------------------

@@ -90,6 +90,7 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   echo "<br>prd->ID: ".$prd->ID;
   echo "<br>show_membership_users: ".$show_membership_users; */
 
+  // check for GF moderators role
   if ( isset($ca_parent) && $ca_parent !== '' ) {
     $my_ca = $ca_parent;
     // echo "<br>my_ca: ".$my_ca;
@@ -171,6 +172,7 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
   echo "<br>prd->ID: ".$prd->ID;
   echo "<br>show_organization_report: ".$show_organization_report; */
 
+  // check for GF moderators role
   if ( isset($ca_parent) && $ca_parent !== '' ) {
     $my_ca = $ca_parent;
     // echo "<br>my_ca: ".$my_ca;
@@ -190,11 +192,11 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
     <td>
       <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $my_ca->user_id; ?>" method="post">
         <p>From&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>
-          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (yyyy-mm-dd)" readonly />
+          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (YYYY-MM-DD)" readonly />
         </p>
 
         <p>To&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (yyyy-mm-dd)" readonly />
+          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (YYYY-MM-DD)" readonly />
         </p>
         <input type="submit" name="org-report-submit" id="org-report-submit" value="Display Report" />
       </form>
@@ -206,55 +208,54 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
 // Setup short code on organization report back end page. Should only be shown on frontend
 add_shortcode('organizationreport', 'show_organization_report'); 
 function show_organization_report($atts){
- /*  var_dump(isset($_POST['org_report_start_date']) );
-  var_dump(empty($_POST['org_report_start_date']) );
-  var_dump(isset($_POST['org_report_end_date']) );
-  var_dump(empty($_POST['org_report_end_date']) ); */
-  print_r($_POST); echo "<br><br>";
-  // print_r($atts);
+  if( !is_admin() && is_user_logged_in() && isset($atts['gformid']) ) {
 
-  if( !is_admin() && isset($atts['gformid']) ) {
-
+    // Required fields
     if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
       !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
-      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization reporting period is invalid. Please choose both start and end dates.</p>";
+      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Please choose both the start and end dates</p>";
       return;
     } else {
+      // Start date should fall after the end date
       $org_report_start_date = date_create($_POST['org_report_start_date']);
       $org_report_end_date = date_create($_POST['org_report_end_date']);
       $date_diff = date_diff($org_report_start_date, $org_report_end_date);
-      echo $date_diff->format("%R%a days");
+
+      // print_r($atts);
+      // echo "<br>"; print_r($_POST);
+      // echo "<br>".$date_diff->format("%R%a days");
 
       if ($date_diff->format("%R%a days") < 0) {
-        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Organization reporting period is invalid. Start date should be after the end date.</p>";
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Start date should be equal to or after the end date</p>";
         return;
       }
 
-      echo "<br>"; var_dump($org_report_start_date); echo"<br>";
-      var_dump($org_report_end_date);
-      
-
-      $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore ('total_resiliency_behaviours_score', $atts['gformid']);
-      $supportProgramsAverageScore = calculateOrganizationAverageScore ('total_support_programs_score', $atts['gformid']);
-      $supportiveLeadershipAverageScore = calculateOrganizationAverageScore ('total_supportive_leadership_score', $atts['gformid']);
-      $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore ('total_supportive_environment_score', $atts['gformid']);
+      $resiliencyBehavioursAverageScore = calculateOrganizationAverageScore (
+        'total_resiliency_behaviours_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+      $supportProgramsAverageScore = calculateOrganizationAverageScore (
+        'total_support_programs_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+      $supportiveLeadershipAverageScore = calculateOrganizationAverageScore (
+        'total_supportive_leadership_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+      $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore (
+        'total_supportive_environment_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
 
       $osirAverageGrandScore = ( $resiliencyBehavioursAverageScore + $supportProgramsAverageScore + 
         $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
 
-      /*  
-      echo "<br><br>resiliencyBehavioursAverageScore: ".$resiliencyBehavioursAverageScore;
-      echo "<br><br>supportProgramsAverageScore: ".$supportProgramsAverageScore;
-      echo "<br><br>supportiveLeadershipAverageScore: ".$supportiveLeadershipAverageScore;
-      echo "<br><br>supportiveEnvironmentAverageScore: ".$supportiveEnvironmentAverageScore;
-      echo "<br><br>osirAverageGrandScore: ".$osirAverageGrandScore; 
-      */
-
       // echo showPDFLinks();
-      echo getOrganizationGenericMsg($resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
-        $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
-      echo getOrganizationScalesMsg($osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
-        $supportProgramsAverageScore, $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore);
+      if ( $resiliencyBehavioursAverageScore == 0 || $supportProgramsAverageScore == 0 || 
+            $supportiveLeadershipAverageScore == 0 || $supportiveEnvironmentAverageScore == 0 ) {
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found for this reporting period. Please choose different dates";
+      } else {
+        echo getOrganizationGenericMsg( 
+          $resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 
+          $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore,
+          $org_report_start_date, $org_report_end_date);
+        echo getOrganizationScalesMsg(
+          $osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
+          $supportProgramsAverageScore, $supportiveLeadershipAverageScore, 
+          $supportiveEnvironmentAverageScore);
+      }
     }
   }
 }

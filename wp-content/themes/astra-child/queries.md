@@ -1,6 +1,18 @@
 /*******************************************************************************
 // Charts DB Queries
 
+// 
+
+// Reporting period Average scores
+SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') scaleScore, 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod
+WHERE reportingPeriod.`form_id` = 18
+
+SELECT * FROM `wp_gf_entry_meta`
+WHERE (`meta_key` = 'survey_entry_submitted_date' AND 
+        `meta_value` BETWEEN '2021-10-15' AND '2021-10-19')
+
 // Organization report 4 average subscales
 SELECT SUM(resiliencysBehavioursScore.`meta_value`) AS 'Grand Total Score',
 AVG(resiliencysBehavioursScore.`meta_value`) AS 'Average Total Score',
@@ -13,7 +25,6 @@ SELECT COUNT(*) AS 'Number submissions'
 FROM `wp_gf_entry_meta`
 WHERE meta_key = 'is_survey_entry_submitted_by_user' AND meta_value = 'yes'
 AND `form_id` = 18
-
 
 //
 
