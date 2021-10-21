@@ -192,7 +192,8 @@ function calculateOrganizationAverageScore($meta_key, $my_gform_id, $report_star
 	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') scaleScore, ";
 	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' ";
 	$sql .= "AND `meta_value` BETWEEN '".$start_date."' AND '".$end_date."') reportingPeriod ";
-	$sql .= "WHERE reportingPeriod.`form_id` = ".$my_gform_id;
+	$sql .= "WHERE scaleScore.`entry_id` = reportingPeriod.`entry_id` AND ";
+	$sql .= "reportingPeriod.`form_id` = ".$my_gform_id;
 
 	$results = $wpdb->get_results( $sql, ARRAY_A );
 

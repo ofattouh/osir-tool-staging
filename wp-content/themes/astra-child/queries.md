@@ -7,7 +7,15 @@
 SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM 
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') scaleScore, 
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod
-WHERE reportingPeriod.`form_id` = 18
+WHERE scaleScore.entry_id = reportingPeriod.entry_id AND
+reportingPeriod.`form_id` = 18
+
+SELECT scaleScore.`entry_id` AS 'ID',
+scaleScore.`meta_value` AS 'Scale Score' FROM 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') scaleScore, 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod 
+WHERE scaleScore.entry_id = reportingPeriod.entry_id 
+AND reportingPeriod.`form_id` = 18
 
 SELECT * FROM `wp_gf_entry_meta`
 WHERE (`meta_key` = 'survey_entry_submitted_date' AND 
