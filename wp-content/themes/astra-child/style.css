@@ -48,14 +48,27 @@ Template: astra
   width: 30% !important;
 }
 
-/* Report start & end dates fields */
-.report-start-date, .report-end-date {
-  width: 60% !important;
+/* Date picker widget */
+div.ui-datepicker{
+  font-size: 12px;
+  width: 20em !important;
 }
 
 /* Report start & end dates fields */
-div.ui-datepicker{
-  font-size: 13px;
+.report-start-date, .report-end-date {
+  width: 45% !important;
+}
+
+/* Memberpress account table */
+table.mepr-account-table th {
+  font-size: 16px !important;
+  padding: 15px !important;
+  text-align: center !important;
+}
+
+table.mepr-account-table td {
+  padding: 15px !important;
+  text-align: left !important;
 }
 
 /* Personal information fields 
@@ -73,8 +86,9 @@ table.organization-report-results {
 
 table.organization-report-results th {
   text-align: center !important;
-  font-size: 20px !important;
+  font-size: 25px !important;
   font-weight: bolder;
+  padding: 15px !important;
 }
 
 /* results */
@@ -94,8 +108,19 @@ tr.organization-report-your-results-tr {
   background-color: #56bde7;
 }
 
+tr.organization-report-your-results-tr:hover {
+  /* background-color: transparent !important; */
+  background-color: #f8f8ff !important;
+  font-weight: bold;
+  font-size: 16px !important;
+}
+
 td.organization-report-your-results-td {
   font-size: 14px !important;
+}
+
+td.organization-report-your-results-td:hover {
+  font-size: 16px !important;
 }
 
 /* Challenge */
@@ -111,6 +136,11 @@ th.organization-report-th3 {
 /* Thriving */
 th.organization-report-th4 {
   background-color: #159c65;
+}
+
+/* Reporting period */
+p.organization-report-dates {
+  font-size: 18px !important;
 }
 
 /**************************** Visualizer ****************************/

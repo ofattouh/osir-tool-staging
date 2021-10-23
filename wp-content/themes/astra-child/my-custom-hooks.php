@@ -192,11 +192,11 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
     <td>
       <form class="org-report-form" name="org-report-form" action="/organization-report-<?php echo $my_ca->user_id; ?>" method="post">
         <p>From&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>
-          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="Start Date (YYYY-MM-DD)" readonly />
+          <input type="text" name="org_report_start_date" class="report-start-date date_picker" placeholder="&nbsp;&nbsp;YYYY-MM-DD" readonly />
         </p>
 
         <p>To&nbsp;<span style="color:#FF0000;font-weight:bold">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="End Date (YYYY-MM-DD)" readonly />
+          <input type="text" name="org_report_end_date" class="report-end-date date_picker" placeholder="&nbsp;&nbsp;YYYY-MM-DD" readonly />
         </p>
         <input type="submit" name="org-report-submit" id="org-report-submit" value="Display Report" />
       </form>
@@ -213,7 +213,7 @@ function show_organization_report($atts){
     // Required fields
     if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
       !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
-      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Please choose both the start and end dates</p>";
+      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Please choose both the start and end dates.</p>";
       return;
     } else {
       // Start date should fall after the end date
@@ -226,7 +226,7 @@ function show_organization_report($atts){
       // echo "<br>".$date_diff->format("%R%a days");
 
       if ($date_diff->format("%R%a days") < 0) {
-        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Start date should be equal to or after the end date</p>";
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Start date should be equal to or after the end date.</p>";
         return;
       }
 
@@ -245,7 +245,7 @@ function show_organization_report($atts){
       // echo showPDFLinks();
       if ( $resiliencyBehavioursAverageScore == 0 || $supportProgramsAverageScore == 0 || 
             $supportiveLeadershipAverageScore == 0 || $supportiveEnvironmentAverageScore == 0 ) {
-        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found for this reporting period. Please choose different dates";
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found for this reporting period. Please choose different dates.";
       } else {
         echo getOrganizationGenericMsg( 
           $resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 

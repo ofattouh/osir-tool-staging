@@ -31,9 +31,10 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 	$organizationProfileMsg .= 'Each of these profiles has information that can help increase your ';
 	$organizationProfileMsg .= 'awareness, and tips that you can act on.</p><br>';
 
+	// Add horizontal scroll bar for the table on small screens
 	$organizationProfileMsg .= '<div style="overflow-x:auto;"><table class="organization-report-results">';
-	$organizationProfileMsg .= '<tr><th class="organization-report-th">Results</th><th class="organization-report-th2">Challenge</th><th class="organization-report-th3">Concern</th><th class="organization-report-th4">Thriving</th></tr>';
-	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td>Your results</td>';
+	$organizationProfileMsg .= '<tr><th class="organization-report-th">RESULTS</th><th class="organization-report-th2">CHALLENGE</th><th class="organization-report-th3">CONCERN</th><th class="organization-report-th4">THRIVING</th></tr>';
+	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td>YOUR RESULTS</td>';
 
 	if ($organizationProfile === 'Challenge') {
 		$organizationProfileMsg .= '<td class="organization-report-your-results-td">Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
@@ -56,7 +57,7 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 		$organizationProfileMsg .= '</td></tr>';
 	}
 	
-	$organizationProfileMsg .= '<tr><td class="organization-report-recommendations">Recommendations</td>';
+	$organizationProfileMsg .= '<tr><td class="organization-report-recommendations">RECOMMEDATIONS</td>';
 	$organizationProfileMsg .= '<td valign="top"><ul><li>Encourage employees to seek help from a mental health professional</li>';
 	$organizationProfileMsg .= '<li>Consider examining your current benefits programs to ensure adequate health coverage</li>';
 	$organizationProfileMsg .= '<li>Do an outreach or communications campaign to advertise the programs available within your organization (e.g., EFAP, trauma care, paramedical psychological services, in-house psychological services)</li>';
@@ -92,13 +93,13 @@ function getOrganizationGenericMsg ($avg_resiliency_behaviours_score, $avg_suppo
 	
 	// Submission entry date/time (EST)
 	date_default_timezone_set('America/New_York');
-	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('Y-m-d'): date('Y-m-d');
-	$end_date = (isset($report_end_date) ) ? $report_end_date->format('Y-m-d'): date('Y-m-d');
+	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('l, Y-m-d'): date('l, Y-m-d');
+	$end_date = (isset($report_end_date) ) ? $report_end_date->format('l, Y-m-d'): date('l, Y-m-d');
 
 	$organizationGenericMsg  = '<a href="/?action=subscriptions">&#60;&#60;Go Back</a><br>';
 	$organizationGenericMsg .= '<br><h2>Organization Report</h2>';
-	$organizationGenericMsg .= '<h5>From: '.$start_date.'</h5>';
-	$organizationGenericMsg .= '<h5>To: '.$end_date.'</h5>';
+	$organizationGenericMsg .= '<p class="organization-report-dates"><b>From: </b><i>'.$start_date.'</i></p>';
+	$organizationGenericMsg .= '<p class="organization-report-dates"><b>To: </b><i>'.$end_date.'</i></p>';
 	$organizationGenericMsg .= '<h3>RISK OF DEVELOPING AN OCCUPATIONAL STRESS INJURY</h3>';
 	$organizationGenericMsg .= '<p>The organization’s overall OSI risk score is calculated ';
 	$organizationGenericMsg .= 'using several data points from the survey. By regularly monitoring ';
@@ -200,7 +201,7 @@ function calculateOrganizationAverageScore($meta_key, $my_gform_id, $report_star
 	$averageScore = (isset($results[0]) && isset($results[0]['averageScore'])) ? 
 		$results[0]['averageScore'] : 0;
 
-	// echo "<br><br>sql: ".$sql;
+	// echo "<br><br>".$sql;
 	// echo "<br>"; print_r($results);
 
 	return $averageScore;
