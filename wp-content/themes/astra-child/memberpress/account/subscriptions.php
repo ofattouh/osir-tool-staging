@@ -2,6 +2,7 @@
 if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');}
 
 MeprHooks::do_action('mepr_before_account_subscriptions', $mepr_current_user);
+$cap = get_user_capability();
 
 if(!empty($subscriptions)) {
   $alt = false;
@@ -10,10 +11,12 @@ if(!empty($subscriptions)) {
     <table id="mepr-account-subscriptions-table" class="mepr-account-table">
       <thead>
         <tr>
-          <th><?php _ex('Subscription Plan', 'ui', 'memberpress'); ?></th>
+          <th><?php _ex('OSIR assessment', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('User Management', 'ui', 'memberpress'); ?></th>
-          <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
+          <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) ) : ?>
+            <th><?php _ex('User Management', 'ui', 'memberpress'); ?></th>
+            <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
+          <?php endif; ?>
         </tr>
       </thead>
       <tbody>
@@ -67,6 +70,8 @@ if(!empty($subscriptions)) {
               <?php endif; ?>
             </td>
             <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s->active; ?></div></td>
+            
+            <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) ) : ?>
             <td data-label="<?php _ex('Actions', 'ui', 'memberpress'); ?>">
                 <div class="mepr-account-actions">
                   <?php
@@ -128,6 +133,7 @@ if(!empty($subscriptions)) {
                 </div>
             </td>
             <?php MeprHooks::do_action('mepr-account-subscriptions-td', $mepr_current_user, $s, $txn, $is_sub); ?>
+            <?php endif; ?>
           </tr>
         <?php endforeach; ?>
         <?php MeprHooks::do_action('mepr-account-subscriptions-table', $mepr_current_user, $subscriptions); ?>

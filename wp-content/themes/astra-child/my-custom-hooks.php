@@ -24,12 +24,8 @@ function validate_attendance_presenteeism_wcb_claim_trauma_fields( $result, $val
   
   echo "<br><br>value<br>";
   var_dump($value);
-  var_dump($validated_value);
-
-  echo "<br><br>is_numeric<br>";
   print_r(is_numeric($value));
-  echo "<br>is_numeric2<br>";
-  print_r(is_numeric($validated_value));
+  var_dump($validated_value);
   */
 
   if ( $result['is_valid'] && !is_int($validated_value) ) {
@@ -71,34 +67,32 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   $obj_type = ($issub ? 'subscriptions' : 'transactions');
   $prd = ($obj_type === 'transactions') ? $transaction->product(): '';
   $ca = MPCA_Corporate_Account::find_corporate_account_by_obj_id($row->id, $obj_type);
-  $user = MeprUtils::get_currentuserinfo();
-
-  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
   $ca_parent = get_ca_parent();
-  $cap = get_user_meta( $user->ID, 'wp_capabilities', true );
+  $cap = get_user_capability();
 
   // Added manually using advanced custom fields inside memberpress membership page
   if ( !empty($prd) && !empty($prd->ID) ) {
     $show_membership_users = get_post_meta( $prd->ID, 'show_membership_users', true );
   }
   
-  /* echo "<br>user->ID: ".$user->ID. ", cap: "; print_r($cap);
-  echo "<br>"; var_dump($row); echo "<br>";
-  echo "<br>ca: ".$ca;
-  echo "<br>ca_parent: ".$ca_parent;
-  echo "<br>obj_type: "; echo $obj_type;
-  echo "<br>prd->ID: ".$prd->ID;
-  echo "<br>show_membership_users: ".$show_membership_users; */
-
   // check for GF moderators role
-  if ( isset($ca_parent) && $ca_parent !== '' ) {
+  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
+  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) ) && 
+      isset($ca_parent) && $ca_parent !== '' ) {
     $my_ca = $ca_parent;
-    // echo "<br>my_ca: ".$my_ca;
-  } else if ( is_array($cap) && !empty($cap['corporate_parent_account_moderator']) && 
-      isset($ca) && isset($ca->user_id) && $ca->user_id == $user->ID ) {
+  } else if ( !empty($cap['corporate_parent_account_moderator']) && isset($ca) &&
+      isset($ca->user_id) && $ca->user_id == $user->ID ) {
     $my_ca = $ca;
-    // echo "<br>my_ca2: ".$my_ca;
   }
+
+  // echo "<br>show_membership_users user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  // echo "<br>show_membership_users: ".$show_membership_users;
+  // echo "<br>"; var_dump($row); echo "<br>";
+  // echo "<br>obj_type: "; echo $obj_type;
+  // echo "<br>prd->ID: ".$prd->ID;
+  // echo "<br>ca: ".$ca;
+  // echo "<br>ca_parent: ".$ca_parent;
+  // echo "<br>my_ca: ".$my_ca;
 
   if( !empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()
      && !empty($show_membership_users) && $show_membership_users === 'yes' ) {
@@ -153,35 +147,33 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
   $obj_type = ($issub ? 'subscriptions' : 'transactions');
   $prd = ($obj_type === 'transactions') ? $transaction->product(): '';
   $ca = MPCA_Corporate_Account::find_corporate_account_by_obj_id($row->id, $obj_type);
-  $user = MeprUtils::get_currentuserinfo();
-
-  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
   $ca_parent = get_ca_parent();
-  $cap = get_user_meta( $user->ID, 'wp_capabilities', true );
+  $cap = get_user_capability();
 
   // Added manually using advanced custom fields inside memberpress membership page
   if ( !empty($prd) && !empty($prd->ID) ) {
     $show_organization_report = get_post_meta( $prd->ID, 'show_organization_report', true );
   }
 
-  /* echo "<br>user->ID: ".$user->ID. ", cap: "; print_r($cap);
-  echo "<br>"; var_dump($row); echo "<br>";
-  echo "<br>ca: ".$ca;
-  echo "<br>ca_parent: ".$ca_parent;
-  echo "<br>obj_type: "; echo $obj_type;
-  echo "<br>prd->ID: ".$prd->ID;
-  echo "<br>show_organization_report: ".$show_organization_report; */
-
   // check for GF moderators role
-  if ( isset($ca_parent) && $ca_parent !== '' ) {
+  // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
+  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) ) &&
+      isset($ca_parent) && $ca_parent !== '') {
     $my_ca = $ca_parent;
-    // echo "<br>my_ca: ".$my_ca;
-  } else if ( is_array($cap) && !empty($cap['corporate_parent_account_moderator']) && 
-      isset($ca) && isset($ca->user_id) && $ca->user_id == $user->ID ) {
+  } else if ( !empty($cap['corporate_parent_account_moderator']) && isset($ca) &&
+      isset($ca->user_id) && $ca->user_id == $user->ID ) {
     $my_ca = $ca;
-    // echo "<br>my_ca2: ".$my_ca;
   }
   
+  // echo "<br>show_organization_report user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  // echo "<br>show_organization_report: ".$show_organization_report;
+  // echo "<br>"; var_dump($row); echo "<br>";
+  // echo "<br>obj_type: "; echo $obj_type;
+  // echo "<br>prd->ID: ".$prd->ID;
+  // echo "<br>ca: ".$ca;
+  // echo "<br>ca_parent: ".$ca_parent;
+  // echo "<br>my_ca: ".$my_ca;
+
   // Link should match organization report back end page permalink consisting of:  
   // /organization-report-{corporate_parent_account_user_id} for: $ca_parent->user_id OR $ca->user_id
   // AND matching gravity form back end field: corporate_parent_account_user_id 
@@ -210,13 +202,13 @@ add_shortcode('organizationreport', 'show_organization_report');
 function show_organization_report($atts){
   if( !is_admin() && is_user_logged_in() && isset($atts['gformid']) ) {
 
-    // Required fields
+    // Required fields (Server validation)
     if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
       !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
       echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Please choose both the start and end dates.</p>";
       return;
     } else {
-      // Start date should fall after the end date
+      // Start date should fall after the end date (Server validation)
       $org_report_start_date = date_create($_POST['org_report_start_date']);
       $org_report_end_date = date_create($_POST['org_report_end_date']);
       $date_diff = date_diff($org_report_start_date, $org_report_end_date);
@@ -258,6 +250,22 @@ function show_organization_report($atts){
       }
     }
   }
+}
+
+// get logged in user capability
+function get_user_capability(){
+  if ( !is_user_logged_in() ) {
+    return '';
+  }
+
+  $user = MeprUtils::get_currentuserinfo();
+  $cap = get_user_meta( $user->ID, 'wp_capabilities', true );
+
+  if ( is_array($cap) ) {
+    return $cap;
+  }
+
+  return '';
 }
 
 //--------------------------------------------------------------------------------------
