@@ -231,8 +231,10 @@ function show_organization_report($atts){
       $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore (
         'total_supportive_environment_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
 
-      $osirAverageGrandScore = ( $resiliencyBehavioursAverageScore + $supportProgramsAverageScore + 
-        $supportiveLeadershipAverageScore + $supportiveEnvironmentAverageScore ) / 4;
+      $osirAverageGrandTotalScore = calculateOrganizationTotalOSIRScore(
+        'total_osir_score', $atts['gformid'], $org_report_start_date, $org_report_end_date) / 
+         calculateOrganizationNumberSubmissions(
+           'is_survey_entry_submitted_by_user', $atts['gformid'], $org_report_start_date, $org_report_end_date);
 
       // echo showPDFLinks();
       if ( $resiliencyBehavioursAverageScore == 0 || $supportProgramsAverageScore == 0 || 
@@ -244,7 +246,7 @@ function show_organization_report($atts){
           $supportiveLeadershipAverageScore, $supportiveEnvironmentAverageScore,
           $org_report_start_date, $org_report_end_date);
         echo getOrganizationScalesMsg(
-          $osirAverageGrandScore, $resiliencyBehavioursAverageScore, 
+          $osirAverageGrandTotalScore, $resiliencyBehavioursAverageScore, 
           $supportProgramsAverageScore, $supportiveLeadershipAverageScore, 
           $supportiveEnvironmentAverageScore);
       }

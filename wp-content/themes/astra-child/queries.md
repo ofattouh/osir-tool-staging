@@ -1,9 +1,34 @@
 /*******************************************************************************
-// Charts DB Queries
+// GF & Charts DB Queries
+
+// Fetch all submissions dates
+select * FROM `wp_gf_entry_meta` 
+WHERE `meta_key` = 'survey_entry_submitted_date' 
+ORDER BY `wp_gf_entry_meta`.`meta_value` ASC
+
+// Fetch organization Grand total OSIR score for certain reporting period
+SELECT SUM(totalOSIRScore.`meta_value`) AS 'grandTotalOSIRScore' FROM 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_osir_score') totalOSIRScore, 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod
+WHERE totalOSIRScore.entry_id = reportingPeriod.entry_id AND
+reportingPeriod.`form_id` = 18
+
+// Fetch organization number of users submissions for this reporting period
+SELECT COUNT(userSubmission.`meta_value`) AS 'numberUserSubmissions' FROM 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'is_survey_entry_submitted_by_user') userSubmission, 
+(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod
+WHERE userSubmission.entry_id = reportingPeriod.entry_id AND
+userSubmission.`meta_value` = 'yes' AND
+reportingPeriod.`form_id` = 18
+
+select * FROM `wp_gf_entry_meta` 
+WHERE `meta_key` = 'total_osir_score' 
+AND `form_id` = 18
+ORDER BY `wp_gf_entry_meta`.`meta_value` ASC
 
 // 
 
-// Reporting period Average scores
+// Reporting period Average scores for certain reporting period
 SELECT AVG(scaleScore.`meta_value`) AS 'averageScore' FROM 
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'total_resiliency_behaviours_score') scaleScore, 
 (select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' AND `meta_value` BETWEEN '2021-10-15' AND '2021-10-19') reportingPeriod

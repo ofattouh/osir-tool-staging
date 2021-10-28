@@ -207,6 +207,61 @@ function calculateOrganizationAverageScore($meta_key, $my_gform_id, $report_star
 	return $averageScore;
 }
 
+// Calculate Organization grand total OSIR score for this reporting period
+function calculateOrganizationTotalOSIRScore($meta_key, $my_gform_id, $report_start_date, $report_end_date) {
+	global $wpdb;
+
+	// Submission entry date/time (EST)
+	date_default_timezone_set('America/New_York');
+	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('Y-m-d'): date('Y-m-d');
+	$end_date = (isset($report_end_date) ) ? $report_end_date->format('Y-m-d'): date('Y-m-d');
+
+	$sql = "SELECT SUM(totalOSIRScore.`meta_value`) AS 'grandTotalOSIRScore' FROM ";
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') totalOSIRScore, "; 
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' ";
+	$sql .= "AND `meta_value` BETWEEN '".$start_date."' AND '".$end_date."') reportingPeriod ";
+	$sql .= "WHERE totalOSIRScore.`entry_id` = reportingPeriod.`entry_id` AND ";
+	$sql .= "reportingPeriod.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$grandTotalOSIRScore = (isset($results[0]) && isset($results[0]['grandTotalOSIRScore'])) ? 
+		$results[0]['grandTotalOSIRScore'] : 0;
+
+	// echo "<br><br>".$sql;
+	// echo "<br>"; print_r($results);
+
+	return $grandTotalOSIRScore;
+}
+
+// Calculate Organization number of user submissions for this reporting period
+function calculateOrganizationNumberSubmissions($meta_key, $my_gform_id, $report_start_date, $report_end_date) {
+	global $wpdb;
+
+	// Submission entry date/time (EST)
+	date_default_timezone_set('America/New_York');
+	$start_date = ( isset($report_start_date) ) ? $report_start_date->format('Y-m-d'): date('Y-m-d');
+	$end_date = (isset($report_end_date) ) ? $report_end_date->format('Y-m-d'): date('Y-m-d');
+
+	$sql  = "SELECT COUNT(userSubmission.`meta_value`) AS 'numberUserSubmissions' FROM ";
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = '".$meta_key."') userSubmission, "; 
+	$sql .= "(select * FROM `wp_gf_entry_meta` WHERE `meta_key` = 'survey_entry_submitted_date' ";
+	$sql .= "AND `meta_value` BETWEEN '".$start_date."' AND '".$end_date."') reportingPeriod ";
+	$sql .= "WHERE userSubmission.`entry_id` = reportingPeriod.`entry_id` AND ";
+	$sql .= "userSubmission.`meta_value` = 'yes' AND ";
+	$sql .= "reportingPeriod.`form_id` = ".$my_gform_id;
+
+	$results = $wpdb->get_results( $sql, ARRAY_A );
+
+	$numberUserSubmissions = (isset($results[0]) && isset($results[0]['numberUserSubmissions'])) ? 
+		$results[0]['numberUserSubmissions'] : 0;
+
+	// echo "<br><br>".$sql;
+	// echo "<br>"; print_r($results);
+
+	return $numberUserSubmissions;
+}
+
 // Participant Report
 function getParticipantReportMsg(){
 	$participantReportMsg  = '<br><br><p>Thank you for your participation.</p>';
