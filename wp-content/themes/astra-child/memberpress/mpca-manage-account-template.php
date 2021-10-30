@@ -102,7 +102,7 @@
             <th><?php _ex('Email', 'ui', 'memberpress-corporate'); ?></th>
             <th><?php _ex('First Name', 'ui', 'memberpress-corporate'); ?></th>
             <th><?php _ex('Last Name', 'ui', 'memberpress-corporate'); ?></th>
-            <th> </th>
+            <th><?php _ex('Actions', 'ui', 'memberpress-corporate'); ?></th>
             <?php do_action('mpca-sub-accounts-th', $mepr_current_user, $sub_accounts); ?>
           </tr>
         </thead>
@@ -116,7 +116,8 @@
               <td><?php echo $sa->first_name; ?></td>
               <td><?php echo $sa->last_name; ?></td>
 
-              <?php if ( MeprUtils::get_currentuserinfo()->ID != $sa->ID ): ?>
+              <?php $cap = get_user_meta( $sa->ID, 'wp_capabilities', true ); ?>
+              <?php if ( MeprUtils::get_currentuserinfo()->ID != $sa->ID && empty($cap['administrator']) ): ?>
                 <td><a href="" data-ca="<?php echo $ca->id; ?>" data-sa="<?php echo $sa->ID; ?>" class="mpca-remove-sub-account"><?php _e('Remove', 'memberpress-corporate'); ?></a></td>
               <?php endif; ?>
 

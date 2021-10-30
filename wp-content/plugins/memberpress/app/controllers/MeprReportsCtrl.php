@@ -31,8 +31,7 @@ class MeprReportsCtrl extends MeprBaseCtrl {
     $local_data = array(
       'report_nonce' => wp_create_nonce('mepr_reports')
     );
-
-    if($hook == 'memberpress_page_memberpress-reports') {
+    if($hook == 'dashboard_page_memberpress-reports') {
       wp_enqueue_script('mepr-google-jsapi', 'https://www.gstatic.com/charts/loader.js', array(), MEPR_VERSION);
       wp_enqueue_script('mepr-reports-js', MEPR_JS_URL.'/admin_reports.js', array('jquery', 'mepr-google-jsapi'), MEPR_VERSION, true);
       wp_enqueue_style('mepr-reports-css', MEPR_CSS_URL.'/admin-reports.css', array(), MEPR_VERSION);
@@ -85,12 +84,12 @@ class MeprReportsCtrl extends MeprBaseCtrl {
       );
 
     foreach($results as $r) {
-      $tooltip_date = date_i18n('M j, Y', mktime(0, 0, 0, gmdate('n'), gmdate('j', strtotime($r->date)), gmdate('Y')), true);
+      $tooltip_date = date_i18n('M j, Y', mktime(0, 0, 0, gmdate('n', strtotime($r->date)), gmdate('j', strtotime($r->date)), gmdate('Y', strtotime($r->date))), true);
 
       $chart_data['rows'][] =
         array( 'c' =>
           array(
-            array('v' => date_i18n('M j', mktime(0, 0, 0, gmdate('n'), gmdate('j', strtotime($r->date)), gmdate('Y')), true), 'f' => null),
+            array('v' => date_i18n('M j', mktime(0, 0, 0, gmdate('n', strtotime($r->date)), gmdate('j', strtotime($r->date)), gmdate('Y', strtotime($r->date))), true), 'f' => null),
             array('v' => (int)$r->c, 'f' => null),
             array('v' => $tooltip_date."\n".__('Completed:', 'memberpress').' '.$currency_symbol.(float)$r->c, 'f' => null),
             array('v' => (int)$r->p, 'f' => null),

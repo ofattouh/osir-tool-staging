@@ -205,7 +205,7 @@ function show_organization_report($atts){
     // Required fields (Server validation)
     if ( !isset($_POST['org_report_start_date']) || empty($_POST['org_report_start_date']) || 
       !isset($_POST['org_report_end_date']) || empty($_POST['org_report_end_date']) ) {
-      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Please choose both the start and end dates.</p>";
+      echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization report is not available or reporting period is invalid!</p>";
       return;
     } else {
       // Start date should fall after the end date (Server validation)
@@ -218,7 +218,7 @@ function show_organization_report($atts){
       // echo "<br>".$date_diff->format("%R%a days");
 
       if ($date_diff->format("%R%a days") < 0) {
-        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Start date should be equal to or after the end date.</p>";
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Organization reporting period is invalid. Start date should be equal to or after the end date!</p>";
         return;
       }
 
@@ -231,15 +231,25 @@ function show_organization_report($atts){
       $supportiveEnvironmentAverageScore = calculateOrganizationAverageScore (
         'total_supportive_environment_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
 
-      $osirAverageGrandTotalScore = calculateOrganizationTotalOSIRScore(
-        'total_osir_score', $atts['gformid'], $org_report_start_date, $org_report_end_date) / 
-         calculateOrganizationNumberSubmissions(
-           'is_survey_entry_submitted_by_user', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+      $organizationTotalOSIRScore = calculateOrganizationTotalOSIRScore(
+        'total_osir_score', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+      $organizationNumberSubmissions = calculateOrganizationNumberSubmissions(
+        'is_survey_entry_submitted_by_user', $atts['gformid'], $org_report_start_date, $org_report_end_date);
+
+      // Makesure there is actual report date for this reporting period
+      if ($organizationTotalOSIRScore > 0 && $organizationNumberSubmissions > 0) {
+        $osirAverageGrandTotalScore = $organizationTotalOSIRScore / $organizationNumberSubmissions;
+      } else {
+        $osirAverageGrandTotalScore = 0;
+      }
 
       // echo showPDFLinks();
       if ( $resiliencyBehavioursAverageScore == 0 || $supportProgramsAverageScore == 0 || 
-            $supportiveLeadershipAverageScore == 0 || $supportiveEnvironmentAverageScore == 0 ) {
-        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found for this reporting period. Please choose different dates.";
+            $supportiveLeadershipAverageScore == 0 || $supportiveEnvironmentAverageScore == 0 || 
+            $osirAverageGrandTotalScore == 0 ) {
+        echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found ";
+        echo "from: <b>".$_POST['org_report_start_date']."</b> to: <b>".$_POST['org_report_end_date']."</b>. ";
+        echo "Please choose different dates!";
       } else {
         echo getOrganizationGenericMsg( 
           $resiliencyBehavioursAverageScore, $supportProgramsAverageScore, 

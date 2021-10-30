@@ -897,6 +897,11 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 						$hours                      = get_post_meta( $chart_id, Visualizer_Plugin::CF_JSON_SCHEDULE, true );
 						$next                       = time() + $hours * HOUR_IN_SECONDS;
 						$new_schedules[ $chart_id ] = $next;
+						// Clear existing chart cache.
+						$cache_key = Visualizer_Plugin::CF_CHART_CACHE . '_' . $chart_id;
+						if ( get_transient( $cache_key ) ) {
+							delete_transient( $cache_key );
+						}
 						do_action( 'themeisle_log_event', Visualizer_Plugin::NAME, sprintf( 'Updated scheduled json chart %d, set next update time %d', $chart_id, $next ), 'info', __FILE__, __LINE__ );
 					}
 					update_option( Visualizer_Plugin::CF_JSON_SCHEDULE, $new_schedules );
@@ -948,6 +953,11 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 				$hours                      = get_post_meta( $chart_id, Visualizer_Plugin::CF_CHART_SCHEDULE, true );
 				$next                       = time() + $hours * HOUR_IN_SECONDS;
 				$new_schedules[ $chart_id ] = $next;
+				// Clear existing chart cache.
+				$cache_key = Visualizer_Plugin::CF_CHART_CACHE . '_' . $chart_id;
+				if ( get_transient( $cache_key ) ) {
+					delete_transient( $cache_key );
+				}
 				do_action( 'themeisle_log_event', Visualizer_Plugin::NAME, sprintf( 'Updated scheduled chart %d, set next update time %d', $chart_id, $next ), 'info', __FILE__, __LINE__ );
 			}
 			update_option( Visualizer_Plugin::CF_CHART_SCHEDULE, $new_schedules );

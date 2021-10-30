@@ -71,6 +71,11 @@ table.mepr-account-table td {
   text-align: left !important;
 }
 
+/* Add Sub Account button */
+#mpca-add-sub-user-btn {
+  color: #fff !important;
+}
+
 /* Personal information fields 
 .mepr-form-input {
   width: 60% !important;

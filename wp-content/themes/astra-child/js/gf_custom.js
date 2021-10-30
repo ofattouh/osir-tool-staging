@@ -13,7 +13,7 @@ jQuery(function($){
         changeMonth: true,
         changeYear: true,
         buttonImageOnly: true,
-        buttonImage: '/wp-content/themes/astra-child/images/calendar-small.jpg',
+        buttonImage: '/wp-content/themes/astra-child/images/calendar-icon.gif',
         showOn: 'button',
         yearRange: '2021:2025',     // https://jqueryui.com/datepicker/#min-max
         // yearRange: '-10:+10'     // Current Year -10 to Current Year + 10.

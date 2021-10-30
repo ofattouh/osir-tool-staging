@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'v3.6.1',
-        'version' => '3.6.1.0',
+        'pretty_version' => 'v3.7.0',
+        'version' => '3.7.0.0',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '1865bc3bf11adc4f6e630f41f8def36019294e1b',
+        'reference' => '0437b398f6fd31bb9cefd2665d948b7b5d313e50',
         'name' => 'codeinwp/visualizer',
         'dev' => false,
     ),
@@ -22,12 +22,12 @@
             'dev_requirement' => false,
         ),
         'codeinwp/visualizer' => array(
-            'pretty_version' => 'v3.6.1',
-            'version' => '3.6.1.0',
+            'pretty_version' => 'v3.7.0',
+            'version' => '3.7.0.0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '1865bc3bf11adc4f6e630f41f8def36019294e1b',
+            'reference' => '0437b398f6fd31bb9cefd2665d948b7b5d313e50',
             'dev_requirement' => false,
         ),
         'markbaker/complex' => array(
