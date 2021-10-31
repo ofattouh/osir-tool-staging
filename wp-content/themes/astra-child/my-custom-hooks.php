@@ -282,12 +282,6 @@ function get_user_capability(){
 
 //--------------------------------------------------------------------------------------
 
-// Show organization report hook
-/* add_action( 'astra_entry_content_after', 'astra_entry_content_after_organization_report');
-function astra_entry_content_after_organization_report () {
-  echo do_shortcode("[organizationreport]");
-} */
-
 /* 
 add_shortcode('memberonly', 'member_only_shortcode'); 
 function member_only_shortcode($atts){

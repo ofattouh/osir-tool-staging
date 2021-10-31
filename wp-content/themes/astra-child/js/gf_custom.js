@@ -10,12 +10,16 @@ jQuery(function($){
     // OSIR organization report start date & end date
     $('.date_picker').datepicker({
         dateFormat : 'yy-mm-dd',    // https://jqueryui.com/datepicker/#date-formats
+        minDate: new Date(2021, 7 - 1, 10), // 2021-07-10
+        maxDate: new Date(2021, 12 - 1, 25), // https://api.jqueryui.com/datepicker/#option-minDate
         changeMonth: true,
         changeYear: true,
         buttonImageOnly: true,
         buttonImage: '/wp-content/themes/astra-child/images/calendar-icon.gif',
-        showOn: 'button',
-        yearRange: '2021:2025',     // https://jqueryui.com/datepicker/#min-max
+        showOn: 'both', // open on focus or a click on an button
+        // showOn: 'button',
+        // showWeek: true,
+        // yearRange: '2021:2025',     // https://jqueryui.com/datepicker/#min-max
         // yearRange: '-10:+10'     // Current Year -10 to Current Year + 10.
         // yearRange: '+0:+10'      // Current Year to Current Year + 10.
         // yearRange: '1900:+0'     // Year 1900 to Current Year.
