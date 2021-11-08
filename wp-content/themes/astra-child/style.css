@@ -148,6 +148,12 @@ p.organization-report-dates {
   font-size: 18px !important;
 }
 
+/**************************** Footer ********************************/
+
+.useful-links-footer {
+  padding-bottom: 30px !important;
+}
+
 /**************************** Visualizer ****************************/
 
 /* Mobile break point */
