@@ -120,12 +120,14 @@ tr.organization-report-your-results-tr:hover {
   font-size: 16px !important;
 }
 
-td.organization-report-your-results-td {
+/*
+td.organization-report-your-results-td:hover {
   font-size: 14px !important;
 }
+*/
 
-td.organization-report-your-results-td:hover {
-  font-size: 16px !important;
+td.organization-report-your-results-td {
+  font-size: 14px !important;
 }
 
 /* Challenge */

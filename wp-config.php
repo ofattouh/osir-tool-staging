@@ -82,10 +82,8 @@ $table_prefix = 'wp_';
  */
 
 /* Shut off all error reporting - Added */
-// ToDo: Change this below setting in production
+// ToDo: Change these below settings in production
 // ini_set('display_errors','Off');
-// ini_set('error_reporting', E_ALL);
-
 define( 'WP_DEBUG', true );
 
 // create log file
