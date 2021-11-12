@@ -76,7 +76,7 @@ function gf_pre_render($form ) {
 	// not back end page for gravity form
 	if ( !is_admin() && isset($page_gform_id) ) {
 		if ( !isset($gf_id) || !isset($gform_id) || $gf_id != $gform_id ) {
-			echo "<a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service.</p>";
+			echo "<a href='/'>&#60;&#60;Go Back</a><br><br><p style='color:#FF0000;font-weight:bold;'>Error! Invalid survey: my_gform_id parameter is missing or invalid. Please contact customer service.</p>";
 			exit;
 		}
 	}

@@ -9,6 +9,11 @@ add_filter( 'gform_field_validation_18_176', 'validate_attendance_presenteeism_w
 add_filter( 'gform_field_validation_18_178', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
 add_filter( 'gform_field_validation_18_177', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
 add_filter( 'gform_field_validation_18_181', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+
+add_filter( 'gform_field_validation_19_176', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_19_178', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_19_177', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
+add_filter( 'gform_field_validation_19_181', 'validate_attendance_presenteeism_wcb_claim_trauma_fields', 10, 4 );
 function validate_attendance_presenteeism_wcb_claim_trauma_fields( $result, $value, $form, $field ) {
 
   if (is_numeric($value)){
@@ -41,6 +46,7 @@ function validate_attendance_presenteeism_wcb_claim_trauma_fields( $result, $val
 
 // Numeric field custom validation. What is your age?
 add_filter( 'gform_field_validation_18_180', 'validate_age_field', 10, 4 );
+add_filter( 'gform_field_validation_19_180', 'validate_age_field', 10, 4 );
 function validate_age_field( $result, $value, $form, $field ) {
 
   if (is_numeric($value)){
@@ -237,16 +243,14 @@ function show_organization_report($atts){
         'is_survey_entry_submitted_by_user', $atts['gformid'], $org_report_start_date, $org_report_end_date);
 
       // Makesure there is actual report date for this reporting period
-      if ($organizationTotalOSIRScore > 0 && $organizationNumberSubmissions > 0) {
+      if ( $organizationNumberSubmissions > 0 ) {
         $osirAverageGrandTotalScore = $organizationTotalOSIRScore / $organizationNumberSubmissions;
       } else {
         $osirAverageGrandTotalScore = 0;
       }
 
       // echo showPDFLinks();
-      if ( $resiliencyBehavioursAverageScore == 0 || $supportProgramsAverageScore == 0 || 
-            $supportiveLeadershipAverageScore == 0 || $supportiveEnvironmentAverageScore == 0 || 
-            $osirAverageGrandTotalScore == 0 ) {
+      if ( $organizationNumberSubmissions == 0 ) {
         echo "<br><a href='/?action=subscriptions'>&#60;&#60;Go Back</a><br><br>No report data was found ";
         echo "from: <b>".$_POST['org_report_start_date']."</b> to: <b>".$_POST['org_report_end_date']."</b>. ";
         echo "Please choose different dates!";
