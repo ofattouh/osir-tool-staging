@@ -40,10 +40,10 @@
       <input type="hidden" name="action" value="manage_sub_accounts" />
       <input type="hidden" name="manage_sub_accounts_form" value="add" />
       <label>
-        <span><?php _e('Existing Username/Email?', 'memberpress-corporate'); ?> </span>
+        <span><?php _e('Existing Username?', 'memberpress-corporate'); ?> </span>
       </label>
       <?php if(MeprUtils::is_mepr_admin()): ?>
-        <input value="" type="text" name="userdata[existing_login]" class="mepr_suggest_user" placeholder="<?php _e('Begin Typing Name', 'memberpress', 'memberpress-corporate') ?>" />
+        <input value="" type="text" name="userdata[existing_login]" class="mepr_suggest_user" placeholder="<?php _e('Begin Typing Username', 'memberpress', 'memberpress-corporate') ?>" />
       <?php else: ?>
         <input value="" type="text" name="userdata[existing_login]" />
       <?php endif ?>
