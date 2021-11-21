@@ -13,7 +13,7 @@ if(!empty($subscriptions)) {
         <tr>
           <th><?php _ex('OSIR assessment', 'ui', 'memberpress'); ?></th>
           <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
-          <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) ) : ?>
+          <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) : ?>
             <th><?php _ex('User Management', 'ui', 'memberpress'); ?></th>
             <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
           <?php endif; ?>
@@ -71,7 +71,7 @@ if(!empty($subscriptions)) {
             </td>
             <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s->active; ?></div></td>
             
-            <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) ) : ?>
+            <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) : ?>
             <td data-label="<?php _ex('Actions', 'ui', 'memberpress'); ?>">
                 <div class="mepr-account-actions">
                   <?php

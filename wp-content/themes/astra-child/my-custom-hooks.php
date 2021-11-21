@@ -83,7 +83,7 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   
   // check for GF moderators role
   // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
-  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) ) && 
+  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) && 
       isset($ca_parent) && $ca_parent !== '' ) {
     $my_ca = $ca_parent;
   } else if ( !empty($cap['corporate_parent_account_moderator']) && isset($ca) &&
@@ -91,14 +91,14 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
     $my_ca = $ca;
   }
 
-  // echo "<br>show_membership_users user->ID: ".$user->ID. ", cap: "; print_r($cap);
-  // echo "<br>show_membership_users: ".$show_membership_users;
-  // echo "<br>"; var_dump($row); echo "<br>";
-  // echo "<br>obj_type: "; echo $obj_type;
-  // echo "<br>prd->ID: ".$prd->ID;
-  // echo "<br>ca: ".$ca;
-  // echo "<br>ca_parent: ".$ca_parent;
-  // echo "<br>my_ca: ".$my_ca;
+  /* echo "<br>show_membership_users user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  echo "<br>show_membership_users: ".$show_membership_users;
+  echo "<br>"; var_dump($row); echo "<br>";
+  echo "<br>obj_type: "; echo $obj_type;
+  echo "<br>prd->ID: ".$prd->ID;
+  echo "<br>ca: ".$ca;
+  echo "<br>ca_parent: ".$ca_parent;
+  echo "<br>my_ca: ".$my_ca; */
 
   if( !empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()
      && !empty($show_membership_users) && $show_membership_users === 'yes' ) {
@@ -163,22 +163,22 @@ function show_organization_report_cell($user, $row, $transaction, $issub) {
 
   // check for GF moderators role
   // For logged in corporate account owner: the parent_id is empty and should be the logged user_id
-  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) ) &&
-      isset($ca_parent) && $ca_parent !== '') {
+  if ( ( !empty($cap['gf_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) &&
+      isset($ca_parent) && $ca_parent !== '' ) {
     $my_ca = $ca_parent;
   } else if ( !empty($cap['corporate_parent_account_moderator']) && isset($ca) &&
       isset($ca->user_id) && $ca->user_id == $user->ID ) {
     $my_ca = $ca;
   }
   
-  // echo "<br>show_organization_report user->ID: ".$user->ID. ", cap: "; print_r($cap);
-  // echo "<br>show_organization_report: ".$show_organization_report;
-  // echo "<br>"; var_dump($row); echo "<br>";
-  // echo "<br>obj_type: "; echo $obj_type;
-  // echo "<br>prd->ID: ".$prd->ID;
-  // echo "<br>ca: ".$ca;
-  // echo "<br>ca_parent: ".$ca_parent;
-  // echo "<br>my_ca: ".$my_ca;
+  /* echo "<br>show_organization_report user->ID: ".$user->ID. ", cap: "; print_r($cap);
+  echo "<br>show_organization_report: ".$show_organization_report;
+  echo "<br>"; var_dump($row); echo "<br>";
+  echo "<br>obj_type: "; echo $obj_type;
+  echo "<br>prd->ID: ".$prd->ID;
+  echo "<br>ca: ".$ca;
+  echo "<br>ca_parent: ".$ca_parent;
+  echo "<br>my_ca: ".$my_ca; */
 
   // Link should match organization report back end page permalink consisting of:  
   // /organization-report-{corporate_parent_account_user_id} for: $ca_parent->user_id OR $ca->user_id
