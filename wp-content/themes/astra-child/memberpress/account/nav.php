@@ -3,10 +3,10 @@
 <div class="mp_wrapper">
   <div id="mepr-account-nav">
     <span class="mepr-nav-item <?php MeprAccountHelper::active_nav('home'); ?>">
-      <a href="<?php echo MeprHooks::apply_filters('mepr-account-nav-home-link',$account_url.$delim.'action=home'); ?>" id="mepr-account-home"><?php echo MeprHooks::apply_filters('mepr-account-nav-home-label',_x('My Account', 'ui', 'memberpress')); ?></a>
+      <a href="<?php echo MeprHooks::apply_filters('mepr-account-nav-home-link',$account_url.$delim.'action=home'); ?>" id="mepr-account-home"><?php echo MeprHooks::apply_filters('mepr-account-nav-home-label',_x('Profile', 'ui', 'memberpress')); ?></a>
     </span>
     <span class="mepr-nav-item <?php MeprAccountHelper::active_nav('subscriptions'); ?>">
-      <a href="<?php echo MeprHooks::apply_filters('mepr-account-nav-subscriptions-link',$account_url.$delim.'action=subscriptions'); ?>" id="mepr-account-subscriptions"><?php echo MeprHooks::apply_filters('mepr-account-nav-subscriptions-label',_x('Management', 'ui', 'memberpress')); ?></a></span>
+      <a href="<?php echo MeprHooks::apply_filters('mepr-account-nav-subscriptions-link',$account_url.$delim.'action=subscriptions'); ?>" id="mepr-account-subscriptions"><?php echo MeprHooks::apply_filters('mepr-account-nav-subscriptions-label',_x('Manage My Account', 'ui', 'memberpress')); ?></a></span>
     
     <?php MeprHooks::do_action('mepr_account_nav', $mepr_current_user); ?>
   </div>

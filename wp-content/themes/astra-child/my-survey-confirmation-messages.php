@@ -8,11 +8,11 @@
 function getOSIRProfile ($total_score = 0) {
 	$organizationProfile = 'N/A';
 
-	if (0 <= $total_score && $total_score <= 27 ) {
+	if (0 <= $total_score && $total_score < 27 ) {
 		$organizationProfile = 'Challenge';
-	} elseif (27 < $total_score && $total_score < 81 ) {
+	} elseif (27 <= $total_score && $total_score <= 81 ) {
 		$organizationProfile = 'Concern';
-	} elseif (81 <= $total_score ) {
+	} elseif (81 < $total_score ) {
 		$organizationProfile = 'Thriving';
 	}
 
@@ -62,7 +62,7 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 	$organizationProfileMsg .= '<li>Consider examining your current benefits programs to ensure adequate health coverage</li>';
 	$organizationProfileMsg .= '<li>Do an outreach or communications campaign to advertise the programs available within your organization (e.g., EFAP, trauma care, paramedical psychological services, in-house psychological services)</li>';
 	$organizationProfileMsg .= '<li>Develop programs for leaders to be better able to discuss health and trauma at work</li>';
-	$organizationProfileMsg .= '<li>Implement leadership training programs to equip employees with leadership skills and behaviour that foster employee health and safety</li>';
+	$organizationProfileMsg .= '<li>Implement leadership training programs to equip employees with leadership skills and behaviours that foster employee health and safety</li>';
 	$organizationProfileMsg .= '<li>Consider providing paid time off to utilize support programs and resources</li>';
 	$organizationProfileMsg .= '</ul></td>';
 
@@ -162,7 +162,7 @@ function getOrganizationGenericMsg ($avg_resiliency_behaviours_score, $avg_suppo
 	$organizationGenericMsg .= 'workplace and how they are treated at work (outside of leadership).</p>';
 	$organizationGenericMsg .= '<p><b>Supportive environment score: '.number_format($avg_supportive_environment_score, 2).'/28</b></p>';
 	$organizationGenericMsg .= '<p>Scoring high on this indicates that employees are treated with ';
-	$organizationGenericMsg .= 'respect, have health workplace social connections, and feel that at ';
+	$organizationGenericMsg .= 'respect, have healthy workplace social connections, and feel that at ';
 	$organizationGenericMsg .= 'least some aspects of their organization are a good fit for them. ';
 	$organizationGenericMsg .= 'If employees are scoring low on this scale, the organization should ';
 	$organizationGenericMsg .= 'seek to improve the work environment and the organizational culture. ';
@@ -264,7 +264,7 @@ function calculateOrganizationNumberSubmissions($meta_key, $my_gform_id, $report
 
 // Participant Report
 function getParticipantReportMsg(){
-	$participantReportMsg  = '<br><br><p>Thank you for your participation.</p>';
+	$participantReportMsg  = '<br><br><p>Thank you for completing the OSIR assessment tool.</p>';
 
 	$participantReportMsg .= '<p>Understanding and regularly monitoring your behaviours, perceptions, ';
 	$participantReportMsg .= 'and experiences, can help increase your level of awareness of your ';

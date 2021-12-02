@@ -21,7 +21,7 @@
   <h3 class="mpca-fat-bottom"><?php printf(__('Corporate account for %s', 'memberpress-corporate'), $owner_name); ?></h3>
 
   <div id="mpca_sub_accounts_used" class="mpca-fat-bottom">
-    <h4><?php printf(__('%1$s of %2$s Sub Accounts Used', 'memberpress-corporate'), $ca->num_sub_accounts_used(), $ca->num_sub_accounts); ?></h4>
+    <h4><?php printf(__('%1$s of %2$s Participants Used', 'memberpress-corporate'), $ca->num_sub_accounts_used(), $ca->num_sub_accounts); ?></h4>
   </div>
 
   <?php MeprView::render('/shared/errors', compact('errors','message')); ?>
@@ -33,7 +33,7 @@
     ?>
 
     <?php if($ca->num_sub_accounts > $ca->num_sub_accounts_used()): ?>
-    <button id="mpca-add-sub-user-btn" class="mpca-fat-bottom" type="button" value=""><?php _e('Add Sub Account', 'memberpress-corporate') ?></button>
+    <button id="mpca-add-sub-user-btn" class="mpca-fat-bottom" type="button" value=""><?php _e('Add Participant', 'memberpress-corporate') ?></button>
     <?php endif ?>
 
     <form action="" method="post" id="mpca-add-sub-user-form" class="mpca-hidden">
@@ -159,8 +159,8 @@
 
   <?php if($ca->num_sub_accounts > $ca->num_sub_accounts_used() && defined('MPCA_IMPORTERS_PATH') === true): ?>
   <div id="mpca_import_sub_accounts">
-    <h4><?php _e('Import Sub Accounts via CSV', 'memberpress-corporate'); ?></h4>
-    <div><small><em><?php _e('(Maximum 200 Sub Accounts per CSV file)', 'memberpress-corporate'); ?></em></small></div>
+    <h4><?php _e('Import Participants via CSV', 'memberpress-corporate'); ?></h4>
+    <div><small><em><?php _e('(Maximum 200 Participants per CSV file)', 'memberpress-corporate'); ?></em></small></div>
 
     <?php
       $csv_notice_checked = isset($_POST['action']) ? isset($_POST['notice']) : true;
@@ -173,16 +173,16 @@
       <input type="hidden" name="ca" value="<?php echo $ca->uuid; ?>" />
       <br/>
       <input type="checkbox" name="notice" <?php checked($csv_notice_checked); ?> />
-      <?php _e('Send NEW members a password reset link (does not email existing members)', 'memberpress-corporate'); ?>
+      <?php _e('Send NEW participants a password reset link (does not email existing members)', 'memberpress-corporate'); ?>
       <br/>
       <input type="checkbox" name="welcome" <?php checked($csv_welcome_checked); ?> />
-      <?php _e('Send NEW members the welcome email if they haven\'t received it already for the membership.', 'memberpress-corporate'); ?>
+      <?php _e('Send NEW participants the welcome email if they haven\'t received it already for the membership.', 'memberpress-corporate'); ?>
       <br/><br/>
       <input type="file" name="mpca_sub_accounts_csv" id="mpca_sub_accounts_csv">
       <input type="submit" value="<?php _e('Upload CSV', 'memberpress-corporate'); ?>" name="submit">
       <span class="mpca-loading-gif" style="display: none;">
         <img src="<?php echo admin_url('images/loading.gif'); ?>" />
-        <em><?php _e('Importing sub accounts...', 'memberpress-corporate'); ?></em>
+        <em><?php _e('Importing participants...', 'memberpress-corporate'); ?></em>
       </span>
     </form>
   </div>

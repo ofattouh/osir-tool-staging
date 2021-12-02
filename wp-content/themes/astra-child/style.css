@@ -76,6 +76,12 @@ table.mepr-account-table td {
   color: #fff !important;
 }
 
+/* Memberpress navigation links */
+.mepr-nav-item a {
+  text-decoration: none !important;
+  font-size: 18px !important;
+}
+
 /* Personal information fields 
 .mepr-form-input {
   width: 60% !important;

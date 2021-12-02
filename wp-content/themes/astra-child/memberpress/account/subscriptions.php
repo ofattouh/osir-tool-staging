@@ -12,9 +12,9 @@ if(!empty($subscriptions)) {
       <thead>
         <tr>
           <th><?php _ex('OSIR assessment', 'ui', 'memberpress'); ?></th>
-          <th><?php _ex('Active', 'ui', 'memberpress'); ?></th>
+          <th><?php _ex('Status', 'ui', 'memberpress'); ?></th>
           <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) : ?>
-            <th><?php _ex('User Management', 'ui', 'memberpress'); ?></th>
+            <th><?php _ex('Participant List', 'ui', 'memberpress'); ?></th>
             <?php MeprHooks::do_action('mepr-account-subscriptions-th', $mepr_current_user, $subscriptions); ?>
           <?php endif; ?>
         </tr>
@@ -69,7 +69,10 @@ if(!empty($subscriptions)) {
                 <div class="mepr-account-subscr-id"><?php echo $s->subscr_id; ?></div>
               <?php endif; ?>
             </td>
-            <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s->active; ?></div></td>
+
+            <!-- Changed membership status label -->
+            <?php $s_mystatus = ($s->active === '<span class="mepr-active">Yes</span>')? 'Active': 'Closed'; ?>
+            <td data-label="<?php _ex('Active', 'ui', 'memberpress'); ?>"><div class="mepr-account-active"><?php echo $s_mystatus; ?></div></td>
             
             <?php if ( !empty($cap['gf_moderator']) || !empty($cap['corporate_parent_account_moderator']) || !empty($cap['administrator']) || !empty($cap['designer']) ) : ?>
             <td data-label="<?php _ex('Actions', 'ui', 'memberpress'); ?>">

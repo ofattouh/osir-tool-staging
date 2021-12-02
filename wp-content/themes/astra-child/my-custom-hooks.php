@@ -103,7 +103,7 @@ function my_mepr_account_subscriptions_actions_func($user, $row, $transaction, $
   if( !empty($my_ca) && isset($my_ca->id) && !empty($my_ca->id) && $my_ca->is_enabled()
      && !empty($show_membership_users) && $show_membership_users === 'yes' ) {
     ?>
-    <a href="<?php echo $my_ca->sub_account_management_url(); ?>" class="mepr-account-row-action mepr-account-manage-sub-accounts"><?php _e('Display Users', 'memberpress-corporate'); ?></a>
+    <a href="<?php echo $my_ca->sub_account_management_url(); ?>" class="mepr-account-row-action mepr-account-manage-sub-accounts"><?php _e('Add or Remove Participants', 'memberpress-corporate'); ?></a>
     <?php
   }
 }
