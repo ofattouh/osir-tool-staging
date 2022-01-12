@@ -11,7 +11,7 @@ jQuery(function($){
     $('.date_picker').datepicker({
         dateFormat : 'yy-mm-dd',    // https://jqueryui.com/datepicker/#date-formats
         minDate: new Date(2021, 7 - 1, 10), // 2021-07-10
-        maxDate: new Date(2021, 12 - 1, 25), // https://api.jqueryui.com/datepicker/#option-minDate
+        maxDate: new Date(2022, 12 - 1, 25), // https://api.jqueryui.com/datepicker/#option-minDate
         changeMonth: true,
         changeYear: true,
         buttonImageOnly: true,

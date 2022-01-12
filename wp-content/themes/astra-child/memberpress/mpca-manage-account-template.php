@@ -176,7 +176,7 @@
       <?php _e('Send NEW participants a password reset link (does not email existing members)', 'memberpress-corporate'); ?>
       <br/>
       <input type="checkbox" name="welcome" <?php checked($csv_welcome_checked); ?> />
-      <?php _e('Send NEW participants the welcome email if they haven\'t received it already for the membership.', 'memberpress-corporate'); ?>
+      <?php _e('Send NEW participants the welcome email if they haven\'t received it already for the access to the OSIR assessment tool.', 'memberpress-corporate'); ?>
       <br/><br/>
       <input type="file" name="mpca_sub_accounts_csv" id="mpca_sub_accounts_csv">
       <input type="submit" value="<?php _e('Upload CSV', 'memberpress-corporate'); ?>" name="submit">
