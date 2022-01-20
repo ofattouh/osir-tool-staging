@@ -96,6 +96,11 @@ table.mepr-account-table td {
   font-size: 18px !important;
 }
 
+/* Membership status label */
+.mepr-account-active {
+  color: #1E7B1E !important;
+}
+
 /* Personal information fields 
 .mepr-form-input {
   width: 60% !important;
