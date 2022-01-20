@@ -26,6 +26,20 @@ Template: astra
   color: #fff !important;
 }
 
+/* Survey fields background/color */
+
+table.gsurvey-likert th.gsurvey-likert-choice-label {
+  background-color: #fff !important;
+}
+
+/* Remove survey fields borders */
+table.gsurvey-likert,
+table.gsurvey-likert th.gsurvey-likert-choice-label,
+table.gsurvey-likert .gsurvey-likert-choice, 
+table.gsurvey-likert .gsurvey-likert-row-label {
+  border-style: none !important;
+}
+
 /**************************** Member Press ****************************/
 
 /* Align display users link inside users management cell */

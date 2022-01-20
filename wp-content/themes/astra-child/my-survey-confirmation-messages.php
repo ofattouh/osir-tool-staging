@@ -34,23 +34,29 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 	// Add horizontal scroll bar for the table on small screens
 	$organizationProfileMsg .= '<div style="overflow-x:auto;"><table class="organization-report-results">';
 	$organizationProfileMsg .= '<tr><th class="organization-report-th">RESULTS</th><th class="organization-report-th2">CHALLENGE</th><th class="organization-report-th3">CONCERN</th><th class="organization-report-th4">THRIVING</th></tr>';
-	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td>YOUR RESULTS</td>';
+	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td></td>';
 
 	if ($organizationProfile === 'Challenge') {
-		$organizationProfileMsg .= '<td class="organization-report-your-results-td">Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
+		$organizationProfileMsg .= '<td class="organization-report-your-results-td">';
+		$organizationProfileMsg .= 'Your organization\'s OSI Risk Score falls under this profile.<br><br>';
+		$organizationProfileMsg .= 'Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
 		$organizationProfileMsg .= 'Support programs score: '.number_format($avg_support_programs_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive leadership score: '.number_format($avg_supportive_leadership_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive environment score: '.number_format($avg_supportive_environment_score, 2);
 		$organizationProfileMsg .= '</td><td></td><td></td></tr>';
 	} else if ($organizationProfile === 'Concern') {
-		$organizationProfileMsg .= '<td></td><td class="organization-report-your-results-td">Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
+		$organizationProfileMsg .= '<td></td><td class="organization-report-your-results-td">';
+		$organizationProfileMsg .= 'Your organization\'s OSI Risk Score falls under this profile.<br><br>';
+		$organizationProfileMsg .= 'Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
 		$organizationProfileMsg .= 'Support programs score: '.number_format($avg_support_programs_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive leadership score: '.number_format($avg_supportive_leadership_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive environment score: '.number_format($avg_supportive_environment_score, 2);
 		$organizationProfileMsg .= '</td><td></td></tr>';
 	
 	} else if ($organizationProfile === 'Thriving') {
-		$organizationProfileMsg .= '<td></td><td></td><td class="organization-report-your-results-td">Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
+		$organizationProfileMsg .= '<td></td><td></td><td class="organization-report-your-results-td">';
+		$organizationProfileMsg .= 'Your organization\'s OSI Risk Score falls under this profile.<br><br>';
+		$organizationProfileMsg .= 'Resiliency behaviours score: '.number_format($avg_resiliency_behaviours_score, 2).'<br>';
 		$organizationProfileMsg .= 'Support programs score: '.number_format($avg_support_programs_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive leadership score: '.number_format($avg_supportive_leadership_score, 2).'<br>';
 		$organizationProfileMsg .= 'Supportive environment score: '.number_format($avg_supportive_environment_score, 2);
