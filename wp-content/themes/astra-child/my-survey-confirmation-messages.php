@@ -33,8 +33,8 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 
 	// Add horizontal scroll bar for the table on small screens
 	$organizationProfileMsg .= '<div style="overflow-x:auto;"><table class="organization-report-results">';
-	$organizationProfileMsg .= '<tr><th class="organization-report-th">RESULTS</th><th class="organization-report-th2">CHALLENGE</th><th class="organization-report-th3">CONCERN</th><th class="organization-report-th4">THRIVING</th></tr>';
-	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr"><td></td>';
+	$organizationProfileMsg .= '<tr><th class="organization-report-th2">CHALLENGE</th><th class="organization-report-th3">CONCERN</th><th class="organization-report-th4">THRIVING</th></tr>';
+	$organizationProfileMsg .= '<tr class="organization-report-your-results-tr">';
 
 	if ($organizationProfile === 'Challenge') {
 		$organizationProfileMsg .= '<td class="organization-report-your-results-td">';
@@ -63,7 +63,7 @@ function getOrganizationScalesMsg ($osirAverageGrandScore, $avg_resiliency_behav
 		$organizationProfileMsg .= '</td></tr>';
 	}
 	
-	$organizationProfileMsg .= '<tr><td class="organization-report-recommendations">RECOMMEDATIONS</td>';
+	$organizationProfileMsg .= '<tr>';
 	$organizationProfileMsg .= '<td valign="top"><ul><li>Encourage employees to seek help from a mental health professional</li>';
 	$organizationProfileMsg .= '<li>Consider examining your current benefits programs to ensure adequate health coverage</li>';
 	$organizationProfileMsg .= '<li>Do an outreach or communications campaign to advertise the programs available within your organization (e.g., EFAP, trauma care, paramedical psychological services, in-house psychological services)</li>';

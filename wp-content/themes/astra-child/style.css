@@ -121,21 +121,24 @@ table.organization-report-results th {
   padding: 15px !important;
 }
 
-/* results */
+/* results
 th.organization-report-th {
   color: #fff;
   background-color: #1735a4;
   font-weight: bolder;
 }
+*/
 
+/*
 td.organization-report-recommendations {
   color: #fff;
   background-color: #1735a4;
 }
+*/
 
 /* Your results */
 tr.organization-report-your-results-tr {
-  background-color: #56bde7;
+  background-color: #F8F8F8;
 }
 
 tr.organization-report-your-results-tr:hover {
