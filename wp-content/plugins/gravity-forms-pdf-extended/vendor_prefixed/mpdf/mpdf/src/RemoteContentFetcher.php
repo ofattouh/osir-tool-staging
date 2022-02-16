@@ -29,6 +29,9 @@ class RemoteContentFetcher implements \Psr\Log\LoggerAwareInterface
         \curl_setopt($ch, \CURLOPT_NOBODY, 0);
         \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
         \curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, $this->mpdf->curlTimeout);
+        if ($this->mpdf->curlExecutionTimeout) {
+            \curl_setopt($ch, \CURLOPT_TIMEOUT, $this->mpdf->curlExecutionTimeout);
+        }
         if ($this->mpdf->curlFollowLocation) {
             \curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, 1);
         }
@@ -36,7 +39,7 @@ class RemoteContentFetcher implements \Psr\Log\LoggerAwareInterface
             \curl_setopt($ch, \CURLOPT_SSL_VERIFYHOST, \false);
             \curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, \false);
         }
-        if (\is_file($this->mpdf->curlCaCertificate)) {
+        if ($this->mpdf->curlCaCertificate && \is_file($this->mpdf->curlCaCertificate)) {
             \curl_setopt($ch, \CURLOPT_CAINFO, $this->mpdf->curlCaCertificate);
         }
         if ($this->mpdf->curlProxy) {

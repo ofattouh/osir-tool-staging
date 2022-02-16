@@ -114,7 +114,7 @@ if ( isset( $get_form_options['form-wrapper'] ) ) { ?>
 	
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_footer .gform_button:hover,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_button:hover,
-	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_previous_button:hover
+	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_previous_button:hover,
 	body #gform_wrapper_<?php echo $css_form_id ?> .gform_page_footer .gform_next_button:hover {
 		<?php echo 'border-style: solid;'; ?>
 		<?php echo ! empty( $get_form_options['submit-button']['hover-color'] ) ? 'background-color:'. $get_form_options['submit-button']['hover-color'].';' : ''; ?>

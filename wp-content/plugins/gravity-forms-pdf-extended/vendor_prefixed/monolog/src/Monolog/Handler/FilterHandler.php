@@ -14,6 +14,7 @@ namespace GFPDF_Vendor\Monolog\Handler;
 use GFPDF_Vendor\Monolog\Logger;
 use GFPDF_Vendor\Monolog\ResettableInterface;
 use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
+use Psr\Log\LogLevel;
 /**
  * Simple handler wrapper that filters records based on a list of levels
  *
@@ -21,6 +22,10 @@ use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
  *
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GFPDF_Vendor\Monolog\Handler\ProcessableHandlerInterface, \GFPDF_Vendor\Monolog\ResettableInterface, \GFPDF_Vendor\Monolog\Handler\FormattableHandlerInterface
 {
@@ -28,13 +33,15 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
     /**
      * Handler or factory callable($record, $this)
      *
-     * @var callable|\Monolog\Handler\HandlerInterface
+     * @var callable|HandlerInterface
+     * @phpstan-var callable(?Record, HandlerInterface): HandlerInterface|HandlerInterface
      */
     protected $handler;
     /**
      * Minimum level for logs that are passed to handler
      *
      * @var int[]
+     * @phpstan-var array<Level, int>
      */
     protected $acceptedLevels;
     /**
@@ -44,12 +51,15 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
      */
     protected $bubble;
     /**
-     * @psalm-param HandlerInterface|callable(?array, HandlerInterface): HandlerInterface $handler
+     * @psalm-param HandlerInterface|callable(?Record, HandlerInterface): HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler        Handler or factory callable($record|null, $filterHandler).
      * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
      * @param int|string                $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
+     *
+     * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param Level|LevelName|LogLevel::* $maxLevel
      */
     public function __construct($handler, $minLevelOrList = \GFPDF_Vendor\Monolog\Logger::DEBUG, $maxLevel = \GFPDF_Vendor\Monolog\Logger::EMERGENCY, bool $bubble = \true)
     {
@@ -60,6 +70,9 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
             throw new \RuntimeException("The given handler (" . \json_encode($this->handler) . ") is not a callable nor a Monolog\\Handler\\HandlerInterface object");
         }
     }
+    /**
+     * @phpstan-return array<int, Level>
+     */
     public function getAcceptedLevels() : array
     {
         return \array_flip($this->acceptedLevels);
@@ -67,6 +80,9 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
     /**
      * @param int|string|array $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
      * @param int|string       $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
+     *
+     * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param Level|LevelName|LogLevel::*                                    $maxLevel
      */
     public function setAcceptedLevels($minLevelOrList = \GFPDF_Vendor\Monolog\Logger::DEBUG, $maxLevel = \GFPDF_Vendor\Monolog\Logger::EMERGENCY) : self
     {
@@ -83,14 +99,14 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
         return $this;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isHandling(array $record) : bool
     {
         return isset($this->acceptedLevels[$record['level']]);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record) : bool
     {
@@ -98,13 +114,14 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
             return \false;
         }
         if ($this->processors) {
+            /** @var Record $record */
             $record = $this->processRecord($record);
         }
         $this->getHandler($record)->handle($record);
         return \false === $this->bubble;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
@@ -124,6 +141,8 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
      *
      * @return HandlerInterface
+     *
+     * @phpstan-param Record $record
      */
     public function getHandler(array $record = null)
     {
@@ -136,7 +155,7 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
         return $this->handler;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -148,7 +167,7 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
         throw new \UnexpectedValueException('The nested handler of type ' . \get_class($handler) . ' does not support formatters.');
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {
@@ -161,5 +180,8 @@ class FilterHandler extends \GFPDF_Vendor\Monolog\Handler\Handler implements \GF
     public function reset()
     {
         $this->resetProcessors();
+        if ($this->getHandler() instanceof \GFPDF_Vendor\Monolog\ResettableInterface) {
+            $this->getHandler()->reset();
+        }
     }
 }

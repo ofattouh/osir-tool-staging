@@ -34,12 +34,12 @@ class LogglyHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHand
      * @var resource[]|CurlHandle[]
      */
     protected $curlHandlers = [];
+    /** @var string */
     protected $token;
+    /** @var string[] */
     protected $tag = [];
     /**
-     * @param string     $token  API token supplied by Loggly
-     * @param string|int $level  The minimum logging level to trigger this handler
-     * @param bool       $bubble Whether or not messages that are handled should bubble up the stack.
+     * @param string $token API token supplied by Loggly
      *
      * @throws MissingExtensionException If the curl extension is missing
      */

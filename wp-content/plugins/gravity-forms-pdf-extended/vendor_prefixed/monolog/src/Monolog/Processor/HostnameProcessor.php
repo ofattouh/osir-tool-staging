@@ -16,11 +16,15 @@ namespace GFPDF_Vendor\Monolog\Processor;
  */
 class HostnameProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
 {
+    /** @var string */
     private static $host;
     public function __construct()
     {
         self::$host = (string) \gethostname();
     }
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         $record['extra']['hostname'] = self::$host;

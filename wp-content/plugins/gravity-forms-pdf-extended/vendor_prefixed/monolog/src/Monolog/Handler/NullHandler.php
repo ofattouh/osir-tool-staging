@@ -12,6 +12,7 @@ declare (strict_types=1);
 namespace GFPDF_Vendor\Monolog\Handler;
 
 use GFPDF_Vendor\Monolog\Logger;
+use Psr\Log\LogLevel;
 /**
  * Blackhole
  *
@@ -19,6 +20,9 @@ use GFPDF_Vendor\Monolog\Logger;
  * to put on top of an existing stack to override it temporarily.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class NullHandler extends \GFPDF_Vendor\Monolog\Handler\Handler
 {
@@ -28,20 +32,22 @@ class NullHandler extends \GFPDF_Vendor\Monolog\Handler\Handler
     private $level;
     /**
      * @param string|int $level The minimum logging level at which this handler will be triggered
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function __construct($level = \GFPDF_Vendor\Monolog\Logger::DEBUG)
     {
         $this->level = \GFPDF_Vendor\Monolog\Logger::toMonologLevel($level);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isHandling(array $record) : bool
     {
         return $record['level'] >= $this->level;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record) : bool
     {

@@ -18,10 +18,14 @@ use GFPDF_Vendor\Monolog\Utils;
  * Handler sending logs to browser's javascript console with no browser extension required
  *
  * @author Olivier Poitrey <rs@dailymotion.com>
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class BrowserConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
+    /** @var bool */
     protected static $initialized = \false;
+    /** @var FormattedRecord[] */
     protected static $records = [];
     /**
      * {@inheritDoc}
@@ -141,6 +145,9 @@ class BrowserConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProces
         }
         return "(function (c) {if (c && c.groupCollapsed) {\n" . \implode("\n", $script) . "\n}})(console);";
     }
+    /**
+     * @return string[]
+     */
     private static function handleStyles(string $formatted) : array
     {
         $args = [];
@@ -160,7 +167,7 @@ class BrowserConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProces
     {
         static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
         static $labels = [];
-        return \preg_replace_callback('/macro\\s*:(.*?)(?:;|$)/', function (array $m) use($string, &$colors, &$labels) {
+        $style = \preg_replace_callback('/macro\\s*:(.*?)(?:;|$)/', function (array $m) use($string, &$colors, &$labels) {
             if (\trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
@@ -171,7 +178,16 @@ class BrowserConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProces
             }
             return $m[1];
         }, $style);
+        if (null === $style) {
+            $pcreErrorCode = \preg_last_error();
+            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . \GFPDF_Vendor\Monolog\Utils::pcreLastErrorMessage($pcreErrorCode));
+        }
+        return $style;
     }
+    /**
+     * @param  mixed[] $dict
+     * @return mixed[]
+     */
     private static function dump(string $title, array $dict) : array
     {
         $script = [];
@@ -193,11 +209,20 @@ class BrowserConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProces
     {
         return '"' . \addcslashes($arg, "\"\n\\") . '"';
     }
+    /**
+     * @param mixed $args
+     */
     private static function call(...$args) : string
     {
         $method = \array_shift($args);
+        if (!\is_string($method)) {
+            throw new \UnexpectedValueException('Expected the first arg to be a string, got: ' . \var_export($method, \true));
+        }
         return static::call_array($method, $args);
     }
+    /**
+     * @param mixed[] $args
+     */
     private static function call_array(string $method, array $args) : string
     {
         return 'c.' . $method . '(' . \implode(', ', $args) . ');';

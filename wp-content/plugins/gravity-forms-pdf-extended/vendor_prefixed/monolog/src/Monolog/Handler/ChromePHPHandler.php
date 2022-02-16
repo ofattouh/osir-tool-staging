@@ -21,6 +21,8 @@ use GFPDF_Vendor\Monolog\Utils;
  * This also works out of the box with Firefox 43+
  *
  * @author Christophe Coevoet <stof@notk.org>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class ChromePHPHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
@@ -37,6 +39,7 @@ class ChromePHPHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingH
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
     protected const USER_AGENT_REGEX = '{\\b(?:Chrome/\\d+(?:\\.\\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\\d|\\d{3,})(?:\\.\\d)*)\\b}';
+    /** @var bool */
     protected static $initialized = \false;
     /**
      * Tracks whether we sent too much data
@@ -46,12 +49,10 @@ class ChromePHPHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingH
      * @var bool
      */
     protected static $overflowed = \false;
+    /** @var mixed[] */
     protected static $json = ['version' => self::VERSION, 'columns' => ['label', 'log', 'backtrace', 'type'], 'rows' => []];
+    /** @var bool */
     protected static $sendHeaders = \true;
-    /**
-     * @param string|int $level  The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
-     */
     public function __construct($level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
@@ -60,7 +61,7 @@ class ChromePHPHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingH
         }
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
@@ -72,7 +73,9 @@ class ChromePHPHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingH
             if ($record['level'] < $this->level) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            /** @var Record $message */
+            $message = $this->processRecord($record);
+            $messages[] = $message;
         }
         if (!empty($messages)) {
             $messages = $this->getFormatter()->formatBatch($messages);

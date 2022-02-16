@@ -1,3 +1,14 @@
+##### [Version 1.10.5](https://github.com/Codeinwp/visualizer-pro/compare/v1.10.4...v1.10.5) (2022-01-19)
+
+- Remove cache when editing a chart from front-end
+
+##### [Version 1.10.4](https://github.com/Codeinwp/visualizer-pro/compare/v1.10.3...v1.10.4) (2021-12-20)
+
+- Improve CSS performance
+- Fix Radar/Spider charts not rendered
+- Fix compatibility issue with Pirate Parrot plugin
+- Improve JS performance
+
 ##### [Version 1.10.3](https://github.com/Codeinwp/visualizer-pro/compare/v1.10.2...v1.10.3) (2021-10-07)
 
 * Fix issue when saving a custom refresh time for chart

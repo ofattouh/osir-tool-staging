@@ -41,12 +41,13 @@ class SlackWebhookHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessi
      * @param string|null $iconEmoji              The emoji name to use (or null)
      * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param string|int  $level                  The minimum logging level at which this handler will be triggered
-     * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct(string $webhookUrl, ?string $channel = null, ?string $username = null, bool $useAttachment = \true, ?string $iconEmoji = null, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, $level = \GFPDF_Vendor\Monolog\Logger::CRITICAL, bool $bubble = \true, array $excludeFields = array())
     {
+        if (!\extension_loaded('curl')) {
+            throw new \GFPDF_Vendor\Monolog\Handler\MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
+        }
         parent::__construct($level, $bubble);
         $this->webhookUrl = $webhookUrl;
         $this->slackRecord = new \GFPDF_Vendor\Monolog\Handler\Slack\SlackRecord($channel, $username, $useAttachment, $iconEmoji, $useShortAttachment, $includeContextAndExtra, $excludeFields);
@@ -60,9 +61,7 @@ class SlackWebhookHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessi
         return $this->webhookUrl;
     }
     /**
-     * {@inheritdoc}
-     *
-     * @param array $record
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {

@@ -42,6 +42,14 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 	private $_charts = array();
 
 	/**
+	 * Lazy render script.
+	 *
+	 * @access private
+	 * @var bool
+	 */
+	private $lazy_render_script = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -53,6 +61,7 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 	public function __construct( Visualizer_Plugin $plugin ) {
 		parent::__construct( $plugin );
 
+		$this->_addAction( 'wp_print_footer_scripts', 'printFooterScripts' );
 		$this->_addAction( 'wp_enqueue_scripts', 'enqueueScripts' );
 		$this->_addAction( 'load-index.php', 'enqueueScripts' );
 		$this->_addAction( 'visualizer_enqueue_scripts', 'enqueueScripts' );
@@ -81,14 +90,32 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 		if ( is_admin() ) {
 			return $tag;
 		}
-
-		$scripts    = array( 'google-jsapi', 'visualizer-render-google-lib', 'visualizer-render-google' );
-
-		foreach ( $scripts as $async ) {
+		// Async scripts.
+		$async_scripts = array( 'google-jsapi', 'chartjs', 'visualizer-datatables' );
+		foreach ( $async_scripts as $async ) {
 			if ( $async === $handle ) {
-				$tag = str_replace( ' src', ' defer="defer" src', $tag );
+				$tag = str_replace( ' src', ' async src', $tag );
 				break;
 			}
+		};
+
+		// Async scripts.
+		$scripts = array( 'dom-to-image' );
+		foreach ( array( 'async', 'defer' ) as $attr ) {
+			if ( wp_scripts()->get_data( $handle, $attr ) ) {
+				break;
+			}
+			if ( in_array( $handle, $async_scripts, true ) || false === strpos( $handle, 'visualizer-' ) ) {
+				break;
+			}
+			if ( ! preg_match( ":\s$attr(=|>|\s):", $tag ) ) {
+				$tag = preg_replace( ':(?=></script>):', " $attr", $tag, 1 );
+				if ( $this->lazy_render_script ) {
+					$tag = str_replace( ' src', ' data-visualizer-script', $tag );
+				}
+			}
+			// Only allow async or defer, not both.
+			break;
 		}
 		return $tag;
 	}
@@ -244,7 +271,6 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 	 */
 	public function enqueueScripts() {
 		wp_register_script( 'visualizer-customization', $this->get_user_customization_js(), array(), null, true );
-		wp_register_style( 'visualizer-front', VISUALIZER_ABSURL . 'css/front.css', array(), Visualizer_Plugin::VERSION );
 		do_action( 'visualizer_pro_frontend_load_resources' );
 	}
 
@@ -329,6 +355,14 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 		// handle settings filter hooks
 		$settings = apply_filters( Visualizer_Plugin::FILTER_GET_CHART_SETTINGS, $settings, $chart->ID, $type );
 
+		$lazy_load = isset( $settings['lazy_load_chart'] ) ? $settings['lazy_load_chart'] : false;
+		$lazy_load = apply_filters( 'visualizer_lazy_load_chart', $lazy_load, $chart->ID );
+		$container_class = 'visualizer-front-container';
+		if ( $lazy_load ) {
+			$this->lazy_render_script = true;
+			$container_class .= ' visualizer-lazy-render';
+		}
+
 		// handle data filter hooks
 		$data   = self::get_chart_data( $chart, $type );
 
@@ -402,6 +436,7 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 
 		$_charts = array();
 		$_charts_type = '';
+		$count = 0;
 		foreach ( $this->_charts as $id => $array ) {
 			$_charts = $this->_charts;
 			$library = $array['library'];
@@ -416,29 +451,30 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 				);
 				wp_enqueue_script( "visualizer-render-$library" );
 			}
+
+			if ( wp_script_is( "visualizer-render-$_charts_type" ) && 0 === $count ) {
+				wp_localize_script(
+					"visualizer-render-$_charts_type",
+					'visualizer',
+					array(
+						'charts'        => $this->_charts,
+						'language'      => $this->get_language(),
+						'map_api_key'   => get_option( 'visualizer-map-api-key' ),
+						'rest_url'      => version_compare( $wp_version, '4.7.0', '>=' ) ? rest_url( 'visualizer/v' . VISUALIZER_REST_VERSION . '/action/#id#/#type#/' ) : '',
+						'wp_nonce'      => wp_create_nonce( 'wp_rest' ),
+						'i10n'          => array(
+							'copied'        => __( 'The data has been copied to your clipboard. Hit Ctrl-V/Cmd-V in your spreadsheet editor to paste the data.', 'visualizer' ),
+						),
+						'page_type' => 'frontend',
+						'is_front'  => true,
+					)
+				);
+			}
+			$count++;
 		}
-		if ( wp_script_is( "visualizer-render-$_charts_type" ) ) {
-			wp_localize_script(
-				"visualizer-render-$_charts_type",
-				'visualizer',
-				array(
-					'charts'        => $_charts,
-					'language'      => $this->get_language(),
-					'map_api_key'   => get_option( 'visualizer-map-api-key' ),
-					'rest_url'      => version_compare( $wp_version, '4.7.0', '>=' ) ? rest_url( 'visualizer/v' . VISUALIZER_REST_VERSION . '/action/#id#/#type#/' ) : '',
-					'wp_nonce'      => wp_create_nonce( 'wp_rest' ),
-					'i10n'          => array(
-						'copied'        => __( 'The data has been copied to your clipboard. Hit Ctrl-V/Cmd-V in your spreadsheet editor to paste the data.', 'visualizer' ),
-					),
-					'page_type' => 'frontend',
-					'is_front'  => true,
-				)
-			);
-		}
-		wp_enqueue_style( 'visualizer-front' );
 
 		// return placeholder div
-		return $actions_div . '<div id="' . $id . '"' . $this->getHtmlAttributes( $attributes ) . '></div>' . $this->addSchema( $chart->ID );
+		return '<div class="' . $container_class . '">' . $actions_div . '<div id="' . $id . '"' . $this->getHtmlAttributes( $attributes ) . '></div>' . $this->addSchema( $chart->ID ) . '</div>';
 	}
 
 	/**
@@ -607,5 +643,58 @@ class Visualizer_Module_Frontend extends Visualizer_Module {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Print footer script.
+	 */
+	public function printFooterScripts() {
+		if ( $this->lazy_render_script ) {
+			?>
+		<script type="text/javascript">
+			var visualizerUserInteractionEvents = [
+				"mouseover",
+				"keydown",
+				"touchmove",
+				"touchstart"
+			];
+
+			visualizerUserInteractionEvents.forEach(function(event) {
+				window.addEventListener(event, visualizerTriggerScriptLoader, { passive: true });
+			});
+
+			function visualizerTriggerScriptLoader() {
+				visualizerLoadScripts();
+				visualizerUserInteractionEvents.forEach(function(event) {
+					window.removeEventListener(event, visualizerTriggerScriptLoader, { passive: true });
+				});
+			}
+
+			function visualizerLoadScripts() {
+				document.querySelectorAll("script[data-visualizer-script]").forEach(function(elem) {
+					jQuery.getScript( elem.getAttribute("data-visualizer-script") )
+					.done( function( script, textStatus ) {
+						elem.setAttribute("src", elem.getAttribute("data-visualizer-script"));
+						elem.removeAttribute("data-visualizer-script");
+						setTimeout( function() {
+							visualizerRefreshChart();
+						} );
+					} );
+				});
+			}
+
+			function visualizerRefreshChart() {
+				jQuery( '.visualizer-front:not(.visualizer-chart-loaded)' ).resize();
+				if ( jQuery( 'div.viz-facade-loaded:not(.visualizer-lazy):empty' ).length > 0 ) {
+					visualizerUserInteractionEvents.forEach( function( event ) {
+						window.addEventListener( event, function() {
+							jQuery( '.visualizer-front:not(.visualizer-chart-loaded)' ).resize();
+						}, { passive: true } );
+					} );
+				}
+			}
+		</script>
+			<?php
+		}
 	}
 }

@@ -18,11 +18,15 @@ use GFPDF_Vendor\Monolog\Logger;
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 class WildfireFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to Wildfire levels.
+     *
+     * @var array<Level, string>
      */
     private $logLevels = [\GFPDF_Vendor\Monolog\Logger::DEBUG => 'LOG', \GFPDF_Vendor\Monolog\Logger::INFO => 'INFO', \GFPDF_Vendor\Monolog\Logger::NOTICE => 'INFO', \GFPDF_Vendor\Monolog\Logger::WARNING => 'WARN', \GFPDF_Vendor\Monolog\Logger::ERROR => 'ERROR', \GFPDF_Vendor\Monolog\Logger::CRITICAL => 'ERROR', \GFPDF_Vendor\Monolog\Logger::ALERT => 'ERROR', \GFPDF_Vendor\Monolog\Logger::EMERGENCY => 'ERROR'];
     /**
@@ -35,7 +39,9 @@ class WildfireFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormat
         $this->removeJsonEncodeOption(\JSON_UNESCAPED_UNICODE);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @return string
      */
     public function format(array $record) : string
     {
@@ -49,6 +55,7 @@ class WildfireFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormat
             $line = $record['extra']['line'];
             unset($record['extra']['line']);
         }
+        /** @var mixed[] $record */
         $record = $this->normalize($record);
         $message = ['message' => $record['message']];
         $handleError = \false;
@@ -77,15 +84,18 @@ class WildfireFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormat
         return \sprintf('%d|%s|', \strlen($json), $json);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @phpstan-return never
      */
     public function formatBatch(array $records)
     {
         throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }
     /**
-     * {@inheritdoc}
-     * @return int|bool|string|null|array|object
+     * {@inheritDoc}
+     *
+     * @return null|scalar|array<array|scalar|null>|object
      */
     protected function normalize($data, int $depth = 0)
     {

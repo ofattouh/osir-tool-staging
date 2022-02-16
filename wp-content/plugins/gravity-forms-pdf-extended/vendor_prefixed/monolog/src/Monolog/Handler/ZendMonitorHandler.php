@@ -19,18 +19,18 @@ use GFPDF_Vendor\Monolog\Logger;
  *
  * @author  Christian Bergau <cbergau86@gmail.com>
  * @author  Jason Davis <happydude@jasondavis.net>
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class ZendMonitorHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
     /**
      * Monolog level / ZendMonitor Custom Event priority map
      *
-     * @var array
+     * @var array<int, int>
      */
     protected $levelMap = [];
     /**
-     * @param  string|int                $level  The minimum logging level at which this handler will be triggered.
-     * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not.
      * @throws MissingExtensionException
      */
     public function __construct($level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
@@ -43,7 +43,7 @@ class ZendMonitorHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessin
         parent::__construct($level, $bubble);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -55,18 +55,23 @@ class ZendMonitorHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessin
      * @param string $message   Text displayed in "Error String"
      * @param array  $formatted Displayed in Custom Variables tab
      * @param int    $severity  Set the event severity level (-1,0,1)
+     *
+     * @phpstan-param FormattedRecord $formatted
      */
     protected function writeZendMonitorCustomEvent(string $type, string $message, array $formatted, int $severity) : void
     {
         zend_monitor_custom_event($type, $message, $formatted, $severity);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getDefaultFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {
         return new \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter();
     }
+    /**
+     * @return array<int, int>
+     */
     public function getLevelMap() : array
     {
         return $this->levelMap;

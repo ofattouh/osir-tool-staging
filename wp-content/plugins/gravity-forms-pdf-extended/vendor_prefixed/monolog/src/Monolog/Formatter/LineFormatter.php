@@ -23,9 +23,13 @@ use GFPDF_Vendor\Monolog\Utils;
 class LineFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
 {
     public const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
+    /** @var string */
     protected $format;
+    /** @var bool */
     protected $allowInlineLineBreaks;
+    /** @var bool */
     protected $ignoreEmptyContextAndExtra;
+    /** @var bool */
     protected $includeStacktraces;
     /**
      * @param string|null $format                     The format of the message
@@ -40,23 +44,23 @@ class LineFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
         parent::__construct($dateFormat);
     }
-    public function includeStacktraces(bool $include = \true)
+    public function includeStacktraces(bool $include = \true) : void
     {
         $this->includeStacktraces = $include;
         if ($this->includeStacktraces) {
             $this->allowInlineLineBreaks = \true;
         }
     }
-    public function allowInlineLineBreaks(bool $allow = \true)
+    public function allowInlineLineBreaks(bool $allow = \true) : void
     {
         $this->allowInlineLineBreaks = $allow;
     }
-    public function ignoreEmptyContextAndExtra(bool $ignore = \true)
+    public function ignoreEmptyContextAndExtra(bool $ignore = \true) : void
     {
         $this->ignoreEmptyContextAndExtra = $ignore;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function format(array $record) : string
     {
@@ -92,6 +96,10 @@ class LineFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
         // remove leftover %extra.xxx% and %context.xxx% if any
         if (\false !== \strpos($output, '%')) {
             $output = \preg_replace('/%(?:extra|context)\\..+?%/', '', $output);
+            if (null === $output) {
+                $pcreErrorCode = \preg_last_error();
+                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . \GFPDF_Vendor\Monolog\Utils::pcreLastErrorMessage($pcreErrorCode));
+            }
         }
         return $output;
     }
@@ -103,6 +111,9 @@ class LineFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
         }
         return $message;
     }
+    /**
+     * @param mixed $value
+     */
     public function stringify($value) : string
     {
         return $this->replaceNewlines($this->convertToString($value));
@@ -117,6 +128,9 @@ class LineFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
         }
         return $str;
     }
+    /**
+     * @param mixed $data
+     */
     protected function convertToString($data) : string
     {
         if (null === $data || \is_bool($data)) {

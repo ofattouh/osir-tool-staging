@@ -34,7 +34,7 @@ class Png
         for ($j = $minSize; $j < $maxSize; $j++) {
             for ($i = $minSize; $i < $maxSize; $i++) {
                 if ($final[$i + $j * $qrSize + 1]) {
-                    \imagefilledrectangle($im, ($i - $minSize) * $s, ($j - $minSize) * $s, ($i - $minSize + 1) * $s - 1, ($j - $minSize + 1) * $s - 1, $foregroundColor);
+                    \imagefilledrectangle($im, (int) \round(($i - $minSize) * $s), (int) \round(($j - $minSize) * $s), (int) \round(($i - $minSize + 1) * $s - 1), (int) \round(($j - $minSize + 1) * $s - 1), $foregroundColor);
                 }
             }
         }

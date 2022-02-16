@@ -142,7 +142,7 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 			add_filter( 'visualizer_action_buttons', array( $this, 'addActionButtons' ), 10, 1 );
 			add_filter( 'visualizer_action_data', array( $this, 'handleAction' ), 10, 5 );
 			add_filter( 'visualizer_pro_show_chart', array( $this, 'checkViewChartPermission' ), 10, 2 );
-			add_filter( 'visualizer_pro_get_permissions', array( $this, 'getPermissions' ), 10, 2 );
+			add_filter( 'visualizer_pro_get_permissions', array( $this, 'getPermissions' ), 10, 1 );
 			add_filter( 'visualizer_pro_get_permissions_data', array( $this, 'getPermissionsDataFilter' ), 10, 2 );
 
 			add_filter( 'visualizer_load_chart', array( $this, 'loadChartTypes' ), 10, 2 );
@@ -168,6 +168,9 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 
 			// editors
 			add_filter( 'visualizer_editors', array( $this, 'supportedEditors' ), 10, 1 );
+
+			// Inline style.
+			add_action( 'visualizer_inline_css', array( $this, 'loadFrontendInlineStyle' ) );
 		}
 
 		/**
@@ -423,10 +426,9 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 		 * Get the permissions meta data for the chart.
 		 *
 		 * @access public
-		 * @param null $default Null.
-		 * @param int  $chart_id The id of the chart.
+		 * @param int $chart_id The id of the chart.
 		 */
-		public function getPermissions( $default = null, $chart_id ) {
+		public function getPermissions( $chart_id ) {
 			return get_post_meta( $chart_id, self::CF_PERMISSIONS, true );
 		}
 
@@ -505,8 +507,6 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 
 			wp_register_style( 'visualizer-handsontable', Visualizer_Pro_ABSURL . 'vendor/handsontable/dist/handsontable.full.min.css', array(), VISUALIZER_PRO_VERSION );
 			wp_register_style( 'visualizer-magnific', '//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css', array( 'visualizer-handsontable' ), VISUALIZER_PRO_VERSION );
-			wp_register_style( 'visualizer-pro-front-edit', Visualizer_Pro_ABSURL . 'inc/css/front.css', array( 'visualizer-magnific' ), VISUALIZER_PRO_VERSION );
-			wp_register_style( 'visualizer-pro-front', Visualizer_Pro_ABSURL . 'inc/css/front.css', array(), VISUALIZER_PRO_VERSION );
 		}
 
 		/**
@@ -599,6 +599,11 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 							update_post_meta( $chart_id, Visualizer_Plugin::CF_SERIES, $source->getSeries() );
 							update_post_meta( $chart_id, Visualizer_Plugin::CF_SOURCE, $source->getSourceName() );
 							update_post_meta( $chart_id, Visualizer_Plugin::CF_DEFAULT_DATA, 0 );
+							// Clear existing chart cache.
+							$cache_key = Visualizer_Plugin::CF_CHART_CACHE . '_' . $chart_id;
+							if ( get_transient( $cache_key ) ) {
+								delete_transient( $cache_key );
+							}
 							apply_filters( Visualizer_Plugin::FILTER_UNDO_REVISIONS, $chart_id, false );
 						}
 					}
@@ -632,10 +637,9 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 		public function addActions( $actions, $chart_id ) {
 			if ( $this->checkChartPermissionFor( 'edit', false, $chart_id, false ) ) {
 				$actions['edit']    = 'edit';
-				wp_enqueue_style( 'visualizer-pro-front-edit' );
+				wp_enqueue_style( 'visualizer-magnific' );
 				wp_enqueue_script( 'visualizer-pro-render-edit' );
 			} else {
-				wp_enqueue_style( 'visualizer-pro-front' );
 				wp_enqueue_script( 'visualizer-pro-render' );
 			}
 			return $actions;
@@ -2244,6 +2248,18 @@ if ( ! class_exists( 'Visualizer_Pro' ) ) {
 			</div>
 
 			<?php
+		}
+
+		/**
+		 * Add inline fronted style.
+		 *
+		 * @param array $arguments Filter arguments.
+		 */
+		public function loadFrontendInlineStyle( &$arguments ) {
+			$inline_css = '.visualizer-editor-front-container{position:relative;width:auto;margin:5%;background:#fff}.visualizer-editor-front{overflow:hidden;width:100%;height:500px}.visualizer-editor-front-actions{padding-bottom:3px}.visualizer-editor-save,.visualizer-editor-cancel{margin:0 4px;padding:2px 15px}';
+			if ( ! empty( $arguments[0] ) ) {
+				$arguments[0] = str_replace( '</style>', "$inline_css </style>", $arguments[0] );
+			}
 		}
 	}
 } // End if().

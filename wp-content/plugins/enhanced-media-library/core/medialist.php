@@ -156,5 +156,3 @@ if ( ! function_exists( 'wpuxss_eml_shortcode_atts' ) ) {
         return $output;
     }
 }
-
-?>

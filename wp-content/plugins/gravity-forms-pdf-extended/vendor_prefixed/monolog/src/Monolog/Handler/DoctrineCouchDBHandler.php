@@ -22,6 +22,7 @@ use GFPDF_Vendor\Doctrine\CouchDB\CouchDBClient;
  */
 class DoctrineCouchDBHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
+    /** @var CouchDBClient */
     private $client;
     public function __construct(\GFPDF_Vendor\Doctrine\CouchDB\CouchDBClient $client, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {

@@ -27,13 +27,13 @@ use GFPDF_Vendor\Monolog\Logger;
  */
 class SyslogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractSyslogHandler
 {
+    /** @var string */
     protected $ident;
+    /** @var int */
     protected $logopts;
     /**
      * @param string     $ident
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
-     * @param string|int $level    The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble   Whether the messages that are handled can bubble up the stack or not
      * @param int        $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */
     public function __construct(string $ident, $facility = \LOG_USER, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true, int $logopts = \LOG_PID)
@@ -43,14 +43,14 @@ class SyslogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractSyslogHandler
         $this->logopts = $logopts;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function close() : void
     {
         \closelog();
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {

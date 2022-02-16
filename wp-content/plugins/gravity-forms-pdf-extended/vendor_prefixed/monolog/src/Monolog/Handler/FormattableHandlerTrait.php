@@ -25,7 +25,7 @@ trait FormattableHandlerTrait
      */
     protected $formatter;
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -33,7 +33,7 @@ trait FormattableHandlerTrait
         return $this;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {

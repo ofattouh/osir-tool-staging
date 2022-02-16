@@ -47,14 +47,12 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
      */
     protected $client;
     /**
-     * @var array Handler config options
+     * @var mixed[] Handler config options
      */
     protected $options = [];
     /**
-     * @param Client     $client  Elasticsearch Client object
-     * @param array      $options Handler configuration
-     * @param string|int $level   The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param Client  $client  Elasticsearch Client object
+     * @param mixed[] $options Handler configuration
      */
     public function __construct(\GFPDF_Vendor\Elasticsearch\Client $client, array $options = [], $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {
@@ -76,7 +74,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
         $this->bulkSend([$record['formatted']]);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -88,7 +86,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
     /**
      * Getter options
      *
-     * @return array
+     * @return mixed[]
      */
     public function getOptions() : array
     {
@@ -102,7 +100,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
         return new \GFPDF_Vendor\Monolog\Formatter\ElasticsearchFormatter($this->options['index'], $this->options['type']);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
@@ -112,7 +110,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
     /**
      * Use Elasticsearch bulk API to send list of documents
      *
-     * @param  array             $records
+     * @param  array[]           $records Records + _index/_type keys
      * @throws \RuntimeException
      */
     protected function bulkSend(array $records) : void
@@ -139,7 +137,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
      *
      * Only the first error is converted into an exception.
      *
-     * @param array $responses returned by $this->client->bulk()
+     * @param mixed[] $responses returned by $this->client->bulk()
      */
     protected function createExceptionFromResponses(array $responses) : \GFPDF_Vendor\Elasticsearch\Common\Exceptions\RuntimeException
     {
@@ -153,7 +151,7 @@ class ElasticsearchHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcess
     /**
      * Creates elasticsearch exception from error array
      *
-     * @param array $error
+     * @param mixed[] $error
      */
     protected function createExceptionFromError(array $error) : \GFPDF_Vendor\Elasticsearch\Common\Exceptions\RuntimeException
     {

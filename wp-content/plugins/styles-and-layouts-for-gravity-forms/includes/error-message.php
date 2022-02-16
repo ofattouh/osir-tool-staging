@@ -1,4 +1,4 @@
-	<?php
+<?php
 /**
  * Controls and settings for error messages.
  */

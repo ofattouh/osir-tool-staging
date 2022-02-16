@@ -26,12 +26,14 @@ use GFPDF_Vendor\Monolog\Logger;
  * @link https://core.telegram.org/bots/api
  *
  * @author Mazur Alexandr <alexandrmazur96@gmail.com>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class TelegramBotHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
     private const BOT_API = 'https://api.telegram.org/bot';
     /**
-     * @var array AVAILABLE_PARSE_MODES The available values of parseMode according to the Telegram api documentation
+     * The available values of parseMode according to the Telegram api documentation
      */
     private const AVAILABLE_PARSE_MODES = ['HTML', 'MarkdownV2', 'Markdown'];
     /**
@@ -50,26 +52,28 @@ class TelegramBotHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessin
      * The kind of formatting that is used for the message.
      * See available options at https://core.telegram.org/bots/api#formatting-options
      * or in AVAILABLE_PARSE_MODES
-     * @var string|null
+     * @var ?string
      */
     private $parseMode;
     /**
      * Disables link previews for links in the message.
-     * @var bool|null
+     * @var ?bool
      */
     private $disableWebPagePreview;
     /**
      * Sends the message silently. Users will receive a notification with no sound.
-     * @var bool|null
+     * @var ?bool
      */
     private $disableNotification;
     /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
-     * @inheritDoc
      */
     public function __construct(string $apiKey, string $channel, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true, string $parseMode = null, bool $disableWebPagePreview = null, bool $disableNotification = null)
     {
+        if (!\extension_loaded('curl')) {
+            throw new \GFPDF_Vendor\Monolog\Handler\MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
+        }
         parent::__construct($level, $bubble);
         $this->apiKey = $apiKey;
         $this->channel = $channel;
@@ -96,16 +100,18 @@ class TelegramBotHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessin
         return $this;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
+        /** @var Record[] $messages */
         $messages = [];
         foreach ($records as $record) {
             if (!$this->isHandling($record)) {
                 continue;
             }
             if ($this->processors) {
+                /** @var Record $record */
                 $record = $this->processRecord($record);
             }
             $messages[] = $record;
@@ -134,6 +140,9 @@ class TelegramBotHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessin
         \curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, \true);
         \curl_setopt($ch, \CURLOPT_POSTFIELDS, \http_build_query(['text' => $message, 'chat_id' => $this->channel, 'parse_mode' => $this->parseMode, 'disable_web_page_preview' => $this->disableWebPagePreview, 'disable_notification' => $this->disableNotification]));
         $result = \GFPDF_Vendor\Monolog\Handler\Curl\Util::execute($ch);
+        if (!\is_string($result)) {
+            throw new \RuntimeException('Telegram API error. Description: No response');
+        }
         $result = \json_decode($result, \true);
         if ($result['ok'] === \false) {
             throw new \RuntimeException('Telegram API error. Description: ' . $result['description']);

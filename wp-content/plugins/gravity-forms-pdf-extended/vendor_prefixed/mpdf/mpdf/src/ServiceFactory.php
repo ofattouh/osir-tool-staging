@@ -36,7 +36,8 @@ class ServiceFactory
         $cache = new \GFPDF_Vendor\Mpdf\Cache($cacheBasePath, $config['cacheCleanupInterval']);
         $fontCache = new \GFPDF_Vendor\Mpdf\Fonts\FontCache(new \GFPDF_Vendor\Mpdf\Cache($cacheBasePath . '/ttfontdata', $config['cacheCleanupInterval']));
         $fontFileFinder = new \GFPDF_Vendor\Mpdf\Fonts\FontFileFinder($config['fontDir']);
-        $cssManager = new \GFPDF_Vendor\Mpdf\CssManager($mpdf, $cache, $sizeConverter, $colorConverter);
+        $remoteContentFetcher = new \GFPDF_Vendor\Mpdf\RemoteContentFetcher($mpdf, $logger);
+        $cssManager = new \GFPDF_Vendor\Mpdf\CssManager($mpdf, $cache, $sizeConverter, $colorConverter, $remoteContentFetcher);
         $otl = new \GFPDF_Vendor\Mpdf\Otl($mpdf, $fontCache);
         $protection = new \GFPDF_Vendor\Mpdf\Pdf\Protection(new \GFPDF_Vendor\Mpdf\Pdf\Protection\UniqidGenerator());
         $writer = new \GFPDF_Vendor\Mpdf\Writer\BaseWriter($mpdf, $protection);
@@ -44,7 +45,6 @@ class ServiceFactory
         $formWriter = new \GFPDF_Vendor\Mpdf\Writer\FormWriter($mpdf, $writer);
         $form = new \GFPDF_Vendor\Mpdf\Form($mpdf, $otl, $colorConverter, $writer, $formWriter);
         $hyphenator = new \GFPDF_Vendor\Mpdf\Hyphenator($mpdf);
-        $remoteContentFetcher = new \GFPDF_Vendor\Mpdf\RemoteContentFetcher($mpdf, $logger);
         $imageProcessor = new \GFPDF_Vendor\Mpdf\Image\ImageProcessor($mpdf, $otl, $cssManager, $sizeConverter, $colorConverter, $colorModeConverter, $cache, $languageToFont, $scriptToLanguage, $remoteContentFetcher, $logger);
         $tag = new \GFPDF_Vendor\Mpdf\Tag($mpdf, $cache, $cssManager, $form, $otl, $tableOfContents, $sizeConverter, $colorConverter, $imageProcessor, $languageToFont);
         $fontWriter = new \GFPDF_Vendor\Mpdf\Writer\FontWriter($mpdf, $writer, $fontCache, $fontDescriptor);

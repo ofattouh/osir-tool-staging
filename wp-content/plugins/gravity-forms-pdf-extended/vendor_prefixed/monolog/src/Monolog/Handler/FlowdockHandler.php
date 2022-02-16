@@ -25,6 +25,8 @@ use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
  *
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see https://www.flowdock.com/api/push
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
 {
@@ -33,9 +35,6 @@ class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
      */
     protected $apiToken;
     /**
-     * @param string|int $level  The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
-     *
      * @throws MissingExtensionException if OpenSSL is missing
      */
     public function __construct(string $apiToken, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
@@ -47,7 +46,7 @@ class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         $this->apiToken = $apiToken;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -64,9 +63,7 @@ class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         throw new \InvalidArgumentException('The FlowdockHandler must be configured (via setFormatter) with an instance of Monolog\\Formatter\\FlowdockFormatter to function correctly');
     }
     /**
-     * {@inheritdoc}
-     *
-     * @param array $record
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -74,7 +71,7 @@ class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         $this->closeSocket();
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function generateDataStream(array $record) : string
     {
@@ -83,6 +80,8 @@ class FlowdockHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
     }
     /**
      * Builds the body of API call
+     *
+     * @phpstan-param FormattedRecord $record
      */
     private function buildContent(array $record) : string
     {

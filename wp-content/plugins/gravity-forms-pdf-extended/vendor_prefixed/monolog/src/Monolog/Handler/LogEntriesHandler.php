@@ -24,8 +24,6 @@ class LogEntriesHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
     /**
      * @param string     $token  Log token supplied by LogEntries
      * @param bool       $useSSL Whether or not SSL encryption should be used.
-     * @param string|int $level  The minimum logging level to trigger this handler
-     * @param bool       $bubble Whether or not messages that are handled should bubble up the stack.
      * @param string     $host   Custom hostname to send the data to if needed
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
@@ -40,7 +38,7 @@ class LogEntriesHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         $this->logToken = $token;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function generateDataStream(array $record) : string
     {

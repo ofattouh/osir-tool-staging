@@ -39,13 +39,32 @@ if ( ! function_exists( 'wpuxss_eml_elementor_scripts' ) ) {
  *  @created  08/2021
  */
 
-add_action( 'after_setup_theme', 'wpuxss_after_setup_theme', 9 );
+add_action( 'after_setup_theme', 'wpuxss_after_setup_theme_impreza', 9 );
 
-if ( ! function_exists( 'wpuxss_after_setup_theme' ) ) {
+if ( ! function_exists( 'wpuxss_after_setup_theme_impreza' ) ) {
 
-    function wpuxss_after_setup_theme() {
+    function wpuxss_after_setup_theme_impreza() {
 
         remove_filter( 'attachment_fields_to_edit', 'us_attachment_fields_to_edit_categories' );
+    }
+}
+
+
+
+/**
+ *  SimpLy Gallery plugin
+ *
+ *  @since    2.8.9
+ *  @created  10/2021
+ */
+
+add_action( 'wp_loaded', 'wpuxss_wp_loaded' );
+
+if ( ! function_exists( 'wpuxss_wp_loaded' ) ) {
+
+    function wpuxss_wp_loaded() {
+
+        remove_filter( 'ajax_query_attachments_args', 'pgc_sgb_ajaxQueryAttachmentsArgs', 20 );
     }
 }
 

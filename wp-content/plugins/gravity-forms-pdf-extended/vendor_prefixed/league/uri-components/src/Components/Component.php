@@ -1,13 +1,11 @@
 <?php
 
 /**
- * League.Uri (http://uri.thephpleague.com/components)
+ * League.Uri (https://uri.thephpleague.com/components/2.0/)
  *
  * @package    League\Uri
  * @subpackage League\Uri\Components
  * @author     Ignace Nyamagana Butera <nyamsprod@gmail.com>
- * @license    https://github.com/thephpleague/uri-components/blob/master/LICENSE (MIT License)
- * @version    2.0.2
  * @link       https://github.com/thephpleague/uri-components
  *
  * For the full copyright and license information, please view the LICENSE
@@ -130,10 +128,7 @@ abstract class Component implements \GFPDF_Vendor\League\Uri\Contracts\UriCompon
     /**
      * {@inheritDoc}
      */
-    public function getUriComponent() : string
-    {
-        return (string) $this->getContent();
-    }
+    public abstract function getUriComponent() : string;
     /**
      * {@inheritDoc}
      */
@@ -141,9 +136,16 @@ abstract class Component implements \GFPDF_Vendor\League\Uri\Contracts\UriCompon
     /**
      * {@inheritDoc}
      */
-    public function __toString() : string
+    public function toString() : string
     {
         return (string) $this->getContent();
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString() : string
+    {
+        return $this->toString();
     }
     /**
      * {@inheritDoc}

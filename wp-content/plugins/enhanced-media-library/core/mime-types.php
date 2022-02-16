@@ -236,4 +236,100 @@ if ( ! function_exists( 'wpuxss_eml_mime_types' ) ) {
     }
 }
 
-?>
+
+
+/**
+ *  wp_generate_attachment_metadata
+ *
+ *  Add dimentions for SVG mime type
+ *
+ *  @type     filter callback
+ *  @since    2.8.9
+ *  @created  12/2021
+ */
+
+add_filter( 'wp_generate_attachment_metadata', function( $metadata, $attachment_id, $context ) {
+
+    if ( get_post_mime_type( $attachment_id ) == 'image/svg+xml' ) {
+        $svg_path = get_attached_file( $attachment_id );
+        $dimensions = wpuxss_svg_dimensions( $svg_path );
+        $metadata['width'] = $dimensions->width;
+        $metadata['height'] = $dimensions->height;
+    }
+    return $metadata;
+
+}, 10, 3 );
+
+
+
+/**
+ *  wp_prepare_attachment_for_js
+ *
+ *  Pass SVG dimensions to the attachment popup
+ *
+ *  @type     filter callback
+ *  @since    2.8.9
+ *  @created  12/2021
+ */
+
+add_filter( 'wp_prepare_attachment_for_js', function( $response, $attachment, $meta) {
+
+    if ( $response['mime'] == 'image/svg+xml' && empty( $response['sizes'] ) ) {
+
+        $svg_path = get_attached_file( $attachment->ID );
+
+        if( ! file_exists( $svg_path ) ) {
+            $svg_path = $response['url'];
+        }
+
+        $dimensions = wpuxss_svg_dimensions( $svg_path );
+        $response['sizes'] = array(
+            'full' => array(
+                'url'         => $response['url'],
+                'width'       => $dimensions->width,
+                'height'      => $dimensions->height,
+                'orientation' => $dimensions->width > $dimensions->height ? 'landscape' : 'portrait'
+            )
+        );
+    }
+    return $response;
+
+}, 10, 3 );
+
+
+
+/**
+ *  wpuxss_svg_dimensions
+ *
+ *  Get SVG dimensions
+ *
+ *  @since    2.8.9
+ *  @created  12/2021
+ */
+
+if ( ! function_exists( 'wpuxss_svg_dimensions' ) ) {
+
+    function wpuxss_svg_dimensions( $svg ) {
+
+        $svg = simplexml_load_file( $svg );
+        $width = 0;
+        $height = 0;
+
+        if ( $svg ) {
+
+            $attributes = $svg->attributes();
+
+            if( isset( $attributes->width, $attributes->height ) ) {
+                $width = (int) $attributes->width;
+                $height = (int) $attributes->height;
+            } elseif ( isset( $attributes->viewBox ) ) {
+                $sizes = explode( ' ', $attributes->viewBox );
+                if( isset( $sizes[2], $sizes[3] ) ) {
+                    $width = (int) $sizes[2];
+                    $height = (int) $sizes[3];
+                }
+            }
+        }
+        return (object) array( 'width' => $width, 'height' => $height );
+    }
+}

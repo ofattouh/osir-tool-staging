@@ -41,35 +41,35 @@ class HandlerWrapper implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface, 
         $this->handler = $handler;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isHandling(array $record) : bool
     {
         return $this->handler->isHandling($record);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record) : bool
     {
         return $this->handler->handle($record);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
         $this->handler->handleBatch($records);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function close() : void
     {
         $this->handler->close();
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function pushProcessor(callable $callback) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -80,7 +80,7 @@ class HandlerWrapper implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface, 
         throw new \LogicException('The wrapped handler does not implement ' . \GFPDF_Vendor\Monolog\Handler\ProcessableHandlerInterface::class);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function popProcessor() : callable
     {
@@ -90,7 +90,7 @@ class HandlerWrapper implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface, 
         throw new \LogicException('The wrapped handler does not implement ' . \GFPDF_Vendor\Monolog\Handler\ProcessableHandlerInterface::class);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -101,7 +101,7 @@ class HandlerWrapper implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface, 
         throw new \LogicException('The wrapped handler does not implement ' . \GFPDF_Vendor\Monolog\Handler\FormattableHandlerInterface::class);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {

@@ -2,7 +2,7 @@
 Contributors: codeinwp,themeisle,marius2012,marius_codeinwp,hardeepasrani,rozroz,Madalin_ThemeIsle
 Tags: tables, charts, pie, visualization, graphs
 Requires at least: 3.5
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPL v2.0 or later
@@ -16,8 +16,8 @@ A simple and powerful WordPress chart plugin to create responsive charts & table
 
 The plugin uses Google Visualization API, DataTables.net and ChartJS to add responsive & animated charts, graphs and tables, which support cross-browser compatibility and display perfectly on mobile devices. You can greatly customize all aspects of the charts and tables, and import the data from Excel, CSV, Google Sheets and more!
 
-### 9 Chart types + 6 more in the pro version ###
-This WordPress graph plugin provides a variety of charts that are optimized to address your WordPress data visualization needs. In the free version, it has line charts, area charts, bar charts, column charts, pie charts, geo charts, table charts, bubble charts, scatter charts. These charts are based on pure HTML5/SVG technology (adopting VML for old IE versions), so no extra plugins are required. Adding these charts to your page can be done in a few simple steps.
+### 4 Chart types + 11 more in the pro version ###
+This WordPress graph plugin provides a variety of charts that are optimized to address your WordPress data visualization needs. In the free version, it has line charts, bar charts, pie charts, table charts. These charts are based on pure HTML5/SVG technology (adopting VML for old IE versions), so no extra plugins are required. Adding these charts to your page can be done in a few simple steps.
 
 ### One of the best table plugin for wordpress ###
 On top of our responsive charts and graphs, you can also add our responsive tables to your posts and pages, and customize them however you like. Not only can you customize the design of the tables, you can add sorting capabilities, pagination, search and more. You can view a few examples of what can be done <a href="https://demo.themeisle.com/visualizer/table-chart/">here</a>, but many more things can be done, including pricing tables and product tables.
@@ -37,7 +37,7 @@ Charts are rendered using HTML5/SVG technology to provide cross-browser compatib
 >
 > * Import data from other charts, graphs and tables
 > * Easily edit the data using a excel-like data editor
-> * Gain access to 6 more chart types ( Combo, Timeline, Candlestick, Gauge, Radar/Spider, Polar Area )
+> * Gain access to 11 more chart types ( Area, Geo, Column, Bubble, Scatter, Combo, Timeline, Candlestick, Gauge, Radar/Spider, Polar Area )
 > * Import data from any database
 > * Synchronize your data periodically
 > * Create private charts (customizable permissions system)
@@ -162,6 +162,35 @@ Pay attention that to turn your shortcodes into graphs, your theme has to have `
 13. Bar chart
 
 == Changelog ==
+
+##### [Version 3.7.4](https://github.com/Codeinwp/visualizer/compare/v3.7.3...v3.7.4) (2022-02-07)
+
+- Fix multiple lazy load charts issue
+- Tested up to WordPress 5.9 version
+
+
+
+
+##### [Version 3.7.3](https://github.com/Codeinwp/visualizer/compare/v3.7.2...v3.7.3) (2022-01-19)
+
+- Fix multiple charts lazy rendering issue
+- Upgrade jQuery UI core library CDN
+- Fix console error when rendering multiple charts
+- Keep only Line / Pie / bar / Table charts in free version
+
+
+
+
+##### [Version 3.7.2](https://github.com/Codeinwp/visualizer/compare/v3.7.1...v3.7.2) (2021-12-20)
+
+- Add latest chartJS library support in the bar chart
+- Fix horizontal axis showing date format in Bar chart 
+- Fix orientation rotate issue in mobile
+- CSS performance improvements
+- Improve JS performance
+
+
+
 
 ##### [Version 3.7.1](https://github.com/Codeinwp/visualizer/compare/v3.7.0...v3.7.1) (2021-11-17)
 

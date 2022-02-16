@@ -3,7 +3,7 @@
 Plugin Name: Checkbox & Radio Inputs Styler for Gravity Forms
 Plugin URI:  https://wpmonks.com/downloads/checkbox-radio-styler-for-gravity-forms/
 Description: Add Icons, Images or styles to Gravity Forms checkbox and radio inputs
-Version:     1.2.1
+Version:     1.2.2
 Author:      Sushil Kumar
 Author URI:  https://wpmonks.com/
 License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,7 +20,7 @@ include_once WP_PLUGIN_DIR . "/" . basename( dirname( __FILE__ ) ).'/update.php'
 //set constants for plugin directory and plugin url
 define( "STLA_CHECKBOX_RADIO_DIR", WP_PLUGIN_DIR . "/" . basename( dirname( __FILE__ ) ) );
 define( "STLA_CHECKBOX_RADIO_URL", plugins_url() . "/" . basename( dirname( __FILE__ ) ) );
-define( "STLA_CHECKBOX_RADIO_VERSION", "1.2.1" );
+define( "STLA_CHECKBOX_RADIO_VERSION", "1.2.2" );
 
 class Sk_Stla_Checkbox_Radio { 
 

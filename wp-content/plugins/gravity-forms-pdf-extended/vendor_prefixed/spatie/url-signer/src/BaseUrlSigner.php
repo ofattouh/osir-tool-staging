@@ -101,6 +101,15 @@ abstract class BaseUrlSigner implements \GFPDF_Vendor\Spatie\UrlSigner\UrlSigner
         return \true;
     }
     /**
+     * Generate a token to identify the secure action.
+     *
+     * @param UriInterface|string $url
+     * @param string              $expiration
+     *
+     * @return string
+     */
+    protected abstract function createSignature($url, string $expiration);
+    /**
      * Check if a query is missing a necessary parameter.
      *
      * @param array $query

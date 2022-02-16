@@ -109,10 +109,14 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
         /**
          * Prevents insecure PHP object injection through phar:// wrapper
          * @see https://github.com/mpdf/mpdf/issues/949
+         * @see https://github.com/mpdf/mpdf/issues/1381
          */
         $wrapperChecker = new \GFPDF_Vendor\Mpdf\File\StreamWrapperChecker($this->mpdf);
         if ($wrapperChecker->hasBlacklistedStreamWrapper($file)) {
             return $this->imageError($file, $firsttime, 'File contains an invalid stream. Only ' . \implode(', ', $wrapperChecker->getWhitelistedStreamWrappers()) . ' streams are allowed.');
+        }
+        if ($wrapperChecker->hasBlacklistedStreamWrapper($orig_srcpath)) {
+            return $this->imageError($orig_srcpath, $firsttime, 'File contains an invalid stream. Only ' . \implode(', ', $wrapperChecker->getWhitelistedStreamWrappers()) . ' streams are allowed.');
         }
         // mPDF 6
         // firsttime i.e. whether to add to this->images - use false when calling iteratively
@@ -126,7 +130,7 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
             $data = $this->mpdf->imageVars[$v[1]];
             $file = \md5($data);
         }
-        if (\preg_match('/data:image\\/(gif|jpe?g|png);base64,(.*)/', $file, $v)) {
+        if (\preg_match('/data:image\\/(gif|jpe?g|png|webp);base64,(.*)/', $file, $v)) {
             $type = $v[1];
             $data = \base64_decode($v[2]);
             $file = \md5($data);
@@ -223,6 +227,25 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
             $this->mpdf->formobjects[$file] = $info;
             return $info;
         }
+        if ($type === 'webp') {
+            // Convert webp images to JPG and treat them as such
+            $im = @\imagecreatefromstring($data);
+            if (!\function_exists('imagewebp') || \false === $im) {
+                return $this->imageError($file, $firsttime, 'Missing GD support for WEBP images.');
+            }
+            $tempfile = $this->cache->tempFilename('_tempImgPNG' . \md5($file) . \random_int(1, 10000) . '.jpg');
+            $checkfile = $this->cache->tempFilename('_tempImgPNG' . \md5($file) . \random_int(1, 10000) . '.jpg');
+            $check = @\imagewebp($im, $checkfile);
+            if (!$check) {
+                return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') when using GD library to parse WEBP image');
+            }
+            @\imagejpeg($im, $tempfile);
+            $data = \file_get_contents($tempfile);
+            \imagedestroy($im);
+            \unlink($tempfile);
+            \unlink($checkfile);
+            $type = 'jpeg';
+        }
         // JPEG
         if ($type === 'jpeg' || $type === 'jpg') {
             $hdr = $this->jpgHeaderFromString($data);
@@ -258,7 +281,7 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
                     \imageinterlace($im, \false);
                     $check = @\imagepng($im, $tempfile);
                     if (!$check) {
-                        return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') whilst using GD library to parse JPG(CMYK) image');
+                        return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') when using GD library to parse JPG(CMYK) image');
                     }
                     $info = $this->getImage($tempfile, \false);
                     if (!$info) {
@@ -785,7 +808,7 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
                         \ob_start();
                         $check = @\imagepng($im);
                         if (!$check) {
-                            return $this->imageError($file, $firsttime, 'Error creating temporary image object whilst using GD library to parse GIF image');
+                            return $this->imageError($file, $firsttime, 'Error creating temporary image object when using GD library to parse GIF image');
                         }
                         $this->mpdf->imageVars['tempImage'] = \ob_get_contents();
                         $tempimglnk = 'var:tempImage';
@@ -798,7 +821,7 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
                     } else {
                         $check = @\imagepng($im, $tempfile);
                         if (!$check) {
-                            return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') whilst using GD library to parse GIF image');
+                            return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') when using GD library to parse GIF image');
                         }
                         $info = $this->getImage($tempfile, \false);
                         if (!$info) {
@@ -912,7 +935,7 @@ class ImageProcessor implements \Psr\Log\LoggerAwareInterface
                 \imageinterlace($im, \false);
                 $check = @\imagepng($im, $tempfile);
                 if (!$check) {
-                    return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') whilst using GD library to parse unknown image type');
+                    return $this->imageError($file, $firsttime, 'Error creating temporary file (' . $tempfile . ') when using GD library to parse unknown image type');
                 }
                 $info = $this->getImage($tempfile, \false);
                 \imagedestroy($im);

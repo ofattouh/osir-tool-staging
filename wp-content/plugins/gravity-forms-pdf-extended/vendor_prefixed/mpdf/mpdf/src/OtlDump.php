@@ -139,7 +139,7 @@ class OtlDump
         $this->version = $version = $this->read_ulong();
         $this->panose = [];
         if ($version == 0x4f54544f) {
-            throw new \GFPDF_Vendor\Mpdf\Exception\FontException("Postscript outlines are not supported");
+            throw new \GFPDF_Vendor\Mpdf\Exception\FontException(\sprintf('Fonts with postscript outlines are not supported (%s)', $file));
         }
         if ($version == 0x74746366 && !$TTCfontID) {
             throw new \GFPDF_Vendor\Mpdf\Exception\FontException("TTCfontID for a TrueType Collection has to be defined in ttfontdata configuration key (" . $file . ")");

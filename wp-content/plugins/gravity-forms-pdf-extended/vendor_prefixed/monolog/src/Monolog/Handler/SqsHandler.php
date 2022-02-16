@@ -36,9 +36,7 @@ class SqsHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
         $this->queueUrl = $queueUrl;
     }
     /**
-     * Writes the record down to the log of the implementing handler.
-     *
-     * @param array $record
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Themes - Twenty Twenty-One package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-03-11 12:55:12+0000\n"
+"PO-Revision-Date: 2022-02-11 01:59:32+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,8 +39,8 @@ msgid "Dark Mode is a device setting. If a visitor to your site requests it, you
 msgstr "Dark Mode is a device setting. If a visitor to your site requests it, your site will be shown with a dark background and light text. <a href=\"%s\">Learn more about Dark Mode.</a>"
 
 #: classes/class-twenty-twenty-one-dark-mode.php:181
-msgid "Dark Mode can also be turned on and off with a button that you can find in the bottom right corner of the page."
-msgstr "Dark Mode can also be turned on and off with a button that you can find in the bottom right corner of the page."
+msgid "Dark Mode can also be turned on and off with a button that you can find in the bottom corner of the page."
+msgstr "Dark Mode can also be turned on and off with a button that you can find in the bottom corner of the page."
 
 #: classes/class-twenty-twenty-one-dark-mode.php:380
 msgid "This website uses LocalStorage to save the setting when Dark Mode support is turned on or off.<br> LocalStorage is necessary for the setting to work and is only used when a user clicks on the Dark Mode button.<br> No data is saved in the database or transferred."
@@ -116,15 +116,10 @@ msgid "Background color"
 msgstr "Background colour"
 
 #. translators: %s: WordPress Version.
-#. translators: %s: WordPress Version.
-#. translators: %s: WordPress Version.
 #: inc/back-compat.php:42 inc/back-compat.php:61 inc/back-compat.php:86
 msgid "This theme requires WordPress 5.3 or newer. You are running version %s. Please upgrade."
 msgstr "This theme requires WordPress 5.3 or newer. You are running version %s. Please upgrade."
 
-#. translators: %: Page number.
-#. translators: %: Page number.
-#. translators: %: Page number.
 #. translators: %: Page number.
 #: image.php:48 template-parts/content/content-page.php:36
 #: template-parts/content/content-single.php:30
@@ -167,19 +162,19 @@ msgctxt "Font size"
 msgid "XS"
 msgstr "XS"
 
-#: comments.php:87
+#: comments.php:85
 msgid "Leave a comment"
 msgstr "Leave a comment"
 
 #. translators: %s: Comment count number.
-#: comments.php:40
+#: comments.php:39
 msgctxt "Comments title"
 msgid "%s comment"
 msgid_plural "%s comments"
 msgstr[0] "%s comment"
 msgstr[1] "%s comments"
 
-#: comments.php:35
+#: comments.php:34
 msgid "1 comment"
 msgstr "1 comment"
 
@@ -264,7 +259,7 @@ msgstr "Frame your images"
 #: inc/starter-content.php:77
 msgctxt "Theme starter content"
 msgid "Block patterns are pre-designed groups of blocks. To add one, select the Add Block button [+] in the toolbar at the top of the editor. Switch to the Patterns tab underneath the search bar, and choose a pattern."
-msgstr "Block patterns are pre-designed groups of blocks. To add one, select the Add Block button [+] in the Toolbar at the top of the editor. Switch to the Patterns tab underneath the search bar, and choose a pattern."
+msgstr "Block patterns are pre-designed groups of blocks. To add one, select the Add Block button [+] in the toolbar at the top of the editor. Switch to the Patterns tab underneath the search bar, and choose a pattern."
 
 #: inc/starter-content.php:73
 msgctxt "Theme starter content"
@@ -353,14 +348,13 @@ msgstr "Thick"
 
 #: classes/class-twenty-twenty-one-customize.php:106
 msgid "On Archive Pages, posts show:"
-msgstr "On archive pages, posts show:"
+msgstr "On Archive Pages, posts show:"
 
 #. translators: %s: Author name.
 #: template-parts/post/author-bio.php:31
 msgid "View all of %s's posts."
 msgstr "View all of %s's posts."
 
-#. translators: %s: Author name.
 #. translators: %s: Author name.
 #: inc/template-tags.php:49 template-parts/post/author-bio.php:19
 msgid "By %s"
@@ -409,36 +403,26 @@ msgstr[0] "We found %d result for your search."
 msgstr[1] "We found %d results for your search."
 
 #. translators: %s: Search term.
-#. translators: %s: Search term.
 #: search.php:21 template-parts/content/content-none.php:22
 msgid "Results for \"%s\""
 msgstr "Results for \"%s\""
 
-#. translators: %s: List of tags.
 #. translators: %s: List of tags.
 #: inc/template-tags.php:118 inc/template-tags.php:162
 msgid "Tagged %s"
 msgstr "Tagged %s"
 
 #. translators: %s: List of categories.
-#. translators: %s: List of categories.
 #: inc/template-tags.php:108 inc/template-tags.php:152
 msgid "Categorized as %s"
 msgstr "Categorised as %s"
 
-#. translators: Used between list items, there is a space after the comma.
-#. translators: Used between list items, there is a space after the comma.
-#. translators: Used between list items, there is a space after the comma.
 #. translators: Used between list items, there is a space after the comma.
 #: inc/template-tags.php:104 inc/template-tags.php:114
 #: inc/template-tags.php:148 inc/template-tags.php:158
 msgid ", "
 msgstr ", "
 
-#. translators: %s: Name of current post. Only visible to screen readers.
-#. translators: %s: Name of current post. Only visible to screen readers.
-#. translators: %s: Name of current post. Only visible to screen readers.
-#. translators: %s: Name of current post. Only visible to screen readers.
 #. translators: %s: Name of current post. Only visible to screen readers.
 #: image.php:70 image.php:95 inc/template-tags.php:92 inc/template-tags.php:135
 #: template-parts/content/content-page.php:48
@@ -470,7 +454,7 @@ msgstr "Overlap"
 #: inc/block-patterns.php:116
 msgctxt "Block pattern description"
 msgid "A block with 3 columns that display contact information and social media links."
-msgstr "A block with three columns that displays contact information and social media links."
+msgstr "A block with 3 columns that display contact information and social media links."
 
 #: inc/block-patterns.php:114
 msgid "Contact information"
@@ -497,7 +481,7 @@ msgstr "Overlapping Images and Text"
 #: inc/block-patterns.php:83
 msgctxt "Block pattern description"
 msgid "A media & text block with a big image on the left and a smaller one with bordered frame on the right."
-msgstr "A Media and Text block with a big image on the left and a smaller one with bordered frame on the right."
+msgstr "A media & text block with a big image on the left and a smaller one with bordered frame on the right."
 
 #: inc/block-patterns.php:80
 msgid "Two images showcase"
@@ -515,7 +499,7 @@ msgstr "Overlapping Images"
 #: inc/block-patterns.php:59
 msgctxt "Block pattern description"
 msgid "A Media & Text block with a big image on the left and a heading on the right. The heading is followed by a separator and a description paragraph."
-msgstr "A Media and Text block with a big image on the left and a heading on the right. The heading is followed by a separator and a description paragraph."
+msgstr "A Media & Text block with a big image on the left and a heading on the right. The heading is followed by a separator and a description paragraph."
 
 #: inc/block-patterns.php:56
 msgid "Media and text article title"
@@ -566,9 +550,9 @@ msgstr "Full size"
 #. translators: %s: Publish date.
 #: inc/template-tags.php:29
 msgid "Published %s"
-msgstr "Published in"
+msgstr "Published %s"
 
-#: comments.php:62 image.php:45 inc/template-tags.php:228
+#: comments.php:61 image.php:45 inc/template-tags.php:228
 #: template-parts/content/content-page.php:33
 #: template-parts/content/content-single.php:27
 #: template-parts/content/content.php:33
@@ -592,11 +576,11 @@ msgstr "Primary menu"
 msgid "Skip to content"
 msgstr "Skip to content"
 
-#: functions.php:360
+#: functions.php:363
 msgid "Add widgets here to appear in your footer."
 msgstr "Add widgets here to appear in your footer."
 
-#: functions.php:358
+#: functions.php:361
 msgid "Footer"
 msgstr "Footer"
 
@@ -701,7 +685,7 @@ msgid "Extra small"
 msgstr "Extra Small"
 
 #. translators: %s: WordPress.
-#: footer.php:60
+#: footer.php:67
 msgid "Proudly powered by %s."
 msgstr "Proudly powered by %s."
 
@@ -709,15 +693,15 @@ msgstr "Proudly powered by %s."
 msgid "Secondary menu"
 msgstr "Secondary menu"
 
-#: comments.php:79
+#: comments.php:78
 msgid "Comments are closed."
 msgstr "Comments are closed."
 
-#: comments.php:71
+#: comments.php:70
 msgid "Newer comments"
 msgstr "Newer comments"
 
-#: comments.php:67
+#: comments.php:66
 msgid "Older comments"
 msgstr "Older comments"
 
@@ -738,7 +722,7 @@ msgid "Nothing here"
 msgstr "Nothing here"
 
 #. Author URI of the theme
-#: footer.php:61
+#: footer.php:68
 msgid "https://wordpress.org/"
 msgstr "https://en-ca.wordpress.org/"
 

@@ -36,8 +36,6 @@ class LogmaticHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
      * @param string     $hostname Host name supplied by Logmatic.
      * @param string     $appname  Application name supplied by Logmatic.
      * @param bool       $useSSL   Whether or not SSL encryption should be used.
-     * @param int|string $level    The minimum logging level to trigger this handler.
-     * @param bool       $bubble   Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
@@ -54,14 +52,14 @@ class LogmaticHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         $this->appname = $appname;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function generateDataStream(array $record) : string
     {
         return $this->logToken . ' ' . $record['formatted'];
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getDefaultFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {

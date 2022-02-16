@@ -53,3 +53,13 @@
 .gform_wrapper .gform_body .gform_fields .gfield .pretty input[value="gf_other_choice"]{
 	width: 10px;
 }
+
+/* Gravity form removed the width from inline choices version 5>= */
+.gform_wrapper .gfield.gf_list_inline .gfield_radio .gchoice.pretty{
+	width: auto;
+}
+
+.gform_legacy_markup_wrapper .gfield_checkbox li.pretty label,
+.gform_legacy_markup_wrapper .gfield_radio li.pretty label{
+	max-width: 100%;
+}

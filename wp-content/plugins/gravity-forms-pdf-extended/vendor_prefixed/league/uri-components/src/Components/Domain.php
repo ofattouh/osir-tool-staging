@@ -1,13 +1,11 @@
 <?php
 
 /**
- * League.Uri (http://uri.thephpleague.com/components)
+ * League.Uri (https://uri.thephpleague.com/components/2.0/)
  *
  * @package    League\Uri
  * @subpackage League\Uri\Components
  * @author     Ignace Nyamagana Butera <nyamsprod@gmail.com>
- * @license    https://github.com/thephpleague/uri-components/blob/master/LICENSE (MIT License)
- * @version    2.0.2
  * @link       https://github.com/thephpleague/uri-components
  *
  * For the full copyright and license information, please view the LICENSE
@@ -138,6 +136,13 @@ final class Domain extends \GFPDF_Vendor\League\Uri\Components\Component impleme
     public function getContent() : ?string
     {
         return $this->host->getContent();
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getUriComponent() : string
+    {
+        return (string) $this->getContent();
     }
     /**
      * {@inheritDoc}

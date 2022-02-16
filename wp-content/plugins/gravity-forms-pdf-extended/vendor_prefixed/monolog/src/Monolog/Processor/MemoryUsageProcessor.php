@@ -19,6 +19,9 @@ namespace GFPDF_Vendor\Monolog\Processor;
  */
 class MemoryUsageProcessor extends \GFPDF_Vendor\Monolog\Processor\MemoryProcessor
 {
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         $usage = \memory_get_usage($this->realUsage);

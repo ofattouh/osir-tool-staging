@@ -41,14 +41,16 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
         }
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @param mixed[] $record
      */
     public function format(array $record)
     {
         return $this->normalize($record);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function formatBatch(array $records)
     {
@@ -103,8 +105,8 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
         return $this;
     }
     /**
-     * @param  mixed                      $data
-     * @return int|bool|string|null|array
+     * @param  mixed                $data
+     * @return null|scalar|array<array|scalar|null>
      */
     protected function normalize($data, int $depth = 0)
     {
@@ -142,11 +144,14 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
                 return $this->normalizeException($data, $depth);
             }
             if ($data instanceof \JsonSerializable) {
+                /** @var null|scalar|array<array|scalar|null> $value */
                 $value = $data->jsonSerialize();
             } elseif (\method_exists($data, '__toString')) {
+                /** @var string $value */
                 $value = $data->__toString();
             } else {
                 // the rest is normalized by json encoding and decoding it
+                /** @var null|scalar|array<array|scalar|null> $value */
                 $value = \json_decode($this->toJson($data, \true), \true);
             }
             return [\GFPDF_Vendor\Monolog\Utils::getClass($data) => $value];
@@ -157,7 +162,7 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
         return '[unknown(' . \gettype($data) . ')]';
     }
     /**
-     * @return array
+     * @return mixed[]
      */
     protected function normalizeException(\Throwable $e, int $depth = 0)
     {
@@ -202,6 +207,9 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
     {
         return \GFPDF_Vendor\Monolog\Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
     }
+    /**
+     * @return string
+     */
     protected function formatDate(\DateTimeInterface $date)
     {
         // in case the date format isn't custom then we defer to the custom DateTimeImmutable
@@ -211,11 +219,11 @@ class NormalizerFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterIn
         }
         return $date->format($this->dateFormat);
     }
-    public function addJsonEncodeOption(int $option)
+    public function addJsonEncodeOption(int $option) : void
     {
         $this->jsonEncodeOptions |= $option;
     }
-    public function removeJsonEncodeOption(int $option)
+    public function removeJsonEncodeOption(int $option) : void
     {
         $this->jsonEncodeOptions &= ~$option;
     }

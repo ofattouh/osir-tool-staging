@@ -36,9 +36,12 @@ use GFPDF_Vendor\PhpConsole\Helper;
  *      PC::debug($_SERVER); // PHP Console debugger for any type of vars
  *
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
+    /** @var array<string, mixed> */
     private $options = [
         'enabled' => \true,
         // bool Is PHP Console server enabled
@@ -83,10 +86,8 @@ class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessing
     /** @var Connector */
     private $connector;
     /**
-     * @param  array             $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
-     * @param  Connector|null    $connector Instance of \PhpConsole\Connector class (optional)
-     * @param  string|int        $level     The minimum logging level at which this handler will be triggered.
-     * @param  bool              $bubble    Whether the messages that are handled can bubble up the stack or not.
+     * @param  array<string, mixed> $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
+     * @param  Connector|null       $connector Instance of \PhpConsole\Connector class (optional)
      * @throws \RuntimeException
      */
     public function __construct(array $options = [], ?\GFPDF_Vendor\PhpConsole\Connector $connector = null, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
@@ -98,6 +99,11 @@ class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessing
         $this->options = $this->initOptions($options);
         $this->connector = $this->initConnector($connector);
     }
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return array<string, mixed>
+     */
     private function initOptions(array $options) : array
     {
         $wrongOptions = \array_diff(\array_keys($options), \array_keys($this->options));
@@ -161,6 +167,9 @@ class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessing
     {
         return $this->connector;
     }
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions() : array
     {
         return $this->options;
@@ -185,6 +194,9 @@ class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessing
             $this->handleErrorRecord($record);
         }
     }
+    /**
+     * @phpstan-param Record $record
+     */
     private function handleDebugRecord(array $record) : void
     {
         $tags = $this->getRecordTags($record);
@@ -194,15 +206,25 @@ class PHPConsoleHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessing
         }
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
+    /**
+     * @phpstan-param Record $record
+     */
     private function handleExceptionRecord(array $record) : void
     {
         $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
     }
+    /**
+     * @phpstan-param Record $record
+     */
     private function handleErrorRecord(array $record) : void
     {
         $context = $record['context'];
         $this->connector->getErrorsDispatcher()->dispatchError($context['code'] ?? null, $context['message'] ?? $record['message'], $context['file'] ?? null, $context['line'] ?? null, $this->options['classesPartialsTraceIgnore']);
     }
+    /**
+     * @phpstan-param Record $record
+     * @return string
+     */
     private function getRecordTags(array &$record)
     {
         $tags = null;

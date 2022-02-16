@@ -36,6 +36,7 @@ class RollbarHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHan
      * @var RollbarLogger
      */
     protected $rollbarLogger;
+    /** @var string[] */
     protected $levelMap = [\GFPDF_Vendor\Monolog\Logger::DEBUG => 'debug', \GFPDF_Vendor\Monolog\Logger::INFO => 'info', \GFPDF_Vendor\Monolog\Logger::NOTICE => 'info', \GFPDF_Vendor\Monolog\Logger::WARNING => 'warning', \GFPDF_Vendor\Monolog\Logger::ERROR => 'error', \GFPDF_Vendor\Monolog\Logger::CRITICAL => 'critical', \GFPDF_Vendor\Monolog\Logger::ALERT => 'critical', \GFPDF_Vendor\Monolog\Logger::EMERGENCY => 'critical'];
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
@@ -43,11 +44,10 @@ class RollbarHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHan
      * @var bool
      */
     private $hasRecords = \false;
+    /** @var bool */
     protected $initialized = \false;
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
-     * @param string|int    $level         The minimum logging level at which this handler will be triggered
-     * @param bool          $bubble        Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(\GFPDF_Vendor\Rollbar\RollbarLogger $rollbarLogger, $level = \GFPDF_Vendor\Monolog\Logger::ERROR, bool $bubble = \true)
     {
@@ -55,7 +55,7 @@ class RollbarHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHan
         parent::__construct($level, $bubble);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -73,6 +73,7 @@ class RollbarHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHan
         } else {
             $toLog = $record['message'];
         }
+        // @phpstan-ignore-next-line
         $this->rollbarLogger->log($context['level'], $toLog, $context);
         $this->hasRecords = \true;
     }
@@ -84,14 +85,14 @@ class RollbarHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHan
         }
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function close() : void
     {
         $this->flush();
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function reset()
     {

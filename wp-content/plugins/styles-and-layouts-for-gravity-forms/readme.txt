@@ -3,8 +3,8 @@ Contributors: wpmonks
 Donate link: https://www.paypal.me/wpmonks
 Tags: Gravity Forms CSS, gravity forms themes, gravity forms styler, Gravity Forms Design, Gravity Forms Multi Column Layouts, Gravity Forms Material Design, Gravity Forms Tooltips
 Requires at least: 4.0
-Tested up to: 5.8
-Stable tag: 4.3.3
+Tested up to: 5.9
+Stable tag: 4.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,6 +111,12 @@ Yes, Gravity Forms embedded in Divi themes is also supported. Please check the t
 4. Options in settings
 
 == Changelog ==
+= 4.3.5 (20 January 2022) =
+* Fixed customizer not saving
+
+= 4.3.4 (25 November 2021) =
+* Fixed submit button hover styling
+
 = 4.3.3 (3 September 2021) =
 * Fixed Next and Previous button not getting same styling
 * Fixed Error messages styles not working in Gravity Forms v2.5

@@ -19,7 +19,7 @@ namespace GFPDF_Vendor\Monolog\Handler;
 abstract class Handler implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
@@ -28,7 +28,7 @@ abstract class Handler implements \GFPDF_Vendor\Monolog\Handler\HandlerInterface
         }
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function close() : void
     {

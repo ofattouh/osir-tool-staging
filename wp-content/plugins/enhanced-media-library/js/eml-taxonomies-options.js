@@ -412,7 +412,6 @@ window.eml = window.eml || { l10n: {} };
                 admin_filter : 'admin_filter',
                 media_uploader_filter : 'media_uploader_filter',
                 media_popup_taxonomy_edit : 'media_popup_taxonomy_edit',
-                show_in_nav_menus : 'show_in_nav_menus',
                 sort : 'sort',
                 show_in_rest : 'show_in_rest',
                 rewrite : [ 'slug', 'with_front' ]

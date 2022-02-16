@@ -36,8 +36,7 @@ class PsrLogMessageProcessor implements \GFPDF_Vendor\Monolog\Processor\Processo
         $this->removeUsedContextFields = $removeUsedContextFields;
     }
     /**
-     * @param  array $record
-     * @return array
+     * {@inheritDoc}
      */
     public function __invoke(array $record) : array
     {

@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Gravity PDF
+# Copyright (C) 2022 Gravity PDF
 # This file is distributed under the same license as the Gravity PDF package.
 msgid ""
 msgstr ""

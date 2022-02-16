@@ -3,7 +3,7 @@
 Plugin Name: Styles & Layouts Gravity Forms
 Plugin URI:  http://wpmonks.com/styles-layouts-gravity-forms
 Description: Create beautiful styles for your gravity forms
-Version:     4.3.3
+Version:     4.3.5
 Author:      Sushil Kumar
 Author URI:  http://wpmonks.com/
 License:     GPL2License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'GF_STLA_DIR', WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) ) );
 define( 'GF_STLA_URL', plugins_url() . '/' . basename( dirname( __FILE__ ) ) );
 define( 'GF_STLA_STORE_URL', 'https://wpmonks.com' );
-define( 'GF_STLA_VERSION', '4.3.3' );
+define( 'GF_STLA_VERSION', '4.3.5' );
 
 if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include_once GF_STLA_DIR . '/admin-menu/EDD_SL_Plugin_Updater.php';

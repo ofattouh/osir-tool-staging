@@ -528,6 +528,7 @@ class Visualizer_Module_Chart extends Visualizer_Module {
 		}
 
 		$_POST['save_chart_image'] = isset( $_POST['save_chart_image'] ) && 'yes' === $_POST['save_chart_image'] ? true : false;
+		$_POST['lazy_load_chart']  = isset( $_POST['lazy_load_chart'] ) && 'yes' === $_POST['lazy_load_chart'] ? true : false;
 
 		if ( isset( $_POST['chart-img'] ) && ! empty( $_POST['chart-img'] ) ) {
 			$attachment_id = $this->save_chart_image( $_POST['chart-img'], $chart_id, $_POST['save_chart_image'] );
@@ -632,7 +633,7 @@ class Visualizer_Module_Chart extends Visualizer_Module {
 		// data tables assets.
 		wp_register_script( 'visualizer-datatables', VISUALIZER_ABSURL . 'js/lib/datatables.min.js', array( 'jquery-ui-core' ), Visualizer_Plugin::VERSION );
 		wp_register_style( 'visualizer-datatables', VISUALIZER_ABSURL . 'css/lib/datatables.min.css', array(), Visualizer_Plugin::VERSION );
-		wp_register_style( 'visualizer-jquery-ui', sprintf( '//ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/smoothness/jquery-ui.css', $wp_scripts->registered['jquery-ui-core']->ver ), array( 'visualizer-datatables' ), Visualizer_Plugin::VERSION );
+		wp_register_style( 'visualizer-jquery-ui', sprintf( '//code.jquery.com/ui/%s/themes/smoothness/jquery-ui.css', $wp_scripts->registered['jquery-ui-core']->ver ), array( 'visualizer-datatables' ), Visualizer_Plugin::VERSION );
 		wp_enqueue_script( 'visualizer-datatables' );
 		wp_enqueue_style( 'visualizer-jquery-ui' );
 

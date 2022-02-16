@@ -18,21 +18,34 @@ namespace GFPDF_Vendor\Monolog\Processor;
  */
 class TagProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
 {
+    /** @var string[] */
     private $tags;
+    /**
+     * @param string[] $tags
+     */
     public function __construct(array $tags = [])
     {
         $this->setTags($tags);
     }
+    /**
+     * @param string[] $tags
+     */
     public function addTags(array $tags = []) : self
     {
         $this->tags = \array_merge($this->tags, $tags);
         return $this;
     }
+    /**
+     * @param string[] $tags
+     */
     public function setTags(array $tags = []) : self
     {
         $this->tags = $tags;
         return $this;
     }
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         $record['extra']['tags'] = $this->tags;

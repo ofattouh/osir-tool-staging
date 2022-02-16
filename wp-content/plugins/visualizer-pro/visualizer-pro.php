@@ -3,7 +3,7 @@
  * Plugin Name: Visualizer: Tables and Charts Manager for WordPress AddOn
  * Plugin URI: http://themeisle.com/plugins/visualizer-charts-and-graphs/
  * Description: This addon enables the pro functions of WordPress Visualizer plugin.
- * Version: 1.10.3
+ * Version: 1.10.5
  * Author: ThemeIsle
  * Author URI: https://themeisle.com
  * WordPress Available:  no
@@ -11,7 +11,7 @@
  */
 define( 'Visualizer_Pro_ABSURL', plugins_url( '/', __FILE__ ) );
 define( 'Visualizer_Pro_PATH', realpath( dirname( __FILE__ ) ) );
-define( 'VISUALIZER_PRO_VERSION', '1.10.3' );
+define( 'VISUALIZER_PRO_VERSION', '1.10.5' );
 define( 'VISUALIZER_PRO_BASEFILE', __FILE__ );
 /**
  * Run the visualizer pro code.

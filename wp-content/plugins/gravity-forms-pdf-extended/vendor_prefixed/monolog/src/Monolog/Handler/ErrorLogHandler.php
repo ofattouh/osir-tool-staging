@@ -14,6 +14,7 @@ namespace GFPDF_Vendor\Monolog\Handler;
 use GFPDF_Vendor\Monolog\Formatter\LineFormatter;
 use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
 use GFPDF_Vendor\Monolog\Logger;
+use GFPDF_Vendor\Monolog\Utils;
 /**
  * Stores to PHP error_log() handler.
  *
@@ -23,13 +24,13 @@ class ErrorLogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
 {
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
+    /** @var int */
     protected $messageType;
+    /** @var bool */
     protected $expandNewlines;
     /**
-     * @param int        $messageType    Says where the error should go.
-     * @param int|string $level          The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param bool       $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
+     * @param int  $messageType    Says where the error should go.
+     * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
     public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true, bool $expandNewlines = \false)
     {
@@ -42,7 +43,7 @@ class ErrorLogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         $this->expandNewlines = $expandNewlines;
     }
     /**
-     * @return array With all available types
+     * @return int[] With all available types
      */
     public static function getAvailableTypes() : array
     {
@@ -56,7 +57,7 @@ class ErrorLogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         return new \GFPDF_Vendor\Monolog\Formatter\LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -65,6 +66,10 @@ class ErrorLogHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
             return;
         }
         $lines = \preg_split('{[\\r\\n]+}', (string) $record['formatted']);
+        if ($lines === \false) {
+            $pcreErrorCode = \preg_last_error();
+            throw new \RuntimeException('Failed to preg_split formatted string: ' . $pcreErrorCode . ' / ' . \GFPDF_Vendor\Monolog\Utils::pcreLastErrorMessage($pcreErrorCode));
+        }
         foreach ($lines as $line) {
             \error_log($line, $this->messageType);
         }

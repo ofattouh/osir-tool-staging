@@ -1,13 +1,11 @@
 <?php
 
 /**
- * League.Uri (http://uri.thephpleague.com/components)
+ * League.Uri (https://uri.thephpleague.com/components/2.0/)
  *
  * @package    League\Uri
  * @subpackage League\Uri\Components
  * @author     Ignace Nyamagana Butera <nyamsprod@gmail.com>
- * @license    https://github.com/thephpleague/uri-components/blob/master/LICENSE (MIT License)
- * @version    2.0.2
  * @link       https://github.com/thephpleague/uri-components
  *
  * For the full copyright and license information, please view the LICENSE
@@ -20,20 +18,16 @@ use GFPDF_Vendor\League\Uri\Contracts\AuthorityInterface;
 use GFPDF_Vendor\League\Uri\Contracts\IpHostInterface;
 use GFPDF_Vendor\League\Uri\Contracts\UriComponentInterface;
 use GFPDF_Vendor\League\Uri\Contracts\UriInterface;
-use GFPDF_Vendor\League\Uri\Exceptions\IdnSupportMissing;
+use GFPDF_Vendor\League\Uri\Exceptions\IdnaConversionFailed;
 use GFPDF_Vendor\League\Uri\Exceptions\IPv4CalculatorMissing;
 use GFPDF_Vendor\League\Uri\Exceptions\SyntaxError;
+use GFPDF_Vendor\League\Uri\Idna\Idna;
 use GFPDF_Vendor\League\Uri\IPv4Normalizer;
 use Psr\Http\Message\UriInterface as Psr7UriInterface;
 use TypeError;
-use function defined;
 use function explode;
 use function filter_var;
-use function function_exists;
 use function gettype;
-use function idn_to_ascii;
-use function idn_to_utf8;
-use function implode;
 use function in_array;
 use function inet_pton;
 use function is_object;
@@ -49,24 +43,6 @@ use function substr;
 use const FILTER_FLAG_IPV4;
 use const FILTER_FLAG_IPV6;
 use const FILTER_VALIDATE_IP;
-use const IDNA_CHECK_BIDI;
-use const IDNA_CHECK_CONTEXTJ;
-use const IDNA_ERROR_BIDI;
-use const IDNA_ERROR_CONTEXTJ;
-use const IDNA_ERROR_DISALLOWED;
-use const IDNA_ERROR_DOMAIN_NAME_TOO_LONG;
-use const IDNA_ERROR_EMPTY_LABEL;
-use const IDNA_ERROR_HYPHEN_3_4;
-use const IDNA_ERROR_INVALID_ACE_LABEL;
-use const IDNA_ERROR_LABEL_HAS_DOT;
-use const IDNA_ERROR_LABEL_TOO_LONG;
-use const IDNA_ERROR_LEADING_COMBINING_MARK;
-use const IDNA_ERROR_LEADING_HYPHEN;
-use const IDNA_ERROR_PUNYCODE;
-use const IDNA_ERROR_TRAILING_HYPHEN;
-use const IDNA_NONTRANSITIONAL_TO_UNICODE;
-use const IDNA_USE_STD3_RULES;
-use const INTL_IDNA_VARIANT_UTS46;
 final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implements \GFPDF_Vendor\League\Uri\Contracts\IpHostInterface
 {
     /**
@@ -142,17 +118,6 @@ final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implement
      */
     private $is_domain = \false;
     /**
-     * @codeCoverageIgnore
-     */
-    private static function supportIdnHost() : void
-    {
-        static $idn_support = null;
-        $idn_support = $idn_support ?? \function_exists('\\idn_to_ascii') && \defined('\\INTL_IDNA_VARIANT_UTS46');
-        if (!$idn_support) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\IdnSupportMissing('IDN host can not be processed. Verify that ext/intl is installed for IDN support and that ICU is at least version 4.6.');
-        }
-    }
-    /**
      * New instance.
      *
      * @param mixed|null $host
@@ -197,18 +162,12 @@ final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implement
         if ($is_ascii || 1 === \preg_match(self::REGEXP_INVALID_HOST_CHARS, $domain_name)) {
             throw new \GFPDF_Vendor\League\Uri\Exceptions\SyntaxError(\sprintf('`%s` is an invalid domain name : the host contains invalid characters.', $host));
         }
-        self::supportIdnHost();
-        $domain_name = \idn_to_ascii($domain_name, \IDNA_CHECK_BIDI | \IDNA_CHECK_CONTEXTJ | \IDNA_USE_STD3_RULES | \IDNA_NONTRANSITIONAL_TO_UNICODE, \INTL_IDNA_VARIANT_UTS46, $info);
-        if (0 !== $info['errors']) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\SyntaxError(\sprintf('`%s` is an invalid domain name : %s.', $host, $this->getIDNAErrors($info['errors'])));
+        $info = \GFPDF_Vendor\League\Uri\Idna\Idna::toAscii($domain_name, \GFPDF_Vendor\League\Uri\Idna\Idna::IDNA2008_ASCII);
+        if (0 !== $info->errors()) {
+            throw \GFPDF_Vendor\League\Uri\Exceptions\IdnaConversionFailed::dueToIDNAError($domain_name, $info);
         }
-        // @codeCoverageIgnoreStart
-        if (\false === $domain_name) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\IdnSupportMissing(\sprintf('The Intl extension is misconfigured for %s, please correct this issue before proceeding.', \PHP_OS));
-        }
-        // @codeCoverageIgnoreEnd
-        $this->host = $domain_name;
-        $this->is_domain = $this->isValidDomain($domain_name);
+        $this->host = $info->result();
+        $this->is_domain = $this->isValidDomain($this->host);
     }
     /**
      * Tells whether the registered name is a valid domain name according to RFC1123.
@@ -223,25 +182,6 @@ final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implement
             $domainMaxLength = 254;
         }
         return !isset($hostname[$domainMaxLength]) && 1 === \preg_match(self::REGEXP_DOMAIN_NAME, $hostname);
-    }
-    /**
-     * Retrieves and format IDNA conversion error message.
-     *
-     * @see http://icu-project.org/apiref/icu4j/com/ibm/icu/text/IDNA.Error.html
-     */
-    private function getIDNAErrors(int $error_byte) : string
-    {
-        /**
-         * IDNA errors.
-         */
-        static $idn_errors = [\IDNA_ERROR_EMPTY_LABEL => 'a non-final domain name label (or the whole domain name) is empty', \IDNA_ERROR_LABEL_TOO_LONG => 'a domain name label is longer than 63 bytes', \IDNA_ERROR_DOMAIN_NAME_TOO_LONG => 'a domain name is longer than 255 bytes in its storage form', \IDNA_ERROR_LEADING_HYPHEN => 'a label starts with a hyphen-minus ("-")', \IDNA_ERROR_TRAILING_HYPHEN => 'a label ends with a hyphen-minus ("-")', \IDNA_ERROR_HYPHEN_3_4 => 'a label contains hyphen-minus ("-") in the third and fourth positions', \IDNA_ERROR_LEADING_COMBINING_MARK => 'a label starts with a combining mark', \IDNA_ERROR_DISALLOWED => 'a label or domain name contains disallowed characters', \IDNA_ERROR_PUNYCODE => 'a label starts with "xn--" but does not contain valid Punycode', \IDNA_ERROR_LABEL_HAS_DOT => 'a label contains a dot=full stop', \IDNA_ERROR_INVALID_ACE_LABEL => 'An ACE label does not contain a valid label string', \IDNA_ERROR_BIDI => 'a label does not meet the IDNA BiDi requirements (for right-to-left characters)', \IDNA_ERROR_CONTEXTJ => 'a label does not meet the IDNA CONTEXTJ requirements'];
-        $res = [];
-        foreach ($idn_errors as $error => $reason) {
-            if ($error === ($error_byte & $error)) {
-                $res[] = $reason;
-            }
-        }
-        return [] === $res ? 'Unknown IDNA conversion error.' : \implode(', ', $res) . '.';
     }
     /**
      * Validates an Ipv6 as Host.
@@ -348,6 +288,13 @@ final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implement
     /**
      * {@inheritDoc}
      */
+    public function getUriComponent() : string
+    {
+        return (string) $this->getContent();
+    }
+    /**
+     * {@inheritDoc}
+     */
     public function toAscii() : ?string
     {
         return $this->getContent();
@@ -360,19 +307,7 @@ final class Host extends \GFPDF_Vendor\League\Uri\Components\Component implement
         if (null !== $this->ip_version || null === $this->host || \false === \strpos($this->host, 'xn--')) {
             return $this->host;
         }
-        $host = \idn_to_utf8($this->host, \IDNA_CHECK_BIDI | \IDNA_CHECK_CONTEXTJ | \IDNA_USE_STD3_RULES | \IDNA_NONTRANSITIONAL_TO_UNICODE, \INTL_IDNA_VARIANT_UTS46, $info);
-        if ([] === $info) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\SyntaxError(\sprintf('The host `%s` is invalid.', $this->host));
-        }
-        if (0 !== $info['errors']) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\SyntaxError(\sprintf('The host `%s` is invalid : %s.', $this->host, $this->getIDNAErrors($info['errors'])));
-        }
-        // @codeCoverageIgnoreStart
-        if (\false === $host) {
-            throw new \GFPDF_Vendor\League\Uri\Exceptions\IdnSupportMissing(\sprintf('The Intl extension is misconfigured for %s, please correct this issue before proceeding.', \PHP_OS));
-        }
-        // @codeCoverageIgnoreEnd
-        return $host;
+        return \GFPDF_Vendor\League\Uri\Idna\Idna::toUnicode($this->host, \GFPDF_Vendor\League\Uri\Idna\Idna::IDNA2008_UNICODE)->result();
     }
     /**
      * {@inheritDoc}

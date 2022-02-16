@@ -120,7 +120,7 @@ class DOMTreeBuilder implements \GFPDF_Vendor\Masterminds\HTML5\Parser\EventHand
             // documents, and attempting to up-convert any older DTDs to HTML5.
             $dt = $impl->createDocumentType('html');
             // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-            $this->doc = $impl->createDocument(null, null, $dt);
+            $this->doc = $impl->createDocument(null, '', $dt);
             $this->doc->encoding = !empty($options['encoding']) ? $options['encoding'] : 'UTF-8';
         }
         $this->errors = array();
@@ -315,6 +315,7 @@ class DOMTreeBuilder implements \GFPDF_Vendor\Masterminds\HTML5\Parser\EventHand
             } elseif ($this->insertMode === static::IM_IN_MATHML) {
                 $aName = \GFPDF_Vendor\Masterminds\HTML5\Elements::normalizeMathMlAttribute($aName);
             }
+            $aVal = (string) $aVal;
             try {
                 $prefix = ($pos = \strpos($aName, ':')) ? \substr($aName, 0, $pos) : \false;
                 if ('xmlns' === $prefix) {

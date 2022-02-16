@@ -56,7 +56,7 @@ a.eml-pro {
 /* == ui-dialog Styles == */
 
 .eml-dialog-modal {
-    z-index: 300000 !important;
+    /*z-index: 300000 !important;*/
 }
 .eml-dialog-modal,
 .eml-dialog-modal p{
@@ -268,6 +268,11 @@ a.eml-pro {
 
 
 
+/* == Media Library Option Page Styles == */
+
+#wpuxss-eml-form-media-library input[type="number"] {
+    width: 80px;
+}
 /* == Taxonomies Option Page Styles == */
 
 .wpuxss-eml-settings-list {

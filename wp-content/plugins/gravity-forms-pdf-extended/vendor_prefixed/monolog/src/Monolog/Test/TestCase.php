@@ -16,18 +16,29 @@ use GFPDF_Vendor\Monolog\DateTimeImmutable;
 use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
 /**
  * Lets you easily generate log records and a dummy formatter for testing purposes
- * *
+ *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 class TestCase extends \GFPDF_Vendor\PHPUnit\Framework\TestCase
 {
     /**
+     * @param mixed[] $context
+     *
      * @return array Record
+     *
+     * @phpstan-param  Level $level
+     * @phpstan-return Record
      */
-    protected function getRecord($level = \GFPDF_Vendor\Monolog\Logger::WARNING, $message = 'test', array $context = []) : array
+    protected function getRecord(int $level = \GFPDF_Vendor\Monolog\Logger::WARNING, string $message = 'test', array $context = []) : array
     {
         return ['message' => (string) $message, 'context' => $context, 'level' => $level, 'level_name' => \GFPDF_Vendor\Monolog\Logger::getLevelName($level), 'channel' => 'test', 'datetime' => new \GFPDF_Vendor\Monolog\DateTimeImmutable(\true), 'extra' => []];
     }
+    /**
+     * @phpstan-return Record[]
+     */
     protected function getMultipleRecords() : array
     {
         return [$this->getRecord(\GFPDF_Vendor\Monolog\Logger::DEBUG, 'debug message 1'), $this->getRecord(\GFPDF_Vendor\Monolog\Logger::DEBUG, 'debug message 2'), $this->getRecord(\GFPDF_Vendor\Monolog\Logger::INFO, 'information'), $this->getRecord(\GFPDF_Vendor\Monolog\Logger::WARNING, 'warning'), $this->getRecord(\GFPDF_Vendor\Monolog\Logger::ERROR, 'error')];

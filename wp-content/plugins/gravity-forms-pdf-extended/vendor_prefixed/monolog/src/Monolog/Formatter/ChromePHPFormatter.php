@@ -21,10 +21,12 @@ class ChromePHPFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterInt
 {
     /**
      * Translates Monolog log levels to Wildfire levels.
+     *
+     * @var array<int, 'log'|'info'|'warn'|'error'>
      */
     private $logLevels = [\GFPDF_Vendor\Monolog\Logger::DEBUG => 'log', \GFPDF_Vendor\Monolog\Logger::INFO => 'info', \GFPDF_Vendor\Monolog\Logger::NOTICE => 'info', \GFPDF_Vendor\Monolog\Logger::WARNING => 'warn', \GFPDF_Vendor\Monolog\Logger::ERROR => 'error', \GFPDF_Vendor\Monolog\Logger::CRITICAL => 'error', \GFPDF_Vendor\Monolog\Logger::ALERT => 'error', \GFPDF_Vendor\Monolog\Logger::EMERGENCY => 'error'];
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function format(array $record)
     {
@@ -47,7 +49,7 @@ class ChromePHPFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterInt
         return [$record['channel'], $message, $backtrace, $this->logLevels[$record['level']]];
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function formatBatch(array $records)
     {

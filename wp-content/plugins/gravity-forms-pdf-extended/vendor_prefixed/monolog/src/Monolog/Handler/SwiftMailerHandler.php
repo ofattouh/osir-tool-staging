@@ -20,18 +20,20 @@ use GFPDF_Vendor\Swift;
  * SwiftMailerHandler uses Swift_Mailer to send the emails
  *
  * @author Gyula Sallai
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class SwiftMailerHandler extends \GFPDF_Vendor\Monolog\Handler\MailHandler
 {
+    /** @var \Swift_Mailer */
     protected $mailer;
+    /** @var Swift_Message|callable(string, Record[]): Swift_Message */
     private $messageTemplate;
     /**
-     * @psalm-param Swift_Message|callable(string, array): Swift_Message $message
+     * @psalm-param Swift_Message|callable(string, Record[]): Swift_Message $message
      *
      * @param \Swift_Mailer          $mailer  The mailer to use
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
-     * @param string|int             $level   The minimum logging level at which this handler will be triggered
-     * @param bool                   $bubble  Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(\GFPDF_Vendor\Swift_Mailer $mailer, $message, $level = \GFPDF_Vendor\Monolog\Logger::ERROR, bool $bubble = \true)
     {
@@ -40,7 +42,7 @@ class SwiftMailerHandler extends \GFPDF_Vendor\Monolog\Handler\MailHandler
         $this->messageTemplate = $message;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function send(string $content, array $records) : void
     {
@@ -61,6 +63,8 @@ class SwiftMailerHandler extends \GFPDF_Vendor\Monolog\Handler\MailHandler
      * @param  string        $content formatted email body to be sent
      * @param  array         $records Log records that formed the content
      * @return Swift_Message
+     *
+     * @phpstan-param Record[] $records
      */
     protected function buildMessage(string $content, array $records) : \GFPDF_Vendor\Swift_Message
     {

@@ -42,9 +42,6 @@ class DynamoDbHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
      * @var Marshaler
      */
     protected $marshaler;
-    /**
-     * @param int|string $level
-     */
     public function __construct(\GFPDF_Vendor\Aws\DynamoDb\DynamoDbClient $client, string $table, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {
         /** @phpstan-ignore-next-line */
@@ -59,7 +56,7 @@ class DynamoDbHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         parent::__construct($level, $bubble);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -72,6 +69,10 @@ class DynamoDbHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         }
         $this->client->putItem(['TableName' => $this->table, 'Item' => $formatted]);
     }
+    /**
+     * @param  mixed[] $record
+     * @return mixed[]
+     */
     protected function filterEmptyFields(array $record) : array
     {
         return \array_filter($record, function ($value) {
@@ -79,7 +80,7 @@ class DynamoDbHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         });
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getDefaultFormatter() : \GFPDF_Vendor\Monolog\Formatter\FormatterInterface
     {

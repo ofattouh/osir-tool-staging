@@ -17,6 +17,9 @@ use GFPDF_Vendor\Monolog\Formatter\JsonFormatter;
 use GFPDF_Vendor\PhpAmqpLib\Message\AMQPMessage;
 use GFPDF_Vendor\PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
+/**
+ * @phpstan-import-type Record from \Monolog\Logger
+ */
 class AmqpHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
     /**
@@ -30,8 +33,6 @@ class AmqpHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandle
     /**
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
      * @param string|null              $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
-     * @param string|int               $level        The minimum logging level at which this handler will be triggered
-     * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($exchange, ?string $exchangeName = null, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {
@@ -71,6 +72,7 @@ class AmqpHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandle
             if (!$this->isHandling($record)) {
                 continue;
             }
+            /** @var Record $record */
             $record = $this->processRecord($record);
             $data = $this->getFormatter()->format($record);
             $this->exchange->batch_basic_publish($this->createAmqpMessage($data), $this->exchangeName, $this->getRoutingKey($record));
@@ -79,6 +81,8 @@ class AmqpHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandle
     }
     /**
      * Gets the routing key for the AMQP exchange
+     *
+     * @phpstan-param Record $record
      */
     protected function getRoutingKey(array $record) : string
     {

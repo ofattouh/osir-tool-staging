@@ -26,22 +26,25 @@ use GFPDF_Vendor\Monolog\Utils;
  */
 class IFTTTHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
+    /** @var string */
     private $eventName;
+    /** @var string */
     private $secretKey;
     /**
-     * @param string     $eventName The name of the IFTTT Maker event that should be triggered
-     * @param string     $secretKey A valid IFTTT secret key
-     * @param string|int $level     The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param string $eventName The name of the IFTTT Maker event that should be triggered
+     * @param string $secretKey A valid IFTTT secret key
      */
     public function __construct(string $eventName, string $secretKey, $level = \GFPDF_Vendor\Monolog\Logger::ERROR, bool $bubble = \true)
     {
+        if (!\extension_loaded('curl')) {
+            throw new \GFPDF_Vendor\Monolog\Handler\MissingExtensionException('The curl extension is needed to use the IFTTTHandler');
+        }
         $this->eventName = $eventName;
         $this->secretKey = $secretKey;
         parent::__construct($level, $bubble);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function write(array $record) : void
     {

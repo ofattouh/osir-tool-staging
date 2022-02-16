@@ -151,12 +151,21 @@ abstract class Visualizer_Render_Sidebar extends Visualizer_Render {
 	 * @access protected
 	 */
 	protected function _renderAdvancedSettings() {
-		self::_renderGroupStart( esc_html__( 'Frontend Actions', 'visualizer' ) );
+		if ( Visualizer_Module_Admin::proFeaturesLocked() ) {
+			self::_renderGroupStart( esc_html__( 'Frontend Actions', 'visualizer' ) );
+		} else {
+			self::_renderGroupStart( esc_html__( 'Frontend Actions', 'visualizer' ) . '<span class="dashicons dashicons-lock"></span>', '', apply_filters( 'visualizer_pro_upsell_class', 'only-pro-feature', 'chart-frontend-actions' ), 'vz-frontend-actions' );
+			echo '<div style="position: relative">';
+		}
 			self::_renderSectionStart();
 				self::_renderSectionDescription( esc_html__( 'Configure frontend actions that need to be shown.', 'visualizer' ) );
 			self::_renderSectionEnd();
 
 			$this->_renderActionSettings();
+		if ( ! Visualizer_Module_Admin::proFeaturesLocked() ) {
+			echo apply_filters( 'visualizer_pro_upsell', '', 'chart-permissions' );
+			echo '</div>';
+		}
 		self::_renderGroupEnd();
 
 		self::_renderGroupStart( esc_html__( 'Manual Configuration', 'visualizer' ) );
@@ -517,19 +526,38 @@ abstract class Visualizer_Render_Sidebar extends Visualizer_Render {
 	 * @access protected
 	 */
 	protected function _renderChartImageSettings() {
-			// Default enable if amp is active.
-			$is_amp = function_exists( 'amp_is_enabled' ) && amp_is_enabled();
-			$this->save_chart_image = null === $this->save_chart_image && $is_amp ? true : $this->save_chart_image;
+		// Default enable if amp is active.
+		$is_amp = function_exists( 'amp_is_enabled' ) && amp_is_enabled();
+		$this->save_chart_image = null === $this->save_chart_image && $is_amp ? true : $this->save_chart_image;
 
-			self::_renderSectionStart( esc_html__( 'Save chart as an image inside Media Library', 'visualizer' ), false );
-				self::_renderCheckboxItem(
-					esc_html__( 'Save inside media library?', 'visualizer' ),
-					'save_chart_image',
-					$this->save_chart_image ? true : false,
-					'yes',
-					esc_html__( 'To enable save the image as an inside media library.', 'visualizer' ),
-					false
-				);
-			self::_renderSectionEnd();
+		$is_create_chart = true;
+		if ( filter_input( INPUT_GET, 'library', FILTER_VALIDATE_BOOLEAN ) ) {
+			if ( filter_input( INPUT_GET, 'action' ) === Visualizer_Plugin::ACTION_EDIT_CHART ) {
+				$is_create_chart = false;
+			}
+		}
+		$this->lazy_load_chart = null === $this->lazy_load_chart && $is_create_chart ? true : $this->lazy_load_chart;
+
+		self::_renderSectionStart( esc_html__( 'Save chart as an image inside Media Library', 'visualizer' ), false );
+			self::_renderCheckboxItem(
+				esc_html__( 'Save inside media library?', 'visualizer' ),
+				'save_chart_image',
+				$this->save_chart_image ? true : false,
+				'yes',
+				esc_html__( 'To enable save the image as an inside media library.', 'visualizer' ),
+				false
+			);
+		self::_renderSectionEnd();
+
+		self::_renderSectionStart( esc_html__( 'Lazy rendering of chart', 'visualizer' ), false );
+			self::_renderCheckboxItem(
+				esc_html__( 'Enable lazy rendering of chart?', 'visualizer' ),
+				'lazy_load_chart',
+				$this->lazy_load_chart ? true : false,
+				'yes',
+				esc_html__( 'To enable lazy chart rendering.', 'visualizer' ),
+				false
+			);
+		self::_renderSectionEnd();
 	}
 }

@@ -106,6 +106,13 @@
         registerDefaultActions();
     });
 
+    // Refresh charts if chart not generated.
+    function refreshEachCharts() {
+        setTimeout( function() {
+            displayChartsOnFrontEnd();
+        }, 100 );
+    }
+
     function initChartDisplay() {
         if(visualizer.is_front == true){ // jshint ignore:line
             displayChartsOnFrontEnd();
@@ -119,7 +126,7 @@
      */
     function showChart(id) {
         // clone the visualizer object so that the original object is not affected.
-        var viz = Object.assign({}, visualizer);
+        var viz = Object.assign(visualizer, window.visualizer || {});
         if(id){
             viz.id = id;
         }
@@ -128,9 +135,11 @@
 
     function displayChartsOnFrontEnd() {
         // display all charts that are NOT to be lazy-loaded.
+        $( 'div.viz-facade-loaded:not(.visualizer-lazy):empty' ).removeClass( 'viz-facade-loaded' );
         $('div.visualizer-front:not(.visualizer-lazy):not(.viz-facade-loaded)').each(function(index, element){
             var id = $(element).addClass('viz-facade-loaded').attr('id');
             showChart(id);
+            refreshEachCharts();
         });
 
         // interate through all charts that are to be lazy-loaded and observe each one.

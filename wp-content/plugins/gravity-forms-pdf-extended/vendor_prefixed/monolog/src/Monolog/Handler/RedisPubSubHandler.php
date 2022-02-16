@@ -27,13 +27,13 @@ use GFPDF_Vendor\Monolog\Logger;
  */
 class RedisPubSubHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHandler
 {
+    /** @var \Predis\Client|\Redis */
     private $redisClient;
+    /** @var string */
     private $channelKey;
     /**
-     * @param \Predis\Client|\Redis $redis  The redis instance
-     * @param string                $key    The channel key to publish records to
-     * @param string|int            $level  The minimum logging level at which this handler will be triggered
-     * @param bool                  $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param \Predis\Client|\Redis $redis The redis instance
+     * @param string                $key   The channel key to publish records to
      */
     public function __construct($redis, string $key, $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {

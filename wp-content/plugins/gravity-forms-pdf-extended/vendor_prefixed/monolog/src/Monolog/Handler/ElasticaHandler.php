@@ -11,6 +11,7 @@ declare (strict_types=1);
  */
 namespace GFPDF_Vendor\Monolog\Handler;
 
+use GFPDF_Vendor\Elastica\Document;
 use GFPDF_Vendor\Monolog\Formatter\FormatterInterface;
 use GFPDF_Vendor\Monolog\Formatter\ElasticaFormatter;
 use GFPDF_Vendor\Monolog\Logger;
@@ -39,14 +40,12 @@ class ElasticaHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
      */
     protected $client;
     /**
-     * @var array Handler config options
+     * @var mixed[] Handler config options
      */
     protected $options = [];
     /**
-     * @param Client     $client  Elastica Client object
-     * @param array      $options Handler configuration
-     * @param int|string $level   The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param Client  $client  Elastica Client object
+     * @param mixed[] $options Handler configuration
      */
     public function __construct(\GFPDF_Vendor\Elastica\Client $client, array $options = [], $level = \GFPDF_Vendor\Monolog\Logger::DEBUG, bool $bubble = \true)
     {
@@ -68,7 +67,7 @@ class ElasticaHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         $this->bulkSend([$record['formatted']]);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setFormatter(\GFPDF_Vendor\Monolog\Formatter\FormatterInterface $formatter) : \GFPDF_Vendor\Monolog\Handler\HandlerInterface
     {
@@ -77,6 +76,9 @@ class ElasticaHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         }
         throw new \InvalidArgumentException('ElasticaHandler is only compatible with ElasticaFormatter');
     }
+    /**
+     * @return mixed[]
+     */
     public function getOptions() : array
     {
         return $this->options;
@@ -89,7 +91,7 @@ class ElasticaHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
         return new \GFPDF_Vendor\Monolog\Formatter\ElasticaFormatter($this->options['index'], $this->options['type']);
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleBatch(array $records) : void
     {
@@ -98,6 +100,9 @@ class ElasticaHandler extends \GFPDF_Vendor\Monolog\Handler\AbstractProcessingHa
     }
     /**
      * Use Elasticsearch bulk API to send list of documents
+     *
+     * @param Document[] $documents
+     *
      * @throws \RuntimeException
      */
     protected function bulkSend(array $documents) : void

@@ -146,6 +146,10 @@ window.eml = window.eml || { l10n: {} };
             order: eml.l10n.media_order
         },
 
+        defaultArgs: {
+            posts_per_page: eml.l10n.loads_per_page
+        },
+
         queries: [],
 
         cleanQueries: function(){

@@ -18,6 +18,9 @@ namespace GFPDF_Vendor\Monolog\Processor;
  */
 class ProcessIdProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         $record['extra']['process_id'] = \getmypid();

@@ -111,7 +111,6 @@ window.eml = window.eml || { l10n: {} };
             var spinner,
                 checkboxes = $( 'input[type=checkbox]', this.$el );
 
-
             if ( this.controller.isModeActive( 'eml-grid' ) ) {
                 spinner = this.controller.browserView.toolbar.get( 'spinner' );
             }

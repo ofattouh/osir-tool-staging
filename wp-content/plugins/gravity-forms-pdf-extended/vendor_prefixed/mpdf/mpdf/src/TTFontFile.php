@@ -173,7 +173,7 @@ class TTFontFile
         $this->version = $version = $this->read_ulong();
         $this->panose = [];
         if ($version === 0x4f54544f) {
-            throw new \GFPDF_Vendor\Mpdf\Exception\FontException('Postscript outlines are not supported');
+            throw new \GFPDF_Vendor\Mpdf\Exception\FontException(\sprintf('Fonts with postscript outlines are not supported (%s)', $file));
         }
         if ($version === 0x74746366 && !$TTCfontID) {
             throw new \GFPDF_Vendor\Mpdf\Exception\FontException(\sprintf('TTCfontID for a TrueType Collection is not defined in mPDF "fontdata" configuration (%s)', $file));
@@ -385,7 +385,18 @@ class TTFontFile
         if ($length < 1) {
             return '';
         }
-        return \fread($this->fh, $length);
+        $data = \fread($this->fh, $length);
+        // fix for #1504
+        // if fread is used to read from a compressed / buffered stream (e.g. phar://...)
+        // the $length parameter will be ignored - fread is limited in size (usually 8192 bytes)
+        // to fix this, the data length must be checked after reading. If the read was incomplete,
+        // try to read the rest of the data
+        $dataLen = \strlen($data);
+        while ($dataLen < $length && !\feof($this->fh)) {
+            $data .= \fread($this->fh, $length - $dataLen);
+            $dataLen = \strlen($data);
+        }
+        return $data;
     }
     function get_table($tag)
     {

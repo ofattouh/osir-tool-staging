@@ -19,7 +19,7 @@ namespace GFPDF_Vendor\Monolog\Processor;
 class WebProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
 {
     /**
-     * @var array|\ArrayAccess
+     * @var array<string, mixed>|\ArrayAccess<string, mixed>
      */
     protected $serverData;
     /**
@@ -27,12 +27,12 @@ class WebProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
      *
      * Array is structured as [key in record.extra => key in $serverData]
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $extraFields = ['url' => 'REQUEST_URI', 'ip' => 'REMOTE_ADDR', 'http_method' => 'REQUEST_METHOD', 'server' => 'SERVER_NAME', 'referrer' => 'HTTP_REFERER'];
     /**
-     * @param array|\ArrayAccess|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array|null              $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer
+     * @param array<string, mixed>|\ArrayAccess<string, mixed>|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
+     * @param array<string, string>|null                            $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer
      */
     public function __construct($serverData = null, array $extraFields = null)
     {
@@ -58,6 +58,9 @@ class WebProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
             }
         }
     }
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         // skip processing if for some reason request data
@@ -73,6 +76,10 @@ class WebProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
         $this->extraFields[$extraName] = $serverName;
         return $this;
     }
+    /**
+     * @param  mixed[] $extra
+     * @return mixed[]
+     */
     private function appendExtraFields(array $extra) : array
     {
         foreach ($this->extraFields as $extraName => $serverName) {

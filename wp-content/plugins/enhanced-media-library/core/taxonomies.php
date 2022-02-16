@@ -55,7 +55,6 @@ if ( ! function_exists( 'wpuxss_eml_taxonomies_validate' ) ) {
                 $input[$taxonomy]['show_in_rest'] = isset($params['show_in_rest']) && !! $params['show_in_rest'] ? 1 : 0;
                 $input[$taxonomy]['sort'] = isset($params['sort']) && !! $params['sort'] ? 1 : 0;
                 $input[$taxonomy]['show_admin_column'] = isset($params['show_admin_column']) && !! $params['show_admin_column'] ? 1 : 0;
-                $input[$taxonomy]['show_in_nav_menus'] = isset($params['show_in_nav_menus']) && !! $params['show_in_nav_menus'] ? 1 : 0;
                 $input[$taxonomy]['rewrite']['with_front'] = isset($params['rewrite']['with_front']) && !! $params['rewrite']['with_front'] ? 1 : 0;
                 $input[$taxonomy]['rewrite']['slug'] = isset($params['rewrite']['slug']) ? wpuxss_eml_sanitize_slug( $params['rewrite']['slug'], $taxonomy ) : '';
             }
@@ -158,6 +157,9 @@ if ( ! function_exists( 'wpuxss_eml_lib_options_validate' ) ) {
             elseif ( 'search_in' === $key ) {
                 $allowed = array( 'titles', 'captions', 'descriptions', 'authors', 'taxonomies' );
                 $input[$key] = array_values( array_intersect( $option, $allowed ) );
+            }
+            elseif ( 'loads_per_page' === $key ) {
+                $input[$key] = (int) $option;
             }
             else {
                 $input[$key] = isset( $option ) && !! $option ? 1 : 0;
@@ -697,53 +699,58 @@ if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
             return $form_fields;
         }
 
-
-        $wpuxss_eml_tax_options = get_option('wpuxss_eml_tax_options');
-
-
+        $wpuxss_eml_tax_options = get_option( 'wpuxss_eml_tax_options' );
+        
         foreach( $form_fields as $field => $args ) {
 
-            if ( ! taxonomy_exists( $field ) ) {
-                continue;
+            // getting rid of any taxonomy in the attachment compat
+            if ( taxonomy_exists( $field ) ) {
+                unset( $form_fields[$field] );
             }
+        } // foreach
 
-            if ( (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'] || (bool) $args['hierarchical'] ) {
+        foreach( get_taxonomies_for_attachments() as $taxonomy ) {
+
+            $t = (array) get_taxonomy($taxonomy);
+            if ( ! $t['show_ui'] )
+                continue;
+            if ( empty($t['label']) )
+                $t['label'] = $taxonomy;
+            if ( empty($t['args']) )
+                $t['args'] = array();
+
+            if ( (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'] || (bool) $t['hierarchical'] ) {
 
                 ob_start();
 
-                    wp_terms_checklist( $post->ID, array( 'taxonomy' => $field, 'checked_ontop' => false, 'walker' => new Walker_Media_Taxonomy_Checklist() ) );
+                    wp_terms_checklist( $post->ID, array( 'taxonomy' => $taxonomy, 'checked_ontop' => false, 'walker' => new Walker_Media_Taxonomy_Checklist() ) );
 
-                    $content = ob_get_contents();
+                    if ( ob_get_contents() != false ) {
+                        $html = '<ul class="term-list">' . ob_get_contents() . '</ul>';
+                    }
+                    else {
 
-                    if ( $content )
-                        $html = '<ul class="term-list">' . $content . '</ul>';
-                    else
-                        $html = '<ul class="term-list"><li>No ' . esc_html($args['label']) . ' found. <a href="' . admin_url('/edit-tags.php?taxonomy='.$field.'&post_type=attachment') . '">' . __('Add some', 'enhanced-media-library') . '.</a></li></ul>';
+                        $not_found = sprintf(
+                            esc_html__( 'No %s found.', 'enhanced-media-library' ),
+                            esc_html($t['label'])
+                        );
+                        $html = '<ul class="term-list"><li>' . $not_found .' <a href="' . admin_url('/edit-tags.php?taxonomy='.$taxonomy.'&post_type=attachment') . '">' . __('Add some', 'enhanced-media-library') . '.</a></li></ul>';
+                    }
 
                 ob_end_clean();
 
-                unset( $form_fields[$field]['value'] );
-
-                $tax_field = $form_fields[$field];
-                unset( $form_fields[$field] );
-
-                $tax_field['input'] = 'html';
-                $tax_field['html'] = $html;
-
-                // re-order tax_field at the end
-                $form_fields = $form_fields + array( $field => $tax_field );
+                $t['input'] = 'html';
+                $t['html'] = $html;
             }
             else {
-                $values = wp_get_object_terms( $post->ID, $field, array( 'fields' => 'names' ) );
-
-                $tax_field = $form_fields[$field];
-                unset( $form_fields[$field] );
-
-                $tax_field['value'] = join(', ', $values);
-
-                // re-order tax_field at the end
-                $form_fields = $form_fields + array( $field => $tax_field );
+                $values = wp_get_object_terms( $post->ID, $taxonomy, array( 'fields' => 'names' ) );
+                $t['value'] = join(', ', $values);
             } // if
+
+            $t['taxonomy'] = true;
+
+            // re-order tax_field to the end
+            $form_fields = $form_fields + array( $taxonomy => $t );
         } // foreach
 
         return $form_fields;
@@ -1483,5 +1490,3 @@ if ( ! function_exists('wpuxss_eml_pre_get_posts') ) {
         $query->set('order', $order );
     }
 }
-
-?>

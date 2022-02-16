@@ -19,6 +19,7 @@ use GFPDF_Vendor\Monolog\ResettableInterface;
  */
 class UidProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface, \GFPDF_Vendor\Monolog\ResettableInterface
 {
+    /** @var string */
     private $uid;
     public function __construct(int $length = 7)
     {
@@ -27,6 +28,9 @@ class UidProcessor implements \GFPDF_Vendor\Monolog\Processor\ProcessorInterface
         }
         $this->uid = $this->generateUid($length);
     }
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record) : array
     {
         $record['extra']['uid'] = $this->uid;

@@ -217,7 +217,7 @@ add_action( 'admin_menu', 'wpuxss_eml_submenu_order', 12 );
 
 if ( ! function_exists( 'wpuxss_eml_submenu_order' ) ) {
 
-    function wpuxss_eml_submenu_order( $menu_order ) {
+    function wpuxss_eml_submenu_order() {
 
         global $submenu;
 
@@ -247,8 +247,6 @@ if ( ! function_exists( 'wpuxss_eml_submenu_order' ) ) {
 
             ksort( $submenu['options-general.php'] );
         }
-
-        return $menu_order;
     }
 }
 
@@ -1706,7 +1704,7 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
 
                     <div id="postbox-container-2" class="postbox-container">
 
-                        <form id="wpuxss-eml-form-taxonomies" method="post" action="options.php">
+                        <form id="wpuxss-eml-form-media-library" method="post" action="options.php">
 
                             <?php settings_fields( 'media-library' ); ?>
 
@@ -1768,6 +1766,44 @@ if ( ! function_exists( 'wpuxss_eml_print_media_library_options' ) ) {
                                     </table>
 
                                     <?php submit_button( __( 'Save Changes' ), 'primary', 'submit', true, array( 'id' => 'eml-submit-lib-settings-filters' ) ); ?>
+
+                                </div>
+
+                            </div>
+
+<h2><?php _e('Scrolling','enhanced-media-library'); ?></h2>
+
+                            <div class="postbox">
+
+                                <div class="inside">
+
+                                    <table class="form-table">
+
+                                        <tr>
+                                            <th scope="row"><?php _e('Infinite scrolling','enhanced-media-library'); ?></th>
+                                            <td>
+                                                <fieldset>
+                                                    <legend class="screen-reader-text"><span><?php _e('Infinite scrolling','enhanced-media-library'); ?></span></legend>
+                                                    <label><input name="wpuxss_eml_lib_options[infinite_scrolling]" type="hidden" value="0" /><input name="wpuxss_eml_lib_options[infinite_scrolling]" type="checkbox" value="1" <?php checked( true, (bool) $wpuxss_eml_lib_options['infinite_scrolling'], true ); ?> /> <?php _e('Enable infinite scrolling','enhanced-media-library'); ?></label>
+                                                    <p class="description"><?php _e( 'Works for Media Library and Media Popups.', 'enhanced-media-library' ); ?></p>
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row"><?php _e('Number per page','enhanced-media-library'); ?></th>
+                                            <td>
+                                                <fieldset>
+                                                    <legend class="screen-reader-text"><span><?php _e('Number per page','enhanced-media-library'); ?></span></legend>
+                                                    <label><input name="wpuxss_eml_lib_options[loads_per_page]" type="number" min="40" step="10" value="<?php echo (int) $wpuxss_eml_lib_options['loads_per_page']; ?>" /> <?php _e('Load this number of media files per page','enhanced-media-library'); ?></label>
+                                                    <p class="description"><?php _e( 'Works for Media Library and Media Popups.', 'enhanced-media-library' ); ?></p>
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                    <?php submit_button( __( 'Save Changes' ), 'primary', 'submit', true, array( 'id' => 'eml-submit-lib-settings-scrolling' ) ); ?>
 
                                 </div>
 
@@ -2067,7 +2103,6 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                                 $html .= '<li><label>' . __('Filter for List View','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-admin_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][admin_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['admin_filter'], false ) . ' /></li>';
                                                 $html .= '<li><label>' . __('Filter for Grid View / Media Popup','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-media_uploader_filter" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_uploader_filter]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_uploader_filter'], false ) . ' /></li>';
                                                 $html .= '<li><label>' . __('Edit in Media Popup','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-media_popup_taxonomy_edit" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][media_popup_taxonomy_edit]" value="1" ' . checked( true, (bool) $wpuxss_eml_taxonomies[$taxonomy->name]['media_popup_taxonomy_edit'], false ) . ' /></li>';
-                                                $html .= '<li><label>' . __('Show in Nav Menu','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-show_in_nav_menus" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_nav_menus]" value="1" ' . checked( true, (bool) $taxonomy->show_in_nav_menus, false ) . ' /></li>';
                                                 $html .= '<li><label>' . __('Remember Terms Order (sort)','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-sort" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][sort]" value="1" ' . checked( true, (bool) $taxonomy->sort, false ) . ' /></li>';
                                                 $html .= '<li><label>' . __('Show in REST','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-show_in_rest" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][show_in_rest]" value="1" ' . checked( true, (bool) $taxonomy->show_in_rest, false ) . ' /></li>';
                                                 $html .= '<li><label>' . __('Rewrite Slug','enhanced-media-library') . '</label><input type="text" class="wpuxss-eml-slug" name="wpuxss_eml_taxonomies[' . esc_attr($taxonomy->name) . '][rewrite][slug]" value="' . esc_attr($wpuxss_eml_taxonomies[$taxonomy->name]['rewrite']['slug']) . '" /></li>';
@@ -2130,7 +2165,6 @@ if ( ! function_exists( 'wpuxss_eml_print_taxonomies_options' ) ) {
                                     $html .= '<li><label>' . __('Filter for List View','enhanced-media-library') . '</label><input class="wpuxss-eml-admin_filter" type="checkbox"  name="" value="1" /></li>';
                                     $html .= '<li><label>' . __('Filter for Grid View / Media Popup','enhanced-media-library') . '</label><input class="wpuxss-eml-media_uploader_filter" type="checkbox" name="" value="1" /></li>';
                                     $html .= '<li><label>' . __('Edit in Media Popup','enhanced-media-library') . '</label><input class="wpuxss-eml-media_popup_taxonomy_edit" type="checkbox" name="" value="1" /></li>';
-                                    $html .= '<li><label>' . __('Show in Nav Menu','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-show_in_nav_menus" name="" value="1" /></li>';
                                     $html .= '<li><label>' . __('Remember Terms Order (sort)','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-sort" name="" value="1" /></li>';
                                     $html .= '<li><label>' . __('Show in REST','enhanced-media-library') . '</label><input type="checkbox" class="wpuxss-eml-show_in_rest" name="" value="1" /></li>';
                                     $html .= '<li><label>' . __('Rewrite Slug','enhanced-media-library') . '</label><input type="text" class="wpuxss-eml-slug" name="" value="" /></li>';
@@ -2592,10 +2626,9 @@ if ( ! function_exists( 'wpuxss_eml_plugin_row_meta' ) ) {
             return $links;
         }
 
-        $links[] = '<a href="https://wordpress.org/support/plugin/enhanced-media-library/reviews/" target="_blank">' . __( 'Rate plugin', 'enhanced-media-library' ) . '</a>';
+        $links[] = '<a href="https://wpuxsolutions.com/documents/enhanced-media-library" target="_blank">' . __( 'Documentation', 'enhanced-media-library' ) . '</a>';
+        $links[] = '<a href="https://wpuxsolutions.com/support" target="_blank">' . __( 'Support', 'enhanced-media-library' ) . '</a>';
 
         return $links;
     }
 }
-
-?>

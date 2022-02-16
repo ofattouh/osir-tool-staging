@@ -20,6 +20,8 @@ use GFPDF_Vendor\Monolog\Handler\Slack\SlackRecord;
  *
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
 {
@@ -39,11 +41,9 @@ class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
      * @param  string|null               $username               Name of a bot
      * @param  bool                      $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
      * @param  string|null               $iconEmoji              The emoji name to use (or null)
-     * @param  int                       $level                  The minimum logging level at which this handler will be triggered
-     * @param  bool                      $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param  bool                      $useShortAttachment     Whether the context/extra messages added to Slack as attachments are in a short style
      * @param  bool                      $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param  array                     $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param  string[]                  $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
     public function __construct(string $token, string $channel, ?string $username = null, bool $useAttachment = \true, ?string $iconEmoji = null, $level = \GFPDF_Vendor\Monolog\Logger::CRITICAL, bool $bubble = \true, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, array $excludeFields = array())
@@ -64,7 +64,7 @@ class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         return $this->token;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function generateDataStream(array $record) : string
     {
@@ -73,12 +73,18 @@ class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
     }
     /**
      * Builds the body of API call
+     *
+     * @phpstan-param FormattedRecord $record
      */
     private function buildContent(array $record) : string
     {
         $dataArray = $this->prepareContentData($record);
         return \http_build_query($dataArray);
     }
+    /**
+     * @phpstan-param FormattedRecord $record
+     * @return string[]
+     */
     protected function prepareContentData(array $record) : array
     {
         $dataArray = $this->slackRecord->getSlackData($record);
@@ -101,7 +107,7 @@ class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         return $header;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record) : void
     {
@@ -170,6 +176,9 @@ class SlackHandler extends \GFPDF_Vendor\Monolog\Handler\SocketHandler
         $this->slackRecord->includeContextAndExtra($includeContextAndExtra);
         return $this;
     }
+    /**
+     * @param string[] $excludeFields
+     */
     public function excludeFields(array $excludeFields) : self
     {
         $this->slackRecord->excludeFields($excludeFields);

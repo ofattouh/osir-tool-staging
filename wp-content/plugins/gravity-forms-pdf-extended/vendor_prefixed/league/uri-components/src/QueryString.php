@@ -1,13 +1,11 @@
 <?php
 
 /**
- * League.Uri (http://uri.thephpleague.com/components)
+ * League.Uri (https://uri.thephpleague.com/components/2.0/)
  *
  * @package    League\Uri
  * @subpackage League\Uri\Components
  * @author     Ignace Nyamagana Butera <nyamsprod@gmail.com>
- * @license    https://github.com/thephpleague/uri-components/blob/master/LICENSE (MIT License)
- * @version    2.0.2
  * @link       https://github.com/thephpleague/uri-components
  *
  * For the full copyright and license information, please view the LICENSE
@@ -131,6 +129,10 @@ final class QueryString
         }
         return $query;
     }
+    /**
+     * @param  non-empty-string   $separator
+     * @return array<string|null>
+     */
     private static function getPairs(string $query, string $separator) : array
     {
         if (\false === \strpos($query, $separator)) {
@@ -155,7 +157,7 @@ final class QueryString
         if (null === $value) {
             return [$key, $value];
         }
-        if ($parseValue === self::DECODE_PAIR_VALUE && 1 === \preg_match(self::REGEXP_ENCODED_PATTERN, $value)) {
+        if (self::DECODE_PAIR_VALUE === $parseValue && 1 === \preg_match(self::REGEXP_ENCODED_PATTERN, $value)) {
             $value = \preg_replace_callback(self::REGEXP_ENCODED_PATTERN, [self::class, 'decodeMatch'], $value);
         }
         return [$key, $value];
@@ -264,6 +266,9 @@ final class QueryString
      */
     public static function extract($query, string $separator = '&', int $enc_type = \PHP_QUERY_RFC3986) : array
     {
+        if ('' === $separator) {
+            throw new \GFPDF_Vendor\League\Uri\Exceptions\SyntaxError('The separator character can not be the empty string.');
+        }
         $query = self::prepareQuery($query, $enc_type);
         if (null === $query || '' === $query) {
             return [];

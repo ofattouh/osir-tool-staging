@@ -32,7 +32,9 @@ class FlowdockFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterInte
         $this->sourceEmail = $sourceEmail;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @return mixed[]
      */
     public function format(array $record) : array
     {
@@ -45,7 +47,9 @@ class FlowdockFormatter implements \GFPDF_Vendor\Monolog\Formatter\FormatterInte
         return $record;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @return mixed[][]
      */
     public function formatBatch(array $records) : array
     {

@@ -23,14 +23,14 @@ namespace GFPDF_Vendor\Monolog\Handler;
 class NoopHandler extends \GFPDF_Vendor\Monolog\Handler\Handler
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isHandling(array $record) : bool
     {
         return \true;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record) : bool
     {

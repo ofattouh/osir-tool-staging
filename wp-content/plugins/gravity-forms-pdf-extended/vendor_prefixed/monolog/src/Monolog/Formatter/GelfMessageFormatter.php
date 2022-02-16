@@ -19,6 +19,8 @@ use GFPDF_Vendor\Monolog\Utils;
  * @see http://docs.graylog.org/en/latest/pages/gelf.html
  *
  * @author Matt Lehner <mlehner@gmail.com>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 class GelfMessageFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
 {
@@ -41,26 +43,33 @@ class GelfMessageFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFor
     protected $maxLength;
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
+     *
+     * @var array<int, int>
+     *
+     * @phpstan-var array<Level, int>
      */
     private $logLevels = [\GFPDF_Vendor\Monolog\Logger::DEBUG => 7, \GFPDF_Vendor\Monolog\Logger::INFO => 6, \GFPDF_Vendor\Monolog\Logger::NOTICE => 5, \GFPDF_Vendor\Monolog\Logger::WARNING => 4, \GFPDF_Vendor\Monolog\Logger::ERROR => 3, \GFPDF_Vendor\Monolog\Logger::CRITICAL => 2, \GFPDF_Vendor\Monolog\Logger::ALERT => 1, \GFPDF_Vendor\Monolog\Logger::EMERGENCY => 0];
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
         parent::__construct('U.u');
-        $this->systemName = \is_null($systemName) || $systemName === '' ? \gethostname() : $systemName;
+        $this->systemName = \is_null($systemName) || $systemName === '' ? (string) \gethostname() : $systemName;
         $this->extraPrefix = \is_null($extraPrefix) ? '' : $extraPrefix;
         $this->contextPrefix = $contextPrefix;
         $this->maxLength = \is_null($maxLength) ? self::DEFAULT_MAX_LENGTH : $maxLength;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function format(array $record) : \GFPDF_Vendor\Gelf\Message
     {
+        $context = $extra = [];
         if (isset($record['context'])) {
-            $record['context'] = parent::format($record['context']);
+            /** @var mixed[] $context */
+            $context = parent::normalize($record['context']);
         }
         if (isset($record['extra'])) {
-            $record['extra'] = parent::format($record['extra']);
+            /** @var mixed[] $extra */
+            $extra = parent::normalize($record['extra']);
         }
         if (!isset($record['datetime'], $record['message'], $record['level'])) {
             throw new \InvalidArgumentException('The record should at least contain datetime, message and level keys, ' . \var_export($record, \true) . ' given');
@@ -75,35 +84,35 @@ class GelfMessageFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFor
         if (isset($record['channel'])) {
             $message->setFacility($record['channel']);
         }
-        if (isset($record['extra']['line'])) {
-            $message->setLine($record['extra']['line']);
-            unset($record['extra']['line']);
+        if (isset($extra['line'])) {
+            $message->setLine($extra['line']);
+            unset($extra['line']);
         }
-        if (isset($record['extra']['file'])) {
-            $message->setFile($record['extra']['file']);
-            unset($record['extra']['file']);
+        if (isset($extra['file'])) {
+            $message->setFile($extra['file']);
+            unset($extra['file']);
         }
-        foreach ($record['extra'] as $key => $val) {
+        foreach ($extra as $key => $val) {
             $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = \strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->extraPrefix . $key, \GFPDF_Vendor\Monolog\Utils::substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->extraPrefix . $key, \GFPDF_Vendor\Monolog\Utils::substr((string) $val, 0, $this->maxLength));
                 continue;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
         }
-        foreach ($record['context'] as $key => $val) {
+        foreach ($context as $key => $val) {
             $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = \strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->contextPrefix . $key, \GFPDF_Vendor\Monolog\Utils::substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->contextPrefix . $key, \GFPDF_Vendor\Monolog\Utils::substr((string) $val, 0, $this->maxLength));
                 continue;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);
         }
         /** @phpstan-ignore-next-line */
-        if (null === $message->getFile() && isset($record['context']['exception']['file'])) {
-            if (\preg_match("/^(.+):([0-9]+)\$/", $record['context']['exception']['file'], $matches)) {
+        if (null === $message->getFile() && isset($context['exception']['file'])) {
+            if (\preg_match("/^(.+):([0-9]+)\$/", $context['exception']['file'], $matches)) {
                 $message->setFile($matches[1]);
                 $message->setLine($matches[2]);
             }

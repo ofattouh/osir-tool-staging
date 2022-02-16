@@ -16,6 +16,8 @@ use GFPDF_Vendor\Elastica\Document;
  * Format a log message into an Elastica Document
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class ElasticaFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormatter
 {
@@ -39,7 +41,7 @@ class ElasticaFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormat
         $this->type = $type;
     }
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function format(array $record)
     {
@@ -55,18 +57,20 @@ class ElasticaFormatter extends \GFPDF_Vendor\Monolog\Formatter\NormalizerFormat
      */
     public function getType() : string
     {
+        /** @phpstan-ignore-next-line */
         return $this->type;
     }
     /**
      * Convert a log message into an Elastica Document
-     * @param  array    $record
-     * @return Document
+     *
+     * @phpstan-param Record $record
      */
     protected function getDocument(array $record) : \GFPDF_Vendor\Elastica\Document
     {
         $document = new \GFPDF_Vendor\Elastica\Document();
         $document->setData($record);
         if (\method_exists($document, 'setType')) {
+            /** @phpstan-ignore-next-line */
             $document->setType($this->type);
         }
         $document->setIndex($this->index);

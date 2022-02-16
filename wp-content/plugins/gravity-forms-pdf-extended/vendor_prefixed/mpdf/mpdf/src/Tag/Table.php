@@ -166,10 +166,20 @@ class Table extends \GFPDF_Vendor\Mpdf\Tag\Tag
             $table['direction'] = $this->mpdf->blk[$this->mpdf->blklvl]['direction'];
         }
         if (isset($properties['BACKGROUND-COLOR'])) {
+            if ($table['bgcolor'] === \false) {
+                // @todo cleaner initialization
+                $table['bgcolor'] = [];
+            }
             $table['bgcolor'][-1] = $properties['BACKGROUND-COLOR'];
         } elseif (isset($properties['BACKGROUND'])) {
+            if ($table['bgcolor'] === \false) {
+                $table['bgcolor'] = [];
+            }
             $table['bgcolor'][-1] = $properties['BACKGROUND'];
         } elseif (isset($attr['BGCOLOR'])) {
+            if ($table['bgcolor'] === \false) {
+                $table['bgcolor'] = [];
+            }
             $table['bgcolor'][-1] = $attr['BGCOLOR'];
         }
         if (isset($properties['VERTICAL-ALIGN']) && \array_key_exists(\strtolower($properties['VERTICAL-ALIGN']), self::ALIGN)) {
